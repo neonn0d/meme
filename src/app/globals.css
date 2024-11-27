@@ -1,0 +1,297 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --stars-small: ${Array.from({length: 700}, () => {
+      const x = Math.floor(Math.random() * 2000);
+      const y = Math.floor(Math.random() * 2000);
+      return `${x}px ${y}px #FFF`;
+    }).join(', ')};
+    
+    --stars-medium: ${Array.from({length: 200}, () => {
+      const x = Math.floor(Math.random() * 2000);
+      const y = Math.floor(Math.random() * 2000);
+      return `${x}px ${y}px #FFF`;
+    }).join(', ')};
+    
+    --stars-large: ${Array.from({length: 100}, () => {
+      const x = Math.floor(Math.random() * 2000);
+      const y = Math.floor(Math.random() * 2000);
+      return `${x}px ${y}px #FFF`;
+    }).join(', ')};
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Template-specific styles */
+
+/* Pepe Classic (Template 2) */
+.pixelated {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.wallet-adapter-button {
+  background-color: black !important;
+  border-radius: 9999px !important;
+
+}
+.wallet-adapter-button:hover {
+scale: 1.1 !important;
+}
+
+.wallet-adapter-button:hover {
+  scale: none !important;
+}
+
+.wallet-adapter-button-trigger {
+  width: 100% !important;
+}
+
+/* Moon Rocket (Template 3) */
+@keyframes glow {
+  0% {
+    box-shadow: 0 0 5px #ff6b00, 0 0 10px #ff6b00, 0 0 15px #ff6b00;
+  }
+  50% {
+    box-shadow: 0 0 10px #ff6b00, 0 0 20px #ff6b00, 0 0 30px #ff6b00;
+  }
+  100% {
+    box-shadow: 0 0 5px #ff6b00, 0 0 10px #ff6b00, 0 0 15px #ff6b00;
+  }
+}
+
+.glow-orange {
+  animation: glow 2s infinite;
+}
+
+@keyframes animateStars {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-2000px);
+  }
+}
+
+.stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: 1744px 122px #FFF,134px 1321px #FFF,1934px 1273px #FFF;
+  animation: animateStars 50s linear infinite;
+}
+
+.stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: 1744px 122px #FFF,134px 1321px #FFF,1934px 1273px #FFF;
+  animation: animateStars 100s linear infinite;
+}
+
+.stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: 1744px 122px #FFF,134px 1321px #FFF,1934px 1273px #FFF;
+  animation: animateStars 150s linear infinite;
+}
+
+/* Template 3 Styles */
+#stars {
+  width: 1px;
+  height: 1px;
+  background: transparent;
+  box-shadow: var(--stars-small);
+  animation: animateStars 50s linear infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+#stars2 {
+  width: 2px;
+  height: 2px;
+  background: transparent;
+  box-shadow: var(--stars-medium);
+  animation: animateStars 100s linear infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+#stars3 {
+  width: 3px;
+  height: 3px;
+  background: transparent;
+  box-shadow: var(--stars-large);
+  animation: animateStars 150s linear infinite;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.glow-orange {
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.glow-orange:hover {
+  box-shadow: 0 0 30px rgba(249, 115, 22, 0.5);
+}
+
+.glow-image {
+  filter: drop-shadow(0 0 20px rgba(249, 115, 22, 0.5));
+  transition: filter 0.3s ease;
+}
+
+.glow-image:hover {
+  filter: drop-shadow(0 0 30px rgba(249, 115, 22, 0.7));
+}
+
+.plasma-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.plasma-btn::before {
+  content: '';
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle closest-side, rgba(255, 255, 255, 0.3), transparent);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.plasma-btn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.glow-btn {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.glow-btn::before {
+  content: '';
+  position: absolute;
+  top: var(--y, 50%);
+  left: var(--x, 50%);
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle closest-side, rgba(255, 255, 255, 0.2), transparent);
+  transition: width 0.3s ease, height 0.3s ease;
+}
+
+.glow-btn:hover::before {
+  width: 150%;
+  height: 150%;
+}
+
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient {
+  animation: gradient 15s ease infinite;
+  background-size: 400% 400%;
+}
+
+/* Add Press Start 2P font for Pepe Classic template */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');

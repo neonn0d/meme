@@ -1,0 +1,164 @@
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { useWallet } from '@solana/wallet-adapter-react';
+import dynamic from 'next/dynamic';
+import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from '@solana/web3.js';
+import { useUser } from '@clerk/nextjs';
+import { PaymentRecord } from '@/types/payment';
+import PaymentModal from './PaymentModal';
+
+// Dynamically import WalletMultiButton with ssr disabled
+const WalletMultiButton = dynamic(
+  () => import('@solana/wallet-adapter-react-ui').then(mod => mod.WalletMultiButton),
+  { ssr: false }
+);
+
+interface PremiumSubscriptionProps {
+  onPaymentSuccess?: () => void;
+}
+
+export default function PremiumSubscription({ onPaymentSuccess }: PremiumSubscriptionProps) {
+  const { publicKey, sendTransaction } = useWallet();
+  const { user } = useUser();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showModal, setShowModal] = useState(false);
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
+  const [modalState, setModalState] = useState<'success' | 'error'>('success');
+
+  const MERCHANT_WALLET = process.env.NEXT_PUBLIC_MERCHANT_WALLET || '';
+  const NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet';
+  const RPC_ENDPOINT = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.devnet.solana.com';
+  const PREMIUM_AMOUNT = Number(process.env.NEXT_PUBLIC_PREMIUM_AMOUNT || '0.01'); // SOL
+
+  const recordPayment = async (hash: string) => {
+    try {
+      const payment: PaymentRecord = {
+        amount: PREMIUM_AMOUNT,
+        timestamp: Date.now(),
+        type: 'premium',
+        transactionHash: hash,
+        status: 'completed',
+        network: NETWORK
+      };
+
+      const response = await fetch('/api/payments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ payment }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to record payment');
+      }
+
+      // Call the success callback if provided
+      onPaymentSuccess?.();
+      
+    } catch (err) {
+      console.error('Error recording payment:', err);
+      throw new Error('Failed to record payment metadata');
+    }
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+    setTransactionHash(null);
+  };
+
+  const handlePayment = async () => {
+    if (!publicKey) {
+      setError('Please connect your wallet first');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      const connection = new Connection(RPC_ENDPOINT, 'confirmed');
+      const merchantWallet = new PublicKey(MERCHANT_WALLET);
+
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: merchantWallet,
+          lamports: PREMIUM_AMOUNT * LAMPORTS_PER_SOL,
+        })
+      );
+
+      const {
+        context: { slot: minContextSlot },
+        value: { blockhash, lastValidBlockHeight }
+      } = await connection.getLatestBlockhashAndContext();
+
+      const signature = await sendTransaction(transaction, connection, { minContextSlot });
+      
+      const confirmation = await connection.confirmTransaction({
+        blockhash,
+        lastValidBlockHeight,
+        signature
+      });
+
+      if (confirmation.value.err) {
+        throw new Error('Transaction failed');
+      }
+
+      // Record the successful payment and show modal first
+      setTransactionHash(signature);
+      setModalState('success');
+      setShowModal(true);
+      
+      // Then record the payment and trigger callback
+      await recordPayment(signature);
+
+    } catch (err) {
+      console.error('Payment error:', err);
+      setError(err instanceof Error ? err.message : 'Payment failed');
+      setModalState('error');
+      setShowModal(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="flex items-center justify-between gap-4">
+      <div>
+        <h3 className="text-lg font-semibold text-zinc-900">Premium Subscription</h3>
+        <p className="text-sm text-zinc-600 mt-1">Get access to all premium features for just {PREMIUM_AMOUNT} SOL/month</p>
+        {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+      </div>
+      
+      <div className="flex items-center gap-2">
+        {!publicKey ? (
+          <WalletMultiButton className="!bg-zinc-900 hover:!bg-zinc-800 !rounded-lg" />
+        ) : (
+          <button
+            onClick={handlePayment}
+            disabled={loading}
+            className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          >
+            {loading ? (
+              <>
+                <span className="animate-spin mr-2">⚡</span>
+                Processing...
+              </>
+            ) : (
+              'Upgrade Now'
+            )}
+          </button>
+        )}
+      </div>
+
+      <PaymentModal
+        isOpen={showModal}
+        onClose={handleModalClose}
+        state={modalState}
+      />
+    </div>
+  );
+}
