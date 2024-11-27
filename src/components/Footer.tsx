@@ -112,10 +112,14 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-8 border-t border-zinc-200">
-          <p className="text-sm text-zinc-500 text-center">
-            {new Date().getFullYear()} MemeGen. All rights reserved.
+        <div className="mt-8 pt-8 border-t border-zinc-200 text-center">
+          <p className="text-sm text-zinc-500">
+            {new Date().getFullYear()} MemeGen. All rights reserved. 
           </p>
+  
+          <Link href="https://misfitsclub.dev" target="_blank" rel="noopener noreferrer" className="text-zinc-600 hover:text-zinc-900 transition-colors font-medium">
+            <span className="font-semibold tracking-wide">Misfits Club</span>
+          </Link>
         </div>
       </div>
     </footer>
