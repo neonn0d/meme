@@ -11,8 +11,6 @@ import { useUser } from "@clerk/nextjs";
 import {
   PaymentRecord,
   Payment,
-  SubscriptionStatus,
-  calculateSubscriptionStatus,
   formatDate,
 } from "@/types/payment";
 import { Loader2, RefreshCw, ExternalLink, ArrowLeft } from "lucide-react";
@@ -83,14 +81,13 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
       return null;
     }
 
-    // Get the most recent payment
     const latestPayment = payments.reduce((latest, current) => 
       current.timestamp > latest.timestamp ? current : latest
     );
 
     const startDate = latestPayment.timestamp;
     const expiryDate = new Date(startDate);
-    expiryDate.setMonth(expiryDate.getMonth() + 1); // 1 month duration
+    expiryDate.setMonth(expiryDate.getMonth() + 1);
 
     const now = new Date();
     const isActive = now < expiryDate;
@@ -111,9 +108,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
       <div className="min-h-screen bg-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-8">
           <div className="p-4 bg-white rounded-lg shadow-sm border border-zinc-200">
-            <p className="text-zinc-600">
-              Please sign in to view payment history.
-            </p>
+            <p className="text-zinc-600">Please sign in to view payment history.</p>
           </div>
         </div>
       </div>
@@ -172,18 +167,15 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
           {/* Subscription Status Card */}
           <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6 h-max">
             <h2 className="text-xl font-semibold mb-4">Subscription Status</h2>
-
             {subscriptionStatus ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-600">Status</span>
-                  <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                      subscriptionStatus.isActive
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
-                    }`}
-                  >
+                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
+                    subscriptionStatus.isActive
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
+                  }`}>
                     {subscriptionStatus.isActive ? "Active" : "Expired"}
                   </span>
                 </div>
@@ -234,9 +226,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
                 disabled={refreshing}
                 className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
               >
-                <RefreshCw
-                  className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`}
-                />
+                <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
                 Refresh
               </button>
             </div>
@@ -255,7 +245,9 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
                   >
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-lg font-semibold text-zinc-900">{payment.amount} SOL</span>
+                        <span className="text-lg font-semibold text-zinc-900">
+                          {payment.amount} SOL
+                        </span>
                         <span className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full capitalize">
                           {payment.type}
                         </span>
