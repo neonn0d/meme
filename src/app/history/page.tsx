@@ -68,6 +68,44 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
     return `https://explorer.solana.com/tx/${hash}?cluster=${process.env.NEXT_PUBLIC_SOLANA_NETWORK}`;
   };
 
+  // Map PaymentRecord[] to Payment[] for subscription calculation
+  const premiumPayments = payments
+    .filter(p => p.type === 'premium')
+    .map(p => ({
+      amount: p.amount,
+      timestamp: p.timestamp,
+      transactionHash: p.transactionHash,
+      type: 'premium_subscription' as const
+    }));
+
+  const calculateSubscriptionStatus = (payments: Payment[]) => {
+    if (payments.length === 0) {
+      return null;
+    }
+
+    // Get the most recent payment
+    const latestPayment = payments.reduce((latest, current) => 
+      current.timestamp > latest.timestamp ? current : latest
+    );
+
+    const startDate = latestPayment.timestamp;
+    const expiryDate = new Date(startDate);
+    expiryDate.setMonth(expiryDate.getMonth() + 1); // 1 month duration
+
+    const now = new Date();
+    const isActive = now < expiryDate;
+    const daysRemaining = isActive ? Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 0;
+
+    return {
+      isActive,
+      startDate,
+      expiryDate: expiryDate.getTime(),
+      daysRemaining
+    };
+  };
+
+  const subscriptionStatus = calculateSubscriptionStatus(premiumPayments);
+
   if (!user) {
     return (
       <div className="min-h-screen bg-zinc-50">
@@ -107,18 +145,6 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
       </div>
     );
   }
-
-  // Map PaymentRecord[] to Payment[] for subscription calculation
-  const premiumPayments: Payment[] = payments
-    .filter((p) => p.type === "premium")
-    .map((p) => ({
-      amount: p.amount,
-      timestamp: p.timestamp,
-      transactionHash: p.transactionHash,
-      type: "premium_subscription",
-    }));
-
-  const subscriptionStatus = calculateSubscriptionStatus(premiumPayments);
 
   return (
     <div className="min-h-screen bg-zinc-50">
@@ -225,28 +251,25 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
                 payments.map((payment, index) => (
                   <div
                     key={index}
-                    className="group flex items-center justify-between p-4 bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 transition-all"
+                    className="group p-4 bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 transition-all"
                   >
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3">
-                        <p className="font-semibold text-zinc-900">
-                          {payment.amount} SOL
-                        </p>
-                        <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-zinc-100 text-zinc-800 border border-zinc-200">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-lg font-semibold text-zinc-900">{payment.amount} SOL</span>
+                        <span className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full capitalize">
                           {payment.type}
                         </span>
                       </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-zinc-500">
-                          {formatDate(payment.timestamp)}
-                        </p>
+                      <div className="flex items-center gap-2 text-sm text-zinc-500">
+                        <span>{formatDate(payment.timestamp)}</span>
+                        <span>•</span>
                         <a
                           href={getExplorerUrl(payment.transactionHash)}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-zinc-400 hover:text-zinc-900 transition-colors group-hover:text-zinc-600"
+                          className="inline-flex items-center gap-1 text-zinc-500 hover:text-blue-500 transition-colors"
                         >
-                          <span className="font-mono truncate max-w-[200px]">{payment.transactionHash}</span>
+                          <span className="hover:underline">View on Explorer</span>
                           <ExternalLink className="w-3 h-3" />
                         </a>
                       </div>

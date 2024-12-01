@@ -161,7 +161,6 @@ export const generateModernHTML = ({
                 <div class="roadmap-grid">
                     ${roadmap.phases.map((phase: any, index: number) => `
                         <div class="roadmap-card">
-                            <span class="phase-number">Phase ${index + 1}</span>
                             <h3>${phase.title}</h3>
                             <p>${phase.description}</p>
                             <div class="date">${phase.date}</div>

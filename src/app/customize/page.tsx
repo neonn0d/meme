@@ -63,6 +63,8 @@ export default function CustomizePage() {
       ? "moon-rocket-v2"
       : rawTemplateId === "cosmic"
       ? "cosmic-space-v1"
+      : rawTemplateId === "minimal"
+      ? "minimal-space-v1"
       : rawTemplateId;
 
   const defaultFields = {

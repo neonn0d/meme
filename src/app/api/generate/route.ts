@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { generateModernTemplate } from "@/templates/modern/template";
 import { generateRocketTemplate } from "@/templates/rocket/template";
 import { generateCosmicTemplate } from "@/templates/cosmic/template";
+import { generateMinimalTemplate } from "@/templates/minimal/template";
 import { GenerateRequestBody, GeneratedTemplate, PreviewData } from "@/types";
 import JSZip from 'jszip';
 
@@ -27,6 +28,7 @@ export async function POST(request: NextRequest) {
     const mappedTemplateId = templateId === 'modern' ? 'modern-doge-v2' :
                             templateId === 'rocket' ? 'moon-rocket-v2' :
                             templateId === 'cosmic' ? 'cosmic-space-v1' :
+                            templateId === 'minimal' ? 'minimal-space-v1' :
                             templateId;
 
     // Create preview data
@@ -76,6 +78,9 @@ export async function POST(request: NextRequest) {
       case 'cosmic-space-v1':
         generatedFiles = generateCosmicTemplate(previewData);
         break;
+      case 'minimal-space-v1':
+        generatedFiles = generateMinimalTemplate(previewData);
+        break;
       default:
         console.error('Invalid template ID:', mappedTemplateId);
         return NextResponse.json(
@@ -98,22 +103,25 @@ export async function POST(request: NextRequest) {
         type: "blob",
         compression: "DEFLATE",
         compressionOptions: {
-          level: 9
+          level: 6
         }
       });
+
+      // Convert Blob to Buffer
+      const buffer = Buffer.from(await zipContent.arrayBuffer());
 
       // Return the zip file
       const filename = body.coinName ? `${body.coinName.toLowerCase()}-website.zip` : 'memecoin-website.zip';
       console.log('Generated filename:', filename); // Debug log
       
-      return new NextResponse(zipContent, {
+      return new NextResponse(buffer, {
         headers: {
-          "Content-Type": "application/zip",
-          "Content-Disposition": `attachment; filename="${filename}"`,
-        },
+          'Content-Type': 'application/zip',
+          'Content-Disposition': `attachment; filename="${filename}"`,
+        }
       });
-    } catch (zipError) {
-      console.error('Error generating zip:', zipError);
+    } catch (error) {
+      console.error('Error generating zip file:', error);
       return NextResponse.json(
         { error: "Failed to generate zip file" },
         { status: 500 }
