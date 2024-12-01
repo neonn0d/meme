@@ -60,7 +60,7 @@ export default function CustomizePage() {
   // Initialize fields with demo content
   const [fields, setFields] = useState<CustomizationFields>({
     templateId: rawTemplateId || "modern",
-    coinName: "DemoMeme Coin",
+    coinName: "MemeGen",
     sections: {
       hero: true,
       tokenomics: true,
@@ -69,92 +69,91 @@ export default function CustomizePage() {
       faq: true,
       community: true,
     },
-    primaryColor: "#6D28D9",
-    secondaryColor: "#ffffff",
-    tokenSymbol: "DEMO",
+    primaryColor: "#3B82F6",
+    secondaryColor: "#EFF6FF",
+    tokenSymbol: "MGEN",
     description:
-      "Welcome to DemoMeme Coin - where memes meet innovation! Our community-driven token combines humor with serious DeFi potential. Join us on this exciting journey to the moon! 🚀",
-    logoUrl: "https://pngimg.com/d/coin_PNG36910.png",
-    contractAddress: "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7",
+      "🚀 MemeGen - Your Ultimate Solana Meme Generator! Create, launch, and moon your own memecoin with style. Powered by Solana's lightning-fast network, we're making meme magic accessible to everyone. Build your community, launch your token, and ride the wave to the moon! 🌙",
+    logoUrl: "https://i.imgur.com/saXHmxG.png",
+    contractAddress: "FZL3hBhMZ6XgJJwF3LVkYJbcxrqSfVwdYzaLwR5hHjcQ",
     socialLinks: {
-      telegram: "https://t.me/demomeme",
-      twitter: "https://twitter.com/demomeme",
-      discord: "https://discord.gg/demomeme",
+      telegram: "https://t.me/memegen",
+      twitter: "https://twitter.com/memegen",
+      discord: "https://discord.gg/memegen",
     },
-    buyLink: "https://pancakeswap.finance/",
+    buyLink: "https://raydium.io/swap/",
     tokenomics: {
-      totalSupply: "1,000,000,000",
+      totalSupply: "1000000000",
       taxBuy: "5",
       taxSell: "5",
       lpLocked: "2 Years",
     },
     seo: {
-      title: "DemoMeme Coin | The Next Generation Meme Token",
+      title: "MemeGen | Ultimate Solana Meme Generator",
       description:
-        "Join the DemoMeme revolution - where memes meet innovation in the world of cryptocurrency. Community-driven, secure, and ready for the moon!",
-      keywords: "meme coin, cryptocurrency, defi, blockchain, community token",
-      ogImage: "https://placehold.co/1200x630/6D28D9/ffffff?text=DEMO+MEME",
+        "Launch your own memecoin on Solana with MemeGen! Fast, easy, and community-driven. Create your moon mission today! 🚀",
+      keywords: "solana, memecoin generator, cryptocurrency, SPL token, defi, meme token, solana token, launch platform",
+      ogImage: "https://placehold.co/1200x630/3B82F6/ffffff?text=MEMEGEN",
     },
     roadmap: {
       phases: [
         {
-          title: "Launch",
+          title: "Launch Platform",
           description:
-            "Website launch, community building, and token fair launch on DEX",
+            "Release MemeGen platform with instant token creation, customizable templates, and automatic Raydium listing capability 🚀",
           date: "Q1 2024",
         },
         {
-          title: "Growth",
+          title: "Community Tools",
           description:
-            "Marketing campaigns, CEX listings, and partnership developments",
+            "Launch marketing toolkit, community management suite, and automated social media integration for viral growth 🌟",
           date: "Q2 2024",
         },
         {
-          title: "Expansion",
+          title: "Advanced Features",
           description:
-            "NFT marketplace launch, governance token implementation",
+            "Introduce AI-powered meme generation, advanced tokenomics customization, and cross-chain expansion plans 💫",
           date: "Q3 2024",
         },
       ],
     },
     team: [
       {
-        name: "Alex Thompson",
-        role: "Project Lead",
+        name: "Meme Lord",
+        role: "Platform Architect",
         avatar: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&facialHairType=Blank&clotheType=BlazerShirt",
       },
       {
-        name: "Sarah Chen",
-        role: "Marketing Director",
+        name: "Degen Dev",
+        role: "Smart Contract Wizard",
         avatar: "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&facialHairType=Blank&clotheType=BlazerShirt",
       },
       {
-        name: "Mike Rodriguez",
-        role: "Lead Developer",
+        name: "Ser Launch",
+        role: "Community Lead",
         avatar: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortRound&facialHairType=BeardLight&clotheType=Hoodie",
       },
     ],
-     
     faq: [
       {
-        question: "What is DemoMeme Coin?",
+        question: "What is MemeGen? 🚀",
         answer:
-          "DemoMeme Coin is a community-driven cryptocurrency that combines the fun of memes with serious DeFi functionality. Our goal is to create a strong, engaged community while delivering innovative blockchain solutions.",
+          "MemeGen is your all-in-one platform for creating and launching memecoins on Solana. We provide everything you need to turn your meme into a moonshot - from token creation to marketing tools!",
       },
       {
-        question: "How can I buy DemoMeme Coin?",
+        question: "How does it work? ⚡",
         answer:
-          "You can buy DemoMeme Coin on PancakeSwap using BNB. Simply connect your wallet, set appropriate slippage, and swap BNB for DEMO tokens.",
+          "Simply choose your template, customize your tokenomics, add your meme magic, and launch! Our platform handles all the technical stuff while you focus on building your community.",
       },
       {
-        question: "Is the liquidity locked?",
+        question: "Is it safe? 🔒",
         answer:
-          "Yes, our liquidity is locked for 2 years to ensure the safety and stability of our token.",
+          "Absolutely! All contracts are auto-generated with battle-tested code, and liquidity locking is built-in. We prioritize security while keeping the meme spirit alive!",
       },
       {
-        question: "What are the tokenomics?",
+        question: "Why choose MemeGen? 🌟",
         answer:
-          "We have a total supply of 1 billion tokens, with 5% buy and sell taxes that contribute to marketing, development, and liquidity.",
+          "We're the first dedicated memecoin generator on Solana, offering instant deployment, marketing tools, and community features. Plus, our platform is built for virality - perfect for your moon mission!",
       },
     ],
   });

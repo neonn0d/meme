@@ -328,7 +328,7 @@ body {
   max-width: 400px;
   height: auto;
   animation: float 6s ease-in-out infinite;
-  filter: drop-shadow(0 0 20px rgba(255, 107, 0, 0.3));
+  filter: drop-shadow(0 0 20px color-mix(in srgb, var(--primary) 30%, transparent));
   z-index: 1;
 }
 

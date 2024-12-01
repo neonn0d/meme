@@ -89,7 +89,7 @@ export const generateCosmicHTML = ({
                       </div>
                       <div class="tokenomics-card">
                           <h3>LP Locked</h3>
-                          <p>${tokenomics.lpLocked}%</p>
+                          <p>${tokenomics.lpLocked}</p>
                       </div>
                   </div>
               </div>

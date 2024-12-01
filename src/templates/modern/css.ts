@@ -54,12 +54,12 @@ body {
 }
 
 .glow-card {
-  box-shadow: 0 0 15px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--primary) 25%, transparent);
   transition: all 0.3s ease;
 }
 
 .glow-card:hover {
-  box-shadow: 0 0 25px rgba(255, 107, 0, 0.4);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 35%, transparent);
   transform: translateY(-5px);
 }
 
@@ -532,7 +532,7 @@ body {
 
 /* Tokenomics Section */
 .tokenomics {
-  padding: 100px 20px;
+  padding: 100px 0px;
   background: rgba(0, 0, 0, 0.5);
   position: relative;
   z-index: 10;
@@ -561,7 +561,7 @@ h2 {
 
 .tokenomics-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent);
   border-color: var(--primary);
 }
 
@@ -582,7 +582,7 @@ h2 {
 
 /* Roadmap Section */
 .roadmap {
-  padding: 100px 20px;
+  padding: 100px 0px;
   position: relative;
 }
 
@@ -604,7 +604,7 @@ h2 {
 
 .roadmap-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent);
   border-color: var(--primary);
 }
 
@@ -655,7 +655,7 @@ h2 {
 
 .team-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent);
   border-color: var(--primary);
 }
 
@@ -712,7 +712,7 @@ h2 {
 
 .faq-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent);
   border-color: var(--primary);
 }
 
@@ -723,7 +723,7 @@ h2 {
 
 /* Community Section */
 .community {
-  padding: 100px 20px;
+  padding: 100px 0px;
   position: relative;
 }
 
@@ -748,7 +748,7 @@ h2 {
 
 .social-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 0 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent);
   border-color: var(--primary);
 }
 
