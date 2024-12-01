@@ -6,9 +6,10 @@ import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
 
 interface NavbarProps {
   children?: React.ReactNode;
+  className?: string;
 }
 
-export function Navbar({ children }: NavbarProps) {
+export function Navbar({ children, className = "" }: NavbarProps) {
   const { isSignedIn } = useUser();
   const pathname = usePathname();
 
@@ -24,12 +25,12 @@ export function Navbar({ children }: NavbarProps) {
   ];
 
   return (
-    <nav className="fixed w-full bg-white shadow-sm border-b border-zinc-200 z-50">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <nav className={`fixed w-full bg-white shadow-sm border-b border-zinc-200 z-50 ${className}`}>
+      <div className={`mx-auto ${pathname === '/customize' ? '' : 'max-w-7xl'} px-4 sm:px-6 lg:px-8`}>
         <div className="flex h-16 justify-between items-center">
           <div className="flex-shrink-0">
             <Link href="/" className="text-xl font-bold text-zinc-900 hover:text-zinc-700 transition-colors">
-            MemeGen
+              MemeGen
             </Link>
           </div>
           <div className="flex items-center gap-6">

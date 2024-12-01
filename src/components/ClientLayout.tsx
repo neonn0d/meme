@@ -16,7 +16,7 @@ export function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <SolanaProvider>
       {!isPreviewPage && <Navbar />}
-      <main className={!isPreviewPage ? "min-h-[calc(100vh-64px-56px)] pt-16" : "min-h-screen"}>
+      <main className={!isPreviewPage ? "min-h-full pt-16" : "min-h-screen"}>
         {children}
       </main>
       {!isPreviewPage && <Footer />}

@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PreviewFrame } from "@/components/PreviewFrame";
 import Link from "next/link";
+import { Monitor, Smartphone } from "lucide-react";
 
 interface RoadmapPhase {
   title: string;
@@ -313,8 +314,8 @@ export default function CustomizePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8 max-w-8xl">
+    <div className=" bg-gray-50">
+      <div className="w-screen min-w-full">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header with Tabs */}
           <div className="border-b border-gray-200">
@@ -346,23 +347,23 @@ export default function CustomizePage() {
                   <div className="flex items-center gap-2 mr-4">
                     <button
                       onClick={() => setIsMobile(false)}
-                      className={`px-3 py-1.5 rounded text-sm font-medium ${
+                      className={`p-2 rounded text-sm font-medium ${
                         !isMobile
-                          ? "bg-purple-600 text-white"
+                          ? "bg-black text-white"
                           : "bg-gray-100 text-gray-700"
                       }`}
                     >
-                      Desktop
+                      <Monitor className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => setIsMobile(true)}
-                      className={`px-3 py-1.5 rounded text-sm font-medium ${
+                      className={`p-2 rounded text-sm font-medium ${
                         isMobile
-                          ? "bg-purple-600 text-white"
+                          ? "bg-black text-white"
                           : "bg-gray-100 text-gray-700"
                       }`}
                     >
-                      Mobile
+                      <Smartphone className="w-4 h-4" />
                     </button>
                   </div>
                 )}
@@ -444,7 +445,7 @@ export default function CustomizePage() {
                 showPreview ? "block" : "hidden"
               }`}
             >
-              <div className="h-full">
+              <div className="flex bg-white h-screen">
                 <iframe
                   src={generatePreviewUrl()}
                   className={`w-full h-full border-0 transition-all duration-300 ${

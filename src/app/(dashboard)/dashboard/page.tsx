@@ -201,27 +201,6 @@ export default function DashboardPage() {
             </ol>
           </div>
         </div>
-
-        {/* Available Templates */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h2 className="text-2xl font-bold text-zinc-900 mb-6">
-            Available Templates
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="p-6 bg-white rounded-lg border border-zinc-200 hover:shadow-sm transition-all duration-300">
-              <h3 className="text-lg font-bold text-zinc-900">
-                Modern Template
-              </h3>
-              <p className="mt-2 text-zinc-600">A sleek and modern design.</p>
-            </div>
-            <div className="p-6 bg-white rounded-lg border border-zinc-200 hover:shadow-sm transition-all duration-300">
-              <h3 className="text-lg font-bold text-zinc-900">
-                Rocket Template
-              </h3>
-              <p className="mt-2 text-zinc-600">Space-themed design.</p>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );
