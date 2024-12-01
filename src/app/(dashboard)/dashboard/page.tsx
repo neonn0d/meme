@@ -4,7 +4,7 @@ import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { PlusCircle, BookOpen, Zap } from "lucide-react";
 import PremiumSubscription from "@/components/premium-subscription";
-import PaymentHistory, { PaymentHistoryRef } from "../../history/page";
+import PaymentHistory, { PaymentHistoryRef } from "@/components/PaymentHistory";
 import { useRef } from "react";
 import { useSubscription } from "@/hooks/useSubscription";
 import { formatDate } from "@/types/payment";
