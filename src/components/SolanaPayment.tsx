@@ -12,7 +12,6 @@ import { useSubscription } from '@/hooks/useSubscription';
 
 const MERCHANT_WALLET = new PublicKey(process.env.NEXT_PUBLIC_MERCHANT_WALLET!);
 const SOLANA_PRICE = Number(process.env.NEXT_PUBLIC_SOLANA_PRICE!) || 0.1;
-const NETWORK = 'mainnet-beta';
 
 interface SolanaPaymentProps {
   onSuccess: () => void;
@@ -156,7 +155,7 @@ export function SolanaPayment({ onSuccess, onClose }: SolanaPaymentProps) {
 
           <div className="text-center">
             <p className="text-xs text-gray-400">
-            Solana Mainnet • Secure Payment
+            Solana • Secure Payment
             </p>
           </div>
         </div>

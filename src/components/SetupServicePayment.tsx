@@ -116,7 +116,7 @@ export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentP
 
           <div className="text-center">
             <p className="text-xs text-gray-500">
-            Solana Mainnet • Secure Payment
+            Solana • Secure Payment
             </p>
           </div>
         </div>

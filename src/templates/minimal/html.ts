@@ -151,11 +151,9 @@ export const generateMinimalHTML = (data: PreviewData): string => {
             </div>
             ${contractAddress ? `
             <div class="contract-address">
-                <span>Contract:</span>
+                <p>Contract:</p>
                 <code>${contractAddress}</code>
-                <button class="copy-button" onclick="copyToClipboard('${contractAddress}')">
-                    Copy
-                </button>
+                <button class="copy-button" onclick="copyToClipboard('${contractAddress}')">Copy</button>
             </div>
             ` : ''}
         </div>

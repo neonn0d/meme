@@ -292,14 +292,15 @@ body {
 
 @media (max-width: 768px) {
   .hero {
-    padding: 40px 0;
+    padding: 120px 0 60px;
   }
 
   .hero-grid {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 32px;
+    text-align: center;
+    gap: 30px;
   }
 
   .hero-left {
@@ -691,7 +692,7 @@ h2 {
 
 /* FAQ Section */
 .faq {
-  padding: 100px 20px;
+  padding: 100px 0px;
   position: relative;
 }
 
@@ -742,6 +743,7 @@ h2 {
   color: white;
   border: 1px solid rgba(255, 255, 255, 0.1);
   transition: all 0.3s ease;
+  width: 100%;
 }
 
 .social-card:hover {

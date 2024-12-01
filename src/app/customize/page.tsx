@@ -315,7 +315,7 @@ export default function CustomizePage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto py-8">
+      <div className="container mx-auto py-8 max-w-8xl">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header with Tabs */}
           <div className="border-b border-gray-200">
@@ -325,7 +325,7 @@ export default function CustomizePage() {
                   onClick={() => setShowPreview(false)}
                   className={`px-4 py-2 font-medium rounded-lg transition-colors ${
                     !showPreview
-                      ? "bg-primary text-white"
+                      ? "bg-black text-white"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -335,7 +335,7 @@ export default function CustomizePage() {
                   onClick={() => setShowPreview(true)}
                   className={`px-4 py-2 font-medium rounded-lg transition-colors ${
                     showPreview
-                      ? "bg-primary text-white"
+                      ? "bg-black text-white"
                       : "text-gray-600 hover:bg-gray-100"
                   }`}
                 >
@@ -370,7 +370,7 @@ export default function CustomizePage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="px-6 py-2 bg-primary text-white font-medium rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50"
+                  className="px-6 py-2 bg-black text-white font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
                 >
                   {isLoading ? "Generating..." : "Generate Website"}
                 </button>
@@ -391,7 +391,7 @@ export default function CustomizePage() {
                         onClick={() => handleTabChange(tab.id)}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           activeTab === tab.id
-                            ? "bg-primary/10 text-primary"
+                            ? "bg-black/10 text-primary"
                             : "text-gray-600 hover:bg-gray-100"
                         }`}
                       >
@@ -449,7 +449,7 @@ export default function CustomizePage() {
                 <iframe
                   src={generatePreviewUrl()}
                   className={`w-full h-full border-0 transition-all duration-300 ${
-                    isMobile ? "max-w-[375px] mx-auto" : ""
+                    isMobile ? "max-w-[375px] mx-auto border border-black" : ""
                   }`}
                 />
               </div>

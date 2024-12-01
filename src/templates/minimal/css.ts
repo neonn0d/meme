@@ -214,6 +214,23 @@ a {
     text-align: center;
 }
 
+@media (max-width: 768px) {
+    .hero {
+        padding: calc(80px + var(--spacing-xl)) 0 var(--spacing-2xl);
+    }
+    
+    .hero h1 {
+        font-size: var(--font-size-3xl);
+        padding: 0 var(--spacing-base);
+    }
+    
+    .hero-description {
+        font-size: var(--font-size-lg);
+        padding: 0 var(--spacing-lg);
+        margin-bottom: var(--spacing-xl);
+    }
+}
+
 .hero h1 {
     font-size: var(--font-size-4xl);
     font-weight: 700;
@@ -268,32 +285,72 @@ a {
 
 /* Contract Address */
 .contract-address {
-    display: inline-flex;
+    display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: var(--spacing-sm);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    justify-content: center;
+    gap: var(--spacing-base);
+    padding: var(--spacing-base);
     background-color: var(--color-secondary);
-    border-radius: var(--border-radius-base);
     font-size: var(--font-size-sm);
+    max-width: 700px;
+    margin: var(--spacing-xl) auto;
+    border-radius: var(--border-radius-lg);
+}
+
+.contract-address p {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-sm);
+    margin: 0;
+    white-space: nowrap;
 }
 
 .contract-address code {
     font-family: monospace;
-    color: var(--color-text-secondary);
+    color: var(--color-text);
+    font-size: var(--font-size-sm);
+    background: var(--color-background);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--border-radius-base);
+    text-align: center;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .copy-button {
-    background: none;
+    background: var(--color-primary);
     border: none;
     cursor: pointer;
-    color: var(--color-text-secondary);
+    color: var(--color-background);
     font-size: var(--font-size-sm);
-    padding: var(--spacing-xs);
-    transition: color 0.2s ease;
+    padding: var(--spacing-xs) var(--spacing-lg);
+    border-radius: var(--border-radius-base);
+    transition: opacity 0.2s ease;
+    white-space: nowrap;
 }
 
 .copy-button:hover {
-    color: var(--color-text);
+    opacity: 0.9;
+}
+
+@media (max-width: 768px) {
+    .contract-address {
+        flex-direction: column;
+        padding: var(--spacing-lg) var(--spacing-base);
+        max-width: 100%;
+        margin: var(--spacing-lg) 0;
+    }
+    
+    .contract-address code {
+        font-size: var(--font-size-xs);
+        padding: var(--spacing-sm);
+        width: 100%;
+        white-space: normal;
+        word-break: break-all;
+    }
 }
 
 /* Tokenomics */
@@ -398,27 +455,47 @@ a {
 
 /* FAQ */
 .faq-grid {
-    display: grid;
+    display: flex;
+    flex-direction: column;
     gap: var(--spacing-lg);
     margin-top: var(--spacing-2xl);
-    max-width: 800px;
-    margin-left: auto;
-    margin-right: auto;
+    width: 100%;
+    padding: 0;
 }
 
 .faq-item {
-    padding: var(--spacing-xl);
+    width: 100%;
+    padding: var(--spacing-xl) var(--spacing-2xl);
     background-color: var(--color-secondary);
     border-radius: var(--border-radius-lg);
 }
 
 .faq-item h3 {
-    margin-bottom: var(--spacing-base);
-    font-size: var(--font-size-lg);
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text);
 }
 
 .faq-item p {
     color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .faq-grid {
+        padding: 0 var(--spacing-base);
+    }
+    
+    .faq-item {
+        padding: var(--spacing-lg);
+    }
+    
+    .faq-item h3 {
+        font-size: var(--font-size-lg);
+        margin-bottom: var(--spacing-base);
+    }
 }
 
 /* Footer */

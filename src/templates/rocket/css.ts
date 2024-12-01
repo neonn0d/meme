@@ -92,7 +92,7 @@ body {
   background: linear-gradient(45deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
+  text-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .nav-links {
@@ -187,7 +187,7 @@ body {
   background: linear-gradient(45deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(255, 107, 0, 0.3);
+  text-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .hero-subtitle {
@@ -304,7 +304,7 @@ body {
 
 .hero-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(255, 107, 0, 0.4);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .hero-btn:hover::before {
@@ -379,7 +379,7 @@ body {
   background: linear-gradient(45deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px rgba(255, 107, 0, 0.3);
+  text-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .tokenomics-grid {
@@ -402,7 +402,7 @@ body {
 .tokenomics-card:hover {
   transform: translateY(-10px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.2);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .card-icon {
@@ -451,7 +451,7 @@ body {
 .roadmap-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .phase-number {
@@ -512,7 +512,7 @@ body {
 .team-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .team-avatar, .team-avatar-placeholder {
@@ -576,7 +576,7 @@ body {
 .faq-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .faq-card h3 {
@@ -619,7 +619,7 @@ body {
 .social-card:hover {
   transform: translateY(-5px);
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(255, 107, 0, 0.1);
+  box-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
 .social-icon {

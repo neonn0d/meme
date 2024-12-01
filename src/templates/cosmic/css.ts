@@ -45,24 +45,45 @@ export const generateCosmicCSS = (data: any): string => {
       backdrop-filter: blur(10px);
       background: rgba(10, 10, 31, 0.8);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      padding: 1rem 0;
+      padding: 0.75rem 1rem;
+      height: 72px;
+      display: flex;
+      align-items: center;
     }
 
     .navbar .container {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    .navbar-logo {
+      display: flex;
+      align-items: center;
     }
 
     .navbar-logo img {
       height: 40px;
       width: auto;
+      display: block;
     }
 
     .navbar-links {
       display: flex;
       gap: 2rem;
       list-style: none;
+      align-items: center;
+    }
+
+    .navbar-right {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
     }
 
     .navbar-links a {
@@ -103,6 +124,9 @@ export const generateCosmicCSS = (data: any): string => {
     .hero h1 {
       font-size: 4rem;
       margin-bottom: 1.5rem;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .hero p {
@@ -116,6 +140,8 @@ export const generateCosmicCSS = (data: any): string => {
       display: flex;
       gap: 1rem;
       justify-content: center;
+      flex-wrap: wrap;
+      padding: 0 1rem;
     }
 
     .button {
@@ -154,6 +180,14 @@ export const generateCosmicCSS = (data: any): string => {
       color: white;
       padding: 0.5rem 1.25rem;
       border-radius: 9999px;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 100px;
+      height: 40px;
     }
 
     section {
@@ -214,7 +248,7 @@ export const generateCosmicCSS = (data: any): string => {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
       gap: 2rem;
-      padding: 0 1rem;
+      padding: 0;
     }
 
     .team-grid > div {
@@ -273,34 +307,28 @@ export const generateCosmicCSS = (data: any): string => {
     }
 
     .contract-address {
-      margin-top: 2rem;
-      background: var(--card-bg);
-      padding: 1rem;
-      border-radius: 0.5rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 1rem;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
+      padding: 1rem;
+      background: var(--card-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1rem;
+      margin: 2rem auto;
+      max-width: 800px;
+    }
+
+    .contract-address span {
+      color: var(--text-secondary);
     }
 
     .contract-address code {
       font-family: monospace;
-      color: var(--primary-color);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 0.5rem 1rem;
-      border-radius: 0.25rem;
-      flex: 1;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .contract-address code:hover {
       background: rgba(255, 255, 255, 0.1);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.9rem;
     }
 
     .copy-button {
@@ -308,20 +336,21 @@ export const generateCosmicCSS = (data: any): string => {
       color: white;
       border: none;
       padding: 0.5rem 1rem;
-      border-radius: 0.25rem;
+      border-radius: 0.5rem;
       cursor: pointer;
-      transition: all 0.3s ease;
+      font-size: 0.9rem;
+      transition: opacity 0.2s ease;
     }
 
     .copy-button:hover {
-      background: var(--secondary-color);
+      opacity: 0.9;
     }
 
     .tokenomics-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 2rem;
-      padding: 2rem;
+      padding: 2rem 0px; 
     }
 
     .tokenomics-card {
@@ -437,24 +466,104 @@ export const generateCosmicCSS = (data: any): string => {
     }
 
     @media (max-width: 768px) {
+      .container {
+        padding: 0 1rem;
+        max-width: 100%;
+      }
+
+      .hero {
+        padding: 6rem 0 3rem;
+        min-height: auto;
+      }
+
+      .hero .container {
+        max-width: 100%;
+        width: 100%;
+        padding: 0 1.5rem;
+      }
+
+      .hero h1 {
+        font-size: 2.5rem;
+        padding: 0;
+        margin-bottom: 1rem;
+        max-width: 100%;
+      }
+
+      .hero p {
+        font-size: 1rem;
+        padding: 0;
+        margin: 0 auto 1.5rem;
+        max-width: 300px;
+      }
+
+      .hero-buttons {
+        gap: 0.75rem;
+        padding: 0;
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+
+      .navbar {
+        padding: 0.75rem;
+        height: 64px;
+      }
+
+      .navbar .container {
+        padding: 0;
+      }
+
+      .navbar-logo img {
+        height: 36px;
+      }
+
+      .button.buy-now {
+        font-size: 0.85rem;
+        padding: 0.4rem 1rem;
+        min-width: auto;
+        width: auto;
+        height: 36px;
+      }
+
       .navbar-links {
         display: none;
       }
 
-      .hero h1 {
-        font-size: 3rem;
+      .navbar-right {
+        gap: 0;
       }
 
-      .hero p {
-        font-size: 1.1rem;
-      }
-
-      section {
-        padding: 4rem 0;
+      .navbar .container {
+        justify-content: space-between;
       }
 
       .team-grid {
         grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      }
+
+      .contract-address {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+        margin: 1.5rem 1rem;
+        text-align: center;
+      }
+
+      .contract-address code {
+        width: 100%;
+        word-break: break-all;
+        font-size: 0.8rem;
+        padding: 0.75rem;
+      }
+
+      .copy-button {
+        width: 100%;
       }
     }
     `;
