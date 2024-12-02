@@ -1,36 +1,45 @@
-'use client';
+"use client"
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs";
+import Link from "next/link"
+import { usePathname } from "next/navigation"
+import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
 
 interface NavbarProps {
-  children?: React.ReactNode;
-  className?: string;
+  children?: React.ReactNode
+  className?: string
 }
 
 export function Navbar({ children, className = "" }: NavbarProps) {
-  const { isSignedIn } = useUser();
-  const pathname = usePathname();
+  const { isSignedIn } = useUser()
+  const pathname = usePathname()
 
   const isActivePath = (path: string) => {
-    return pathname === path;
-  };
+    return pathname === path
+  }
 
   const navLinks = [
-    { href: '/dashboard', label: 'Dashboard' },
-    { href: '/templates', label: 'Templates' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/docs', label: 'Docs' },
-  ];
+    { href: "/dashboard", label: "Dashboard" },
+    { href: "/templates", label: "Templates" },
+    { href: "/pricing", label: "Pricing" },
+    { href: "/docs", label: "Docs" },
+  ]
 
   return (
-    <nav className={`fixed w-full bg-white shadow-sm border-b border-zinc-200 z-50 ${className}`}>
-      <div className={`mx-auto ${pathname === '/customize' ? '' : 'max-w-7xl'} px-4 sm:px-6 lg:px-8`}>
+    <nav
+      className={`fixed w-full bg-white shadow-sm border-b border-zinc-200 z-50 ${className}`}
+    >
+      <div
+        className={`mx-auto ${
+          pathname === "/customize" ? "" : "max-w-7xl"
+        } px-4 sm:px-6 lg:px-8`}
+      >
         <div className="flex h-16 justify-between items-center">
           <div className="flex-shrink-0">
-            <Link href="/" className="text-xl font-bold text-zinc-900 hover:text-zinc-700 transition-colors">
-              MemeGen
+            <Link
+              href="/"
+              className="text-xl font-bold text-zinc-900 hover:text-zinc-700 transition-colors"
+            >
+              BUIDL
             </Link>
           </div>
           <div className="flex items-center gap-6">
@@ -42,20 +51,20 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                     href={link.href}
                     className={`text-sm font-medium transition-colors ${
                       isActivePath(link.href)
-                        ? 'text-zinc-900'
-                        : 'text-zinc-600 hover:text-zinc-900'
+                        ? "text-zinc-900"
+                        : "text-zinc-600 hover:text-zinc-900"
                     }`}
                   >
                     {link.label}
                   </Link>
                 ))}
                 {children}
-                <UserButton 
+                <UserButton
                   afterSignOutUrl="/"
                   appearance={{
                     elements: {
-                      avatarBox: "w-8 h-8"
-                    }
+                      avatarBox: "w-8 h-8",
+                    },
                   }}
                 />
               </>
@@ -64,9 +73,9 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                 <Link
                   href="/docs"
                   className={`text-sm font-medium transition-colors ${
-                    isActivePath('/docs')
-                      ? 'text-zinc-900'
-                      : 'text-zinc-600 hover:text-zinc-900'
+                    isActivePath("/docs")
+                      ? "text-zinc-900"
+                      : "text-zinc-600 hover:text-zinc-900"
                   }`}
                 >
                   Docs
@@ -87,5 +96,5 @@ export function Navbar({ children, className = "" }: NavbarProps) {
         </div>
       </div>
     </nav>
-  );
+  )
 }

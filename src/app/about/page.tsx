@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import Link from "next/link";
+import Link from "next/link"
 import {
   ArrowLeft,
   Code2,
@@ -9,19 +9,19 @@ import {
   Search,
   Shield,
   Zap,
-} from "lucide-react";
+} from "lucide-react"
 
 interface AboutSection {
-  title: string;
-  content: string;
-  subsections?: { title: string; content: string }[];
+  title: string
+  content: string
+  subsections?: { title: string; content: string }[]
 }
 
 const aboutSections: AboutSection[] = [
   {
     title: "Our Mission",
     content:
-      "MemeGen simplifies the memecoin website creation process by generating beautiful, professional website files that help projects establish credibility and trust in the Solana ecosystem.",
+      "BUIDL simplifies the memecoin website creation process by generating beautiful, professional website files that help projects establish credibility and trust in the Solana ecosystem.",
     subsections: [
       {
         title: "Vision",
@@ -36,7 +36,7 @@ const aboutSections: AboutSection[] = [
     ],
   },
   {
-    title: "Why Choose MemeGen",
+    title: "Why Choose BUIDL",
     content:
       "Our platform offers unique advantages that set us apart in the memecoin space:",
     subsections: [
@@ -57,7 +57,7 @@ const aboutSections: AboutSection[] = [
       },
     ],
   },
-];
+]
 
 export default function AboutPage() {
   return (
@@ -76,7 +76,7 @@ export default function AboutPage() {
 
         {/* Header Section */}
         <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-3xl font-bold text-zinc-900">About MemeGen</h1>
+          <h1 className="text-3xl font-bold text-zinc-900">About BUIDL</h1>
           <p className="mt-2 text-zinc-600">
             The fastest way to create your memecoin website
           </p>
@@ -90,8 +90,12 @@ export default function AboutPage() {
                 <Rocket className="w-6 h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-zinc-900">Quick Generation</h3>
-                <p className="text-sm text-zinc-600">Website files in minutes</p>
+                <h3 className="font-semibold text-zinc-900">
+                  Quick Generation
+                </h3>
+                <p className="text-sm text-zinc-600">
+                  Website files in minutes
+                </p>
               </div>
             </div>
           </div>
@@ -159,5 +163,5 @@ export default function AboutPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

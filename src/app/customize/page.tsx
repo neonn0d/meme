@@ -1,40 +1,40 @@
-"use client";
+"use client"
 
-import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { useSearchParams } from "next/navigation";
-import { BasicInfoForm } from "./components/BasicInfoForm";
-import { TokenomicsForm } from "./components/TokenomicsForm";
-import { TeamForm } from "./components/TeamForm";
-import { RoadmapForm } from "./components/RoadmapForm";
-import { FaqForm } from "./components/FaqForm";
-import { SocialLinksForm } from "./components/SocialLinksForm";
-import { SeoForm } from "./components/SeoForm";
-import { SectionsForm } from "./components/SectionsForm";
-import { CustomizationFields } from "@/types";
-import { SolanaPayment } from "@/components/SolanaPayment";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
-import { useSubscription } from "@/hooks/useSubscription";
-import { PreviewFrame } from "@/components/PreviewFrame";
-import Link from "next/link";
-import { Monitor, Smartphone } from "lucide-react";
+import { useState, useEffect, useRef } from "react"
+import { useAuth } from "@clerk/nextjs"
+import { useSearchParams } from "next/navigation"
+import { BasicInfoForm } from "./components/BasicInfoForm"
+import { TokenomicsForm } from "./components/TokenomicsForm"
+import { TeamForm } from "./components/TeamForm"
+import { RoadmapForm } from "./components/RoadmapForm"
+import { FaqForm } from "./components/FaqForm"
+import { SocialLinksForm } from "./components/SocialLinksForm"
+import { SeoForm } from "./components/SeoForm"
+import { SectionsForm } from "./components/SectionsForm"
+import { CustomizationFields } from "@/types"
+import { SolanaPayment } from "@/components/SolanaPayment"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
+import { useSubscription } from "@/hooks/useSubscription"
+import { PreviewFrame } from "@/components/PreviewFrame"
+import Link from "next/link"
+import { Monitor, Smartphone } from "lucide-react"
 
 interface RoadmapPhase {
-  title: string;
-  description: string;
-  date: string;
+  title: string
+  description: string
+  date: string
 }
 
 interface TeamMember {
-  name: string;
-  role: string;
-  avatar: string;
+  name: string
+  role: string
+  avatar: string
 }
 
 interface FaqItem {
-  question: string;
-  answer: string;
+  question: string
+  answer: string
 }
 
 const tabs = [
@@ -46,22 +46,22 @@ const tabs = [
   { id: "faq", label: "FAQ" },
   { id: "social", label: "Social Links" },
   { id: "seo", label: "SEO" },
-] as const;
+] as const
 
-type TabId = (typeof tabs)[number]["id"];
+type TabId = (typeof tabs)[number]["id"]
 
 export default function CustomizePage() {
-  const { userId } = useAuth();
-  const { isSubscribed } = useSubscription();
-  const searchParams = useSearchParams();
-  const rawTemplateId = searchParams.get("template");
-  const router = useRouter();
-  const [isMobile, setIsMobile] = useState(false);
+  const { userId } = useAuth()
+  const { isSubscribed } = useSubscription()
+  const searchParams = useSearchParams()
+  const rawTemplateId = searchParams.get("template")
+  const router = useRouter()
+  const [isMobile, setIsMobile] = useState(false)
 
   // Initialize fields with demo content
   const [fields, setFields] = useState<CustomizationFields>({
     templateId: rawTemplateId || "modern",
-    coinName: "MemeGen",
+    coinName: "BUIDL",
     sections: {
       hero: true,
       tokenomics: true,
@@ -74,13 +74,13 @@ export default function CustomizePage() {
     secondaryColor: "#EFF6FF",
     tokenSymbol: "MGEN",
     description:
-      "🚀 MemeGen - Your Ultimate Solana Meme Generator! Create, launch, and moon your own memecoin with style. Powered by Solana's lightning-fast network, we're making meme magic accessible to everyone. Build your community, launch your token, and ride the wave to the moon! 🌙",
+      "🚀 BUIDL - Your Ultimate Solana Meme Generator! Create, launch, and moon your own memecoin with style. Powered by Solana's lightning-fast network, we're making meme magic accessible to everyone. Build your community, launch your token, and ride the wave to the moon! 🌙",
     logoUrl: "https://i.imgur.com/saXHmxG.png",
     contractAddress: "FZL3hBhMZ6XgJJwF3LVkYJbcxrqSfVwdYzaLwR5hHjcQ",
     socialLinks: {
-      telegram: "https://t.me/memegen",
-      twitter: "https://twitter.com/memegen",
-      discord: "https://discord.gg/memegen",
+      telegram: "https://t.me/BUIDL",
+      twitter: "https://twitter.com/BUIDL",
+      discord: "https://discord.gg/BUIDL",
     },
     buyLink: "https://raydium.io/swap/",
     tokenomics: {
@@ -90,18 +90,19 @@ export default function CustomizePage() {
       lpLocked: "2 Years",
     },
     seo: {
-      title: "MemeGen | Ultimate Solana Meme Generator",
+      title: "BUIDL | Ultimate Solana Meme Generator",
       description:
-        "Launch your own memecoin on Solana with MemeGen! Fast, easy, and community-driven. Create your moon mission today! 🚀",
-      keywords: "solana, memecoin generator, cryptocurrency, SPL token, defi, meme token, solana token, launch platform",
-      ogImage: "https://placehold.co/1200x630/3B82F6/ffffff?text=MEMEGEN",
+        "Launch your own memecoin on Solana with BUIDL! Fast, easy, and community-driven. Create your moon mission today! 🚀",
+      keywords:
+        "solana, memecoin generator, cryptocurrency, SPL token, defi, meme token, solana token, launch platform",
+      ogImage: "https://placehold.co/1200x630/3B82F6/ffffff?text=BUIDL",
     },
     roadmap: {
       phases: [
         {
           title: "Launch Platform",
           description:
-            "Release MemeGen platform with instant token creation, customizable templates, and automatic Raydium listing capability 🚀",
+            "Release BUIDL platform with instant token creation, customizable templates, and automatic Raydium listing capability 🚀",
           date: "Q1 2024",
         },
         {
@@ -122,24 +123,27 @@ export default function CustomizePage() {
       {
         name: "Meme Lord",
         role: "Platform Architect",
-        avatar: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&facialHairType=Blank&clotheType=BlazerShirt",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&facialHairType=Blank&clotheType=BlazerShirt",
       },
       {
         name: "Degen Dev",
         role: "Smart Contract Wizard",
-        avatar: "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&facialHairType=Blank&clotheType=BlazerShirt",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&facialHairType=Blank&clotheType=BlazerShirt",
       },
       {
         name: "Ser Launch",
         role: "Community Lead",
-        avatar: "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortRound&facialHairType=BeardLight&clotheType=Hoodie",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortRound&facialHairType=BeardLight&clotheType=Hoodie",
       },
     ],
     faq: [
       {
-        question: "What is MemeGen? 🚀",
+        question: "What is BUIDL? 🚀",
         answer:
-          "MemeGen is your all-in-one platform for creating and launching memecoins on Solana. We provide everything you need to turn your meme into a moonshot - from token creation to marketing tools!",
+          "BUIDL is your all-in-one platform for creating and launching memecoins on Solana. We provide everything you need to turn your meme into a moonshot - from token creation to marketing tools!",
       },
       {
         question: "How does it work? ⚡",
@@ -152,16 +156,16 @@ export default function CustomizePage() {
           "Absolutely! All contracts are auto-generated with battle-tested code, and liquidity locking is built-in. We prioritize security while keeping the meme spirit alive!",
       },
       {
-        question: "Why choose MemeGen? 🌟",
+        question: "Why choose BUIDL? 🌟",
         answer:
           "We're the first dedicated memecoin generator on Solana, offering instant deployment, marketing tools, and community features. Plus, our platform is built for virality - perfect for your moon mission!",
       },
     ],
-  });
+  })
 
-  const [activeTab, setActiveTab] = useState<TabId>("basic");
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>("basic")
+  const [isLoading, setIsLoading] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
   const [previewData, setPreviewData] = useState<CustomizationFields>({
     templateId: searchParams?.get("template") || "modern",
     coinName: "",
@@ -197,36 +201,36 @@ export default function CustomizePage() {
       keywords: "",
       ogImage: "",
     },
-  });
+  })
 
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState(false)
 
   const handleFieldChange = (partialFields: Partial<CustomizationFields>) => {
     setFields((prev) => ({
       ...prev,
       ...partialFields,
-    }));
-    setPreviewData((prev) => ({ ...prev, ...partialFields }));
-  };
+    }))
+    setPreviewData((prev) => ({ ...prev, ...partialFields }))
+  }
 
   const handleTabChange = (tabId: TabId) => {
-    console.log("Changing tab to:", tabId);
-    setActiveTab(tabId);
-  };
+    console.log("Changing tab to:", tabId)
+    setActiveTab(tabId)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     if (isSubscribed) {
       // Skip payment for premium users
-      handlePaymentSuccess();
+      handlePaymentSuccess()
     } else {
-      setShowPaymentModal(true);
+      setShowPaymentModal(true)
     }
-  };
+  }
 
   const handlePaymentSuccess = async () => {
-    setShowPaymentModal(false);
-    setIsLoading(true);
+    setShowPaymentModal(false)
+    setIsLoading(true)
 
     try {
       const response = await fetch("/api/generate", {
@@ -238,80 +242,80 @@ export default function CustomizePage() {
           userId,
           ...fields,
         }),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error("Failed to generate website");
+        throw new Error("Failed to generate website")
       }
 
       // Get the filename from the Content-Disposition header
-      const contentDisposition = response.headers.get("Content-Disposition");
-      const filenameMatch = contentDisposition?.match(/filename="(.+)"/);
+      const contentDisposition = response.headers.get("Content-Disposition")
+      const filenameMatch = contentDisposition?.match(/filename="(.+)"/)
       const filename = filenameMatch
         ? filenameMatch[1]
-        : `${fields.coinName.toLowerCase().replace(/\s+/g, "-")}-website.zip`;
+        : `${fields.coinName.toLowerCase().replace(/\s+/g, "-")}-website.zip`
 
       // Convert the response to a blob
-      const blob = await response.blob();
+      const blob = await response.blob()
 
       // Create a URL for the blob
-      const url = window.URL.createObjectURL(blob);
+      const url = window.URL.createObjectURL(blob)
 
       // Create a temporary link element and trigger download
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = filename;
-      document.body.appendChild(link);
-      link.click();
+      const link = document.createElement("a")
+      link.href = url
+      link.download = filename
+      document.body.appendChild(link)
+      link.click()
 
       // Clean up
-      link.remove();
-      window.URL.revokeObjectURL(url);
+      link.remove()
+      window.URL.revokeObjectURL(url)
 
       // Set a flag in session storage that we just downloaded
-      sessionStorage.setItem("justDownloaded", "true");
+      sessionStorage.setItem("justDownloaded", "true")
 
-      toast.success("Website generated successfully!");
+      toast.success("Website generated successfully!")
 
       // Redirect to success page after ensuring download started
-      router.push("/success");
+      router.push("/success")
     } catch (error) {
-      console.error("Generation error:", error);
-      toast.error("Failed to generate website. Please try again.");
+      console.error("Generation error:", error)
+      toast.error("Failed to generate website. Please try again.")
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
-  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [showPaymentModal, setShowPaymentModal] = useState(false)
 
   const generatePreviewUrl = () => {
-    const params = new URLSearchParams();
-    params.set("template", fields.templateId);
-    params.set("coinName", encodeURIComponent(fields.coinName));
-    params.set("sections", encodeURIComponent(JSON.stringify(fields.sections)));
-    params.set("primaryColor", fields.primaryColor);
-    params.set("secondaryColor", fields.secondaryColor);
-    params.set("tokenSymbol", encodeURIComponent(fields.tokenSymbol));
-    params.set("description", encodeURIComponent(fields.description));
-    params.set("logoUrl", encodeURIComponent(fields.logoUrl));
-    params.set("contractAddress", encodeURIComponent(fields.contractAddress));
+    const params = new URLSearchParams()
+    params.set("template", fields.templateId)
+    params.set("coinName", encodeURIComponent(fields.coinName))
+    params.set("sections", encodeURIComponent(JSON.stringify(fields.sections)))
+    params.set("primaryColor", fields.primaryColor)
+    params.set("secondaryColor", fields.secondaryColor)
+    params.set("tokenSymbol", encodeURIComponent(fields.tokenSymbol))
+    params.set("description", encodeURIComponent(fields.description))
+    params.set("logoUrl", encodeURIComponent(fields.logoUrl))
+    params.set("contractAddress", encodeURIComponent(fields.contractAddress))
     params.set(
       "socialLinks",
-      encodeURIComponent(JSON.stringify(fields.socialLinks))
-    );
-    params.set("buyLink", encodeURIComponent(fields.buyLink));
+      encodeURIComponent(JSON.stringify(fields.socialLinks)),
+    )
+    params.set("buyLink", encodeURIComponent(fields.buyLink))
     params.set(
       "tokenomics",
-      encodeURIComponent(JSON.stringify(fields.tokenomics))
-    );
-    params.set("seo", encodeURIComponent(JSON.stringify(fields.seo)));
-    params.set("roadmap", encodeURIComponent(JSON.stringify(fields.roadmap)));
-    params.set("team", encodeURIComponent(JSON.stringify(fields.team)));
-    params.set("faq", encodeURIComponent(JSON.stringify(fields.faq)));
-    params.set("view", isMobile ? "mobile" : "desktop");
-    return `/preview?${params.toString()}`;
-  };
+      encodeURIComponent(JSON.stringify(fields.tokenomics)),
+    )
+    params.set("seo", encodeURIComponent(JSON.stringify(fields.seo)))
+    params.set("roadmap", encodeURIComponent(JSON.stringify(fields.roadmap)))
+    params.set("team", encodeURIComponent(JSON.stringify(fields.team)))
+    params.set("faq", encodeURIComponent(JSON.stringify(fields.faq)))
+    params.set("view", isMobile ? "mobile" : "desktop")
+    return `/preview?${params.toString()}`
+  }
 
   return (
     <div className=" bg-gray-50">
@@ -477,5 +481,5 @@ export default function CustomizePage() {
         </div>
       )}
     </div>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-# MemeGen - Memecoin Website Generator
+# BUIDL - Memecoin Website Generator
 
-MemeGen is a powerful, user-friendly platform that allows users to create professional memecoin websites with ease. Built with Next.js 14, TypeScript, and Solana blockchain integration, it offers a seamless experience for creating and customizing memecoin landing pages.
+BUIDL is a powerful, user-friendly platform that allows users to create professional memecoin websites with ease. Built with Next.js 14, TypeScript, and Solana blockchain integration, it offers a seamless experience for creating and customizing memecoin landing pages.
 
 ## 🚀 Features
 
@@ -61,21 +61,25 @@ NEXT_PUBLIC_PREMIUM_AMOUNT=0.001
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/memegen.git
-   cd memegen
+   git clone https://github.com/yourusername/BUIDL.git
+   cd BUIDL
    \`\`\`
 
 2. Install dependencies:
    \`\`\`bash
    npm install
+
    # or
+
    yarn install
    \`\`\`
 
 3. Run the development server:
    \`\`\`bash
    npm run dev
+
    # or
+
    yarn dev
    \`\`\`
 
@@ -107,6 +111,7 @@ NEXT_PUBLIC_PREMIUM_AMOUNT=0.001
 ## 🎨 Customization Options
 
 ### Basic Information
+
 - Project name
 - Token symbol
 - Description
@@ -114,12 +119,14 @@ NEXT_PUBLIC_PREMIUM_AMOUNT=0.001
 - Header image
 
 ### Design
+
 - Primary color
 - Secondary color
 - Accent colors
 - Font selections
 
 ### Content Sections
+
 - Team members
 - Roadmap items
 - Tokenomics
@@ -128,6 +135,7 @@ NEXT_PUBLIC_PREMIUM_AMOUNT=0.001
 ## 💰 Payment System
 
 The platform uses Solana for all payments:
+
 - One-time setup fee: 0.001 SOL
 - Premium subscription: 0.001 SOL/month
 - Template customization: 0.001 SOL
@@ -135,6 +143,7 @@ The platform uses Solana for all payments:
 ## 🔄 State Management
 
 The application uses React's Context API and hooks for state management:
+
 - User authentication state
 - Customization form state
 - Preview state
@@ -161,4 +170,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 🤝 Support
 
-For support, email support@memegen.com or join our Discord server.
+For support, email support@BUIDL.com or join our Discord server.
