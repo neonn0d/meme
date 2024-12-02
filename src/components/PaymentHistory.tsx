@@ -16,6 +16,7 @@ import {
 import { Loader2, RefreshCw, ExternalLink, ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSubscription } from '@/hooks/useSubscription';
 
 export interface PaymentHistoryRef {
   fetchPayments: () => Promise<void>;
@@ -29,6 +30,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [totalSpent, setTotalSpent] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const { subscriptionDetails } = useSubscription();
 
   const fetchPayments = useCallback(async () => {
     try {
@@ -65,43 +67,6 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
   const getExplorerUrl = (hash: string) => {
     return `https://explorer.solana.com/tx/${hash}?cluster=${process.env.NEXT_PUBLIC_SOLANA_NETWORK}`;
   };
-
-  // Map PaymentRecord[] to Payment[] for subscription calculation
-  const premiumPayments = payments
-    .filter(p => p.type === 'premium')
-    .map(p => ({
-      amount: p.amount,
-      timestamp: p.timestamp,
-      transactionHash: p.transactionHash,
-      type: 'premium_subscription' as const
-    }));
-
-  const calculateSubscriptionStatus = (payments: Payment[]) => {
-    if (payments.length === 0) {
-      return null;
-    }
-
-    const latestPayment = payments.reduce((latest, current) => 
-      current.timestamp > latest.timestamp ? current : latest
-    );
-
-    const startDate = latestPayment.timestamp;
-    const expiryDate = new Date(startDate);
-    expiryDate.setMonth(expiryDate.getMonth() + 1);
-
-    const now = new Date();
-    const isActive = now < expiryDate;
-    const daysRemaining = isActive ? Math.ceil((expiryDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : 0;
-
-    return {
-      isActive,
-      startDate,
-      expiryDate: expiryDate.getTime(),
-      daysRemaining
-    };
-  };
-
-  const subscriptionStatus = calculateSubscriptionStatus(premiumPayments);
 
   if (!user) {
     return (
@@ -167,53 +132,44 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
           {/* Subscription Status Card */}
           <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6 h-max">
             <h2 className="text-xl font-semibold mb-4">Subscription Status</h2>
-            {subscriptionStatus ? (
+            {subscriptionDetails ? (
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-600">Status</span>
                   <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    subscriptionStatus.isActive
+                    subscriptionDetails.isActive
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
                   }`}>
-                    {subscriptionStatus.isActive ? "Active" : "Expired"}
+                    {subscriptionDetails.isActive ? "Active" : "Expired"}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-600">Start Date</span>
                   <span className="font-medium">
-                    {formatDate(subscriptionStatus.startDate)}
+                    {formatDate(subscriptionDetails.startDate)}
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between">
                   <span className="text-zinc-600">Expiry Date</span>
                   <span className="font-medium">
-                    {formatDate(subscriptionStatus.expiryDate)}
+                    {formatDate(subscriptionDetails.expiryDate)}
                   </span>
                 </div>
 
-                {subscriptionStatus.isActive && (
+                {subscriptionDetails.isActive && (
                   <div className="flex items-center justify-between">
                     <span className="text-zinc-600">Days Remaining</span>
                     <span className="font-medium">
-                      {subscriptionStatus.daysRemaining} days
+                      {subscriptionDetails.daysRemaining} days
                     </span>
                   </div>
                 )}
-
-                {!subscriptionStatus.isActive && (
-                  <button
-                    className="w-full mt-4 px-4 py-2 bg-zinc-900 text-white rounded-lg hover:bg-zinc-800 transition-colors"
-                    onClick={() => router.push("/dashboard")}
-                  >
-                    Renew Subscription
-                  </button>
-                )}
               </div>
             ) : (
-              <p className="text-zinc-600">No active subscription</p>
+              <p className="text-zinc-600">No subscription found</p>
             )}
           </div>
 

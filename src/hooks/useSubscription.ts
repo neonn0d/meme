@@ -36,7 +36,8 @@ export function useSubscription() {
           amount: record.amount,
           timestamp: record.timestamp,
           transactionHash: record.transactionHash,
-          type: 'premium_subscription'
+          type: 'premium_subscription',
+          expiryDate: record.expiryDate
         }));
 
       const subscriptionStatus = calculateSubscriptionStatus(premiumPayments);

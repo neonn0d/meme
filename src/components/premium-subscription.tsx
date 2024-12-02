@@ -32,15 +32,39 @@ export default function PremiumSubscription({ onPaymentSuccess }: PremiumSubscri
   const RPC_ENDPOINT = process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT || 'https://api.devnet.solana.com';
   const PREMIUM_AMOUNT = Number(process.env.NEXT_PUBLIC_PREMIUM_AMOUNT || '0.01'); // SOL
 
+  const calculateExpiryDate = (startDate: number): number => {
+    const startDateTime = new Date(startDate);
+    const expiryDateTime = new Date(startDate);
+    expiryDateTime.setMonth(expiryDateTime.getMonth() + 1);
+    
+    // Handle edge cases where the next month has fewer days
+    const startDay = startDateTime.getDate();
+    const lastDayOfNextMonth = new Date(
+      expiryDateTime.getFullYear(),
+      expiryDateTime.getMonth() + 1,
+      0
+    ).getDate();
+    
+    // If the start day is greater than the last day of next month,
+    // set it to the last day of next month
+    if (startDay > lastDayOfNextMonth) {
+      expiryDateTime.setDate(lastDayOfNextMonth);
+    }
+    
+    return expiryDateTime.getTime();
+  };
+
   const recordPayment = async (hash: string) => {
     try {
+      const timestamp = Date.now();
       const payment: PaymentRecord = {
         amount: PREMIUM_AMOUNT,
-        timestamp: Date.now(),
+        timestamp,
         type: 'premium',
         transactionHash: hash,
         status: 'completed',
-        network: NETWORK
+        network: NETWORK,
+        expiryDate: calculateExpiryDate(timestamp)
       };
 
       const response = await fetch('/api/payments', {
