@@ -6,9 +6,9 @@ import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
 
-export const metadata = {
-  title: 'Memecoin Website Generator',
-  description: 'Create your own customized memecoin website in minutes',
+export const metadata = { 
+  title: 'BUIDL - Memecoin Website Generator',
+  description: 'Create your own customized memecoin website in minutes with BUIDL',
 }
 
 interface RootLayoutProps {

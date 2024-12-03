@@ -46,7 +46,7 @@ export default function DashboardPage() {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-full">
       <div className="max-w-7xl mx-auto px-4 sm:px-0 py-12 space-y-8">
         {/* Header Section */}
         <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">

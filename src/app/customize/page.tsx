@@ -383,7 +383,7 @@ export default function CustomizePage() {
           </div>
 
           {/* Main Content */}
-          <div className="flex min-h-[calc(100vh-12rem)]">
+          <div className="flex min-h-full">
             {/* Edit Panel */}
             <div className={`flex-1 ${showPreview ? "hidden" : "block"}`}>
               <div className="overflow-y-auto">
@@ -445,11 +445,11 @@ export default function CustomizePage() {
             </div>
             {/* Preview Panel */}
             <div
-              className={`flex-1 border-l border-gray-200 ${
+              className={`flex-1  ${
                 showPreview ? "block" : "hidden"
               }`}
             >
-              <div className="flex bg-white h-screen">
+              <div className="w-full h-full min-h-[87.5vh] transition-all duration-300">
                 <iframe
                   src={generatePreviewUrl()}
                   className={`w-full h-full border-0 transition-all duration-300 ${

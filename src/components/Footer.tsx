@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import Link from "next/link"
+import Link from "next/link";
 
 export function Footer() {
   return (
@@ -59,7 +59,20 @@ export function Footer() {
               <ul className="space-y-3">
                 <li>
                   <Link
-                    href="/blog"
+                    href="https://buidl.openstatus.dev/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
+                  >
+                    <span className="flex items-center gap-2">
+
+                      Status<span className="mt-1 w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                    </span>
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#"
                     className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
                   >
                     Blog
@@ -67,15 +80,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/about"
-                    className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
+                    href="#"
                     className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
                   >
                     Terms
@@ -83,7 +88,7 @@ export function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/privacy"
+                    href="#"
                     className="text-sm text-zinc-600 hover:text-zinc-900 transition-colors"
                   >
                     Privacy
@@ -103,7 +108,7 @@ export function Footer() {
               </div>
               <div className="mt-4 flex space-x-4 justify-end">
                 <a
-                  href="https://twitter.com"
+                  href="https://twitter.com/buidlcoin"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-zinc-600 hover:text-zinc-900 transition-colors"
@@ -118,7 +123,7 @@ export function Footer() {
                   </svg>
                 </a>
                 <a
-                  href="https://discord.com"
+                  href="https://discord.gg/UHDdNH574Y"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-zinc-600 hover:text-zinc-900 transition-colors"
@@ -133,7 +138,7 @@ export function Footer() {
                   </svg>
                 </a>
                 <a
-                  href="https://t.me"
+                  href="https://t.me/buidl_community"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-zinc-600 hover:text-zinc-900 transition-colors"
@@ -169,5 +174,5 @@ export function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }

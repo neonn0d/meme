@@ -201,7 +201,7 @@ export default function TemplatesPage() {
           </div>
 
           {/* Coming Soon Template */}
-          {/* <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
               <Clock className="w-8 h-8 text-zinc-900" />
             </div>
@@ -237,37 +237,6 @@ export default function TemplatesPage() {
               >
                 Coming Soon
               </button>
-            </div>
-          </div> */}
-        </div>
-
-        {/* Custom Development Section */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <div className="flex items-start gap-8">
-            <div className="p-4 rounded-xl bg-white shadow-sm border border-zinc-200">
-              <Code2 className="w-8 h-8 text-zinc-800" />
-            </div>
-            <div className="space-y-6 flex-1">
-              <div className="space-y-3">
-                <h2 className="text-2xl font-bold text-zinc-900">
-                  Need Custom Development?
-                </h2>
-                <p className="text-zinc-600 leading-relaxed max-w-2xl">
-                  Looking for a unique web3 solution? Our experienced team can help bring your vision to life, 
-                  whether it's a DeFi dashboard, NFT platform, or any other blockchain project.
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <a
-                  href="https://x.com/b0tstepfather"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors font-medium"
-                >
-                  Contact Developer
-                  <ExternalLink className="w-4 h-4 opacity-70" />
-                </a>
-              </div>
             </div>
           </div>
         </div>
