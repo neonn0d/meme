@@ -1,19 +1,27 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight, Rocket } from 'lucide-react';
 import { SignUpButton, useUser } from "@clerk/nextjs";
 
 export default function CTA() {
   const { isSignedIn } = useUser();
+  const { scrollYProgress } = useScroll();
+  
+  const rocketX = useTransform(scrollYProgress, [0.7, 1], ['-50%', '0%']);
 
   return (
     <div className="relative overflow-hidden bg-black">
       {/* Background Rocket */}
-      <div className="absolute right-0 top-1/2 -translate-y-1/2 -translate-x-1/4 transform opacity-5">
+      <motion.div 
+        className="absolute md:right-24 right-0 top-0 -translate-y-1/2 transform opacity-5"
+        style={{ 
+          x: rocketX
+        }}
+      >
         <Rocket className="h-96 w-96 rotate-45 text-white" />
-      </div>
+      </motion.div>
       
       <motion.div 
         className="py-24 text-center relative"
