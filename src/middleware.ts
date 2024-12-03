@@ -4,7 +4,9 @@ export default authMiddleware({
   publicRoutes: [
     "/",          // Home page
     "/sign-in",   // Sign-in page
-    "/sign-up"    // Sign-up page
+    "/sign-up",    // Sign-up page
+    "/pricing",   // Pricing page
+    "/docs",      // Docs page
   ],
   afterAuth(auth, req, evt) {
     if (!auth.userId && !auth.isPublicRoute) {
@@ -25,6 +27,7 @@ export const config = {
     "/preview",     // Protect preview
     "/templates",   // Protect templates
     "/history",     // Protect history
+    "/preview",     // Protect preview
     "/api/(.*)"     // Protect all API routes if needed
   ],
 };
