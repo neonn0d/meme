@@ -43,13 +43,13 @@ export default function Hero() {
             </motion.h1>
 
             <motion.p
-              className="mt-6 text-sm sm:text-base md:text-lg lg:text-xl xl:text-xl text-black max-w-5xl mx-auto mb-12"
+              className="mt-6 text-sm sm:text-base md:text-lg  text-gray-600 max-w-5xl mx-auto mb-12"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
             >
               Skip the boring stuff. Pick a crazy template, slap your coin’s
-              name on it, and start mooning. 🚀
+              name on it, and start mooning. 
             </motion.p>
 
             <motion.div

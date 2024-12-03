@@ -3,6 +3,7 @@
 import Hero from '@/components/Hero';
 import Features from '@/components/Features';
 import CTA from '@/components/CTA';
+import BuidlToken from "@/components/BuidlToken";
 
 export default function Home() {
   return (
@@ -11,6 +12,7 @@ export default function Home() {
         <Hero />
         <Features />
         <CTA />
+        <BuidlToken />
       </main>
     </div>
   );

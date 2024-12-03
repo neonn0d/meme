@@ -16,74 +16,35 @@ interface DocSection {
 const documentation: DocSection[] = [
   {
     title: "Getting Started",
-    content:
-      "Our platform offers two professionally designed templates to kickstart your memecoin website. Follow these steps to get started:",
+    content: "Create your memecoin website in minutes:",
     subsections: [
       {
-        title: "Choose a Template",
+        title: "Quick Start",
         content:
-          "• Modern Template: Professional landing page with token overview, tokenomics, and team sections\n• Rocket Template: Space-themed design with dynamic statistics and community features",
-      },
-      {
-        title: "Customization Process",
-        content:
-          '1. Select your preferred template\n2. Click "Customize Template"\n3. Modify content and styling\n4. Preview changes in real-time\n5. Deploy when ready',
-      },
+          '1. Browse templates\n2. Customize your content\n3. Click "Generate Website"\n4. Get your code',
+      }
     ],
   },
   {
-    title: "Template Features",
-    content:
-      "Each template comes with a comprehensive set of features designed for memecoin projects:",
+    title: "Features",
+    content: "Everything you need for your memecoin website:",
     subsections: [
       {
-        title: "Modern Template",
+        title: "Built-in Features",
         content:
-          "• Hero section with token overview\n• Tokenomics breakdown section\n• Interactive roadmap presentation\n• Team & partners showcase\n• Mobile-responsive design",
-      },
-      {
-        title: "Rocket Template",
-        content:
-          "• Dynamic token statistics display\n• Community milestones section\n• Exchange listings showcase\n• Integrated social media feeds\n• Space-themed animations",
-      },
+          "• Modern, responsive design\n• Token info & stats\n• Community sections\n• Social integration\n• Instant generation",
+      }
     ],
-  },
-  {
-    title: "Customization",
-    content: "Customize your website using our intuitive configuration system:",
-    code: `{
-  "website": {
-    "name": "Your Coin Name",
-    "symbol": "SYMBOL",
-    "description": "Your coin description",
-    "links": {
-      "telegram": "https://t.me/yourcoin",
-      "twitter": "https://twitter.com/yourcoin",
-      "chart": "https://dextools.io/...",
-      "contract": "0x..."
-    },
-    "tokenomics": {
-      "totalSupply": "1,000,000,000",
-      "taxBuy": "0%",
-      "taxSell": "0%"
-    }
-  }
-}`,
   },
   {
     title: "Best Practices",
-    content: "Follow these guidelines for the best results:",
+    content: "Tips for success:",
     subsections: [
       {
-        title: "Content Guidelines",
+        title: "Guidelines",
         content:
-          "• Keep descriptions clear and concise\n• Use professional imagery\n• Provide accurate tokenomics information\n• Include all relevant social links\n• Maintain transparency with your community",
-      },
-      {
-        title: "Technical Optimization",
-        content:
-          "• Test your website on multiple devices\n• Optimize images for fast loading\n• Verify all links are working\n• Keep contract information up to date\n• Regular content updates",
-      },
+          "• Keep content clear and professional\n• Use high-quality images\n• Update content regularly\n• Test on all devices\n• Maintain social presence",
+      }
     ],
   },
 ];
@@ -143,15 +104,6 @@ export default function DocsPage() {
               )}
             </div>
           ))}
-        </div>
-
-        {/* Contact Section */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <div className="flex items-start gap-8">
-            <div className="p-4 rounded-xl bg-white shadow-sm border border-zinc-200">
-              <Code2 className="w-8 h-8 text-zinc-800" />
-            </div>
-          </div>
         </div>
       </div>
     </div>
