@@ -110,7 +110,7 @@ export function Footer() {
               <Link href="#" className="text-xs text-zinc-500 hover:text-zinc-900">
                 Terms
               </Link>
-              <Link href="#" className="text-xs text-zinc-500 hover:text-zinc-900">
+              <Link href="/privacy" className="text-xs text-zinc-500 hover:text-zinc-900">
                 Privacy
               </Link>
             </div>
