@@ -139,7 +139,7 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
       onSuccess();
       
       // Redirect to history page
-      router.push('/history');
+      router.push('/dashboard');
     } catch (error: any) {
       console.error('Payment error:', error);
       if (error.message?.includes('insufficient funds')) {

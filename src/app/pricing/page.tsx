@@ -4,7 +4,6 @@ import { useAuth } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSubscription } from "@/hooks/useSubscription";
-import { SolanaPayment } from "@/components/SolanaPayment";
 import { PremiumSubPricing } from "@/components/PremiumSubPricing";
 
 const features = [
@@ -81,7 +80,7 @@ export default function PricingPage() {
             <p className="mt-4">
               <span className="text-2xl font-bold text-zinc-900">{premiumPrice}</span>
               <span className="text-zinc-500"> SOL</span>
-              <span className="text-zinc-500">/30 days</span>
+              <span className="text-zinc-500">/Month</span>
             </p>
             {isSubscribed ? (
               <div className="mt-4 py-2 px-4 bg-zinc-100 text-zinc-900 rounded-lg text-center text-sm">
