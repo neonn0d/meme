@@ -12,7 +12,7 @@ interface NavbarProps {
 }
 
 export function Navbar({ children, className = "" }: NavbarProps) {
-  const { isSignedIn } = useUser()
+  const { isSignedIn, isLoaded } = useUser()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -24,7 +24,6 @@ export function Navbar({ children, className = "" }: NavbarProps) {
     { href: "/dashboard", label: "Dashboard" },
     { href: "/templates", label: "Templates" },
     { href: "/pricing", label: "Pricing" },
-    { href: "/docs", label: "Docs" },
   ]
 
   return (
@@ -78,7 +77,15 @@ export function Navbar({ children, className = "" }: NavbarProps) {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center gap-6">
-            {isSignedIn ? (
+            {!isLoaded ? (
+              // Skeleton loading state
+              <>
+                <div className="h-4 w-20 bg-zinc-200 rounded animate-pulse"></div>
+                <div className="h-4 w-20 bg-zinc-200 rounded animate-pulse"></div>
+                <div className="h-4 w-20 bg-zinc-200 rounded animate-pulse"></div>
+                <div className="h-8 w-8 bg-zinc-200 rounded-full animate-pulse"></div>
+              </>
+            ) : isSignedIn ? (
               <>
                 {navLinks.map((link) => (
                   <Link
@@ -106,25 +113,17 @@ export function Navbar({ children, className = "" }: NavbarProps) {
             ) : (
               <>
                 <Link
-                  href="/docs"
-                  className={`text-sm font-medium transition-colors ${
-                    isActivePath("/docs")
-                      ? "text-zinc-900"
-                      : "text-zinc-600 hover:text-zinc-900"
-                  }`}
+                  href="/signin"
+                  className="text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
                 >
-                  Docs
+                  Sign In
                 </Link>
-                <SignInButton mode="modal">
-                  <button className="text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors">
-                    Sign In
-                  </button>
-                </SignInButton>
-                <SignUpButton mode="modal">
-                  <button className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors">
-                    Sign Up
-                  </button>
-                </SignUpButton>
+                <Link
+                  href="/signup"
+                  className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
+                >
+                  Sign Up
+                </Link>
               </>
             )}
           </div>
@@ -164,22 +163,20 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                   >
                     Docs
                   </Link>
-                  <SignInButton mode="modal">
-                    <button 
-                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Sign In
-                    </button>
-                  </SignInButton>
-                  <SignUpButton mode="modal">
-                    <button 
-                      className="block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-zinc-900 text-white hover:bg-zinc-800"
-                      onClick={() => setIsMobileMenuOpen(false)}
-                    >
-                      Sign Up
-                    </button>
-                  </SignUpButton>
+                  <Link
+                    href="/signin"
+                    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-zinc-900 text-white hover:bg-zinc-800`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
                 </>
               )}
             </div>
