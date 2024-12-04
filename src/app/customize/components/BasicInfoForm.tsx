@@ -5,12 +5,13 @@ import { FormProps } from "./types";
 import { Button } from "@/components/ui/button";
 import {
   Coins,
-  Link2,
   FileText,
   Palette,
   Globe,
   Shuffle,
   ShoppingCart,
+  CircleDollarSign,
+  BookOpenText
 } from "lucide-react";
 import { useState } from "react";
 
@@ -86,7 +87,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
       description: "Your token ticker (e.g., BUIDL, PEPE, etc.)",
       placeholder: "MEME",
       value: fields.tokenSymbol,
-      icon: Palette,
+      icon: CircleDollarSign,
       color: "from-pink-500/5 to-pink-500/10",
       iconColor: "text-pink-500/70",
     },
@@ -96,7 +97,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
       description: "A brief description of your project",
       placeholder: "The next generation community-driven memecoin",
       value: fields.description,
-      icon: FileText,
+      icon: BookOpenText,
       color: "from-blue-500/5 to-blue-500/10",
       iconColor: "text-blue-500/70",
     },
@@ -117,7 +118,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
       description: "Your token smart contract address",
       placeholder: "0x...",
       value: fields.contractAddress,
-      icon: Link2,
+      icon: FileText,
       color: "from-indigo-500/5 to-indigo-500/10",
       iconColor: "text-indigo-500/70",
     },
