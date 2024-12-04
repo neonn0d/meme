@@ -47,10 +47,10 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-full">
-      <div className="max-w-7xl mx-auto px-4 sm:px-0 py-12 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-0 py-6 sm:py-12 space-y-4 sm:space-y-8">
         {/* Header Section */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-3xl font-bold text-zinc-900">
+        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
             Welcome to Your Dashboard
           </h1>
           <p className="mt-2 text-zinc-600">
@@ -59,12 +59,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Status Overview */}
-        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold">Subscription Overview</h2>
+        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-4 sm:p-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">Subscription Overview</h2>
             {isSubscribed && (
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-700">
-                <Sparkles className="w-4 h-4 mr-1" />
+              <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold bg-gradient-to-r from-green-50 to-green-100 text-green-700 border border-green-200">
+                <Sparkles className="w-3.5 h-3.5 mr-1.5" />
                 Premium Active
               </span>
             )}
@@ -77,24 +77,24 @@ export default function DashboardPage() {
           ) : (
             <div className="space-y-6">
               {/* Status Cards */}
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-3 sm:gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {isSubscribed && subscriptionDetails ? (
                   <>
-                    <div className="p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
+                    <div className="p-4 sm:p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
                       <p className="text-sm text-zinc-600">Subscription Status</p>
                       <p className="text-lg font-medium text-green-600">
                         Premium Active
                       </p>
                     </div>
 
-                    <div className="p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
+                    <div className="p-4 sm:p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
                       <p className="text-sm text-zinc-600">Subscription Type</p>
                       <p className="text-lg font-medium text-zinc-900">
                         Monthly Plan
                       </p>
                     </div>
 
-                    <div className="p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
+                    <div className="p-4 sm:p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
                       <p className="text-sm text-zinc-600">Next Payment</p>
                       <p className="text-lg font-medium text-zinc-900">
                         {formatDate(subscriptionDetails.expiryDate)}
@@ -103,7 +103,7 @@ export default function DashboardPage() {
                   </>
                 ) : (
                   <>
-                    <div className="p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
+                    <div className="p-4 sm:p-6 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
                       <p className="text-sm text-zinc-600">
                         Subscription Status
                       </p>
@@ -113,7 +113,7 @@ export default function DashboardPage() {
                           : "Subscription Expired"}
                       </p>
                     </div>
-                    <div className="sm:col-span-2 p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
+                    <div className="sm:col-span-2 p-3 sm:p-4 bg-gradient-to-br from-zinc-50 to-zinc-100 rounded-xl border border-zinc-200">
                       {!isLoading && (
                         <PremiumSubscription
                           onPaymentSuccess={handlePaymentSuccess}
@@ -123,7 +123,7 @@ export default function DashboardPage() {
                   </>
                 )}
               </div>
-              <div className="flex items-center justify-between mt-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-4">
                 {hasPayments && (
                   <Link
                     href="/history"
@@ -144,50 +144,50 @@ export default function DashboardPage() {
         </div>
 
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Link
             href="/templates"
-            className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full"
+            className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full"
           >
             <div className="mb-4">
               <PlusCircle className="w-8 h-8 text-zinc-900" />
             </div>
-            <h2 className="text-xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Create New Website
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
               Choose from our professionally designed templates to create your
               memecoin website.
             </p>
-            <span className="self-start inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors">
+            <span className="self-start inline-flex items-center px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors">
               Browse Templates
             </span>
           </Link>
 
           <Link
             href="/docs"
-            className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full"
+            className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full"
           >
             <div className="mb-4">
               <BookOpen className="w-8 h-8 text-zinc-900" />
             </div>
-            <h2 className="text-xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Documentation
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
               Learn how to customize your website and make the most of our
               features.
             </p>
-            <span className="self-start inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors">
+            <span className="self-start inline-flex items-center px-4 sm:px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors">
               View Documentation
             </span>
           </Link>
 
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
               <Zap className="w-8 h-8 text-zinc-900" />
             </div>
-            <h2 className="text-xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Quick Start
             </h2>
             <p className="mb-4 text-zinc-600">

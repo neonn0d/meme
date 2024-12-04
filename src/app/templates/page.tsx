@@ -30,11 +30,11 @@ export default function TemplatesPage() {
         </div>
 
         {/* Header Section */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-3xl font-bold text-zinc-900">
+        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
             Choose Your Template
           </h1>
-          <p className="mt-2 text-zinc-600">
+          <p className="mt-2 text-base text-zinc-600">
             Select from our professionally designed templates to create your
             memecoin website.
           </p>
@@ -43,11 +43,11 @@ export default function TemplatesPage() {
         {/* Templates Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {/* Modern Template */}
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
-              <Star className="w-8 h-8 text-zinc-900" />
+              <Star className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Modern Template
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
@@ -83,11 +83,11 @@ export default function TemplatesPage() {
           </div>
 
           {/* Rocket Template */}
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
-              <Rocket className="w-8 h-8 text-zinc-900" />
+              <Rocket className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Rocket Template
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
@@ -123,11 +123,11 @@ export default function TemplatesPage() {
           </div>
 
           {/* Minimal Template */}
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
-              <Code2 className="w-8 h-8 text-zinc-900" />
+              <Code2 className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Minimal Template
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
@@ -162,11 +162,11 @@ export default function TemplatesPage() {
           </div>
 
           {/* Cosmic Template */}
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
-              <Sparkles className="w-8 h-8 text-zinc-900" />
+              <Sparkles className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Cosmic Template
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">
@@ -201,11 +201,11 @@ export default function TemplatesPage() {
           </div>
 
           {/* Coming Soon Template */}
-          <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
-              <Clock className="w-8 h-8 text-zinc-900" />
+              <Clock className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
             </div>
-            <h2 className="text-2xl font-bold text-zinc-900 mb-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
               Coming Soon
             </h2>
             <p className="mb-6 flex-grow text-zinc-600">

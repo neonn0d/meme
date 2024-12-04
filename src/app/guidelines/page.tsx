@@ -18,22 +18,22 @@ export default function GuidelinesPage() {
   };
 
   return (
-    <div className="min-h-screen py-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen py-8 sm:py-16 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-4xl font-bold text-center mb-4">Deployment Guidelines</h1>
-          <p className="text-center text-gray-600 mb-12">Follow these steps to deploy your website</p>
+          <h1 className="text-2xl sm:text-4xl font-bold text-center mb-3 sm:mb-4">Deployment Guidelines</h1>
+          <p className="text-center text-gray-600 mb-8 sm:mb-12">Follow these steps to deploy your website</p>
 
-          <div className="space-y-12">
+          <div className="space-y-8 sm:space-y-12">
             {/* GitHub First Step */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
-                <FiGithub className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Step 1: Upload to GitHub</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <FiGithub className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Step 1: Upload to GitHub</h2>
               </div>
               <div className="space-y-6">
                 <div className="bg-blue-50 rounded-lg p-4 text-blue-800">
@@ -94,12 +94,12 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Vercel Deployment */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
                 <img src="https://assets.vercel.com/image/upload/v1588805858/repositories/vercel/logo.png" 
                      alt="Vercel Logo" 
-                     className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Option 1: Deploy to Vercel (Recommended)</h2>
+                     className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Option 1: Deploy to Vercel (Recommended)</h2>
               </div>
               <div className="space-y-6">
                 <div className="bg-blue-50 rounded-lg p-4 text-blue-800">
@@ -128,12 +128,12 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Netlify Deployment */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
                 <img src="https://www.netlify.com/v3/img/components/logomark.png" 
                      alt="Netlify Logo" 
-                     className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Option 2: Deploy to Netlify</h2>
+                     className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Option 2: Deploy to Netlify</h2>
               </div>
               <div className="space-y-6">
                 <ol className="list-decimal pl-5 space-y-4 text-gray-600">
@@ -162,16 +162,16 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Other Hosting Options */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
-                <FiServer className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Option 3: Other Hosting Providers</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <FiServer className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Option 3: Other Hosting Providers</h2>
               </div>
               <div className="space-y-6">
                 <p className="text-gray-600">You can host your static website on any web hosting provider. Here's what you need:</p>
                 
-                <div className="space-y-4">
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="space-y-4 sm:space-y-6">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <h3 className="font-medium mb-2">Required Files</h3>
                     <ul className="list-disc pl-5 space-y-2 text-gray-600">
                       <li>index.html (Your main webpage)</li>
@@ -180,7 +180,7 @@ export default function GuidelinesPage() {
                     </ul>
                   </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <h3 className="font-medium mb-2">Popular Hosting Options</h3>
                     <ul className="list-disc pl-5 space-y-2 text-gray-600">
                       <li><a href="https://pages.cloudflare.com" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">Cloudflare Pages</a> - Free, fast, and secure</li>
@@ -190,7 +190,7 @@ export default function GuidelinesPage() {
                     </ul>
                   </div>
 
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <h3 className="font-medium mb-2">Steps for Traditional Hosting</h3>
                     <ol className="list-decimal pl-5 space-y-2 text-gray-600">
                       <li>Purchase hosting from your preferred provider</li>
@@ -205,10 +205,10 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Domain Registration and Setup */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
-                <FiGlobe className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Get Your Custom Domain</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <FiGlobe className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Get Your Custom Domain</h2>
               </div>
               <div className="space-y-6">
                 <div className="bg-blue-50 rounded-lg p-4 text-blue-800">
@@ -216,7 +216,7 @@ export default function GuidelinesPage() {
                 </div>
 
                 {/* Domain Registration */}
-                <div className="bg-gray-50 p-4 rounded-lg">
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                   <h3 className="font-medium mb-4">Step 1: Buy a Domain</h3>
                   <p className="text-gray-600 mb-4">Popular domain registrars:</p>
                   <div className="grid gap-4 md:grid-cols-2 mb-4">
@@ -245,7 +245,7 @@ export default function GuidelinesPage() {
 
                 {/* Domain Setup for Different Hosts */}
                 <div className="space-y-6">
-                  <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <h3 className="font-medium mb-4">Step 2: Connect Domain to Your Hosting</h3>
                     
                     {/* Vercel Domain Setup */}
@@ -314,44 +314,55 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Professional Setup Service */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
-                <FiStar className="h-8 w-8 mr-4" />
-                <div>
-                  <h2 className="text-2xl font-semibold">Don't want to handle the technical setup? 🛠️</h2>
-                  <p className="text-blue-600 font-medium mt-1">LIMITED TIME OFFER ⏰</p>
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-40 h-40 transform translate-x-16 -translate-y-16 bg-gradient-to-br from-purple-500/10 to-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+              <div className="relative">
+                <div className="flex flex-col gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <FiStar className="h-6 w-6 sm:h-8 sm:w-8 text-purple-600 flex-shrink-0" />
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Need help setting up? 🛠️</h2>
+                  </div>
+                  <p className="text-purple-600 font-semibold inline-flex items-center">
+                    <span className="bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full text-sm">LIMITED TIME OFFER ⏰</span>
+                  </p>
                 </div>
-              </div>
-              <p className="text-gray-600 mb-6">Let us take care of everything - from domain setup to hosting configuration. You focus on your memecoin, we'll handle the technical stuff!</p>
-              <div className="space-y-6">
-                <div className="mt-6 border border-blue-100 rounded-xl overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 text-white">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="bg-white/20 p-2 rounded-lg">
-                          <FiStar className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <div className="flex items-center space-x-2">
-                            <p className="font-medium">We'll Do It For You</p>
-                          </div>
-                          <p className="text-sm text-white/90 mt-1">Skip the technical hassle completely</p>
-                        </div>
+
+                <div className="space-y-6">
+                  <div className="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl p-4 sm:p-6 border border-purple-100">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 mb-4">
+                      <h3 className="font-semibold text-lg sm:text-xl text-gray-900">Let us handle everything for you!</h3>
+                      <div className="flex items-center sm:flex-col sm:items-end gap-2 sm:gap-1">
+                        <div className="bg-purple-600/10 px-3 py-1 rounded-full text-sm font-medium text-purple-700">Only 0.2 SOL</div>
+                        <p className="text-xs text-gray-500">Regular price 0.5 SOL</p>
                       </div>
-                      <div className="flex flex-col items-end">
-                        <div className="bg-white/20 px-3 py-1 rounded-full text-sm font-medium">Only 0.2 SOL</div>
-                        <p className="text-xs text-white/80 mt-1">Regular price 0.5 SOL</p>
+                    </div>
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-2">
+                        <FiCheck className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">Professional deployment of your website</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <FiCheck className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">Custom domain setup and configuration</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <FiCheck className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">SSL certificate installation</span>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <FiCheck className="h-5 w-5 text-purple-600 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700">24/7 technical support</span>
                       </div>
                     </div>
                   </div>
-                  
-                  <div className="p-4 bg-white">                    
+
+                  <div className="flex justify-center">
                     <Link
                       href="/setup-service"
-                      className="group flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white py-3 px-6 rounded-xl transition-all duration-200 hover:shadow-lg"
+                      className="w-full sm:w-auto px-6 py-3 text-base font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors shadow-sm inline-flex items-center justify-center gap-2"
                     >
-                      <span className="font-medium">Let's Handle This For You</span>
-                      <FiArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
+                      Get Started Now
+                      <FiArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
                 </div>
@@ -359,10 +370,10 @@ export default function GuidelinesPage() {
             </div>
 
             {/* Help Section */}
-            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-8">
-              <div className="flex items-center mb-6">
-                <FiExternalLink className="h-8 w-8 mr-4" />
-                <h2 className="text-2xl font-semibold">Need More Help?</h2>
+            <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-5 sm:p-8">
+              <div className="flex items-center mb-4 sm:mb-6">
+                <FiExternalLink className="h-6 w-6 sm:h-8 sm:w-8 mr-3 sm:mr-4" />
+                <h2 className="text-xl sm:text-2xl font-semibold">Need More Help?</h2>
               </div>
               <div className="space-y-4">
                 <p className="text-gray-600">Check out these resources for detailed deployment guides:</p>
