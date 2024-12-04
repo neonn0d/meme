@@ -325,8 +325,8 @@ export default function CustomizePage() {
                   onClick={() => setShowPreview(false)}
                   className={`px-4 py-2 font-medium rounded-lg transition-colors ${
                     !showPreview
-                      ? "bg-black text-white"
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                   }`}
                 >
                   Edit
@@ -335,8 +335,8 @@ export default function CustomizePage() {
                   onClick={() => setShowPreview(true)}
                   className={`px-4 py-2 font-medium rounded-lg transition-colors ${
                     showPreview
-                      ? "bg-black text-white"
-                      : "text-gray-600 hover:bg-gray-100"
+                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                   }`}
                 >
                   Preview
@@ -349,8 +349,8 @@ export default function CustomizePage() {
                       onClick={() => setIsMobile(false)}
                       className={`p-2 rounded text-sm font-medium ${
                         !isMobile
-                          ? "bg-black text-white"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                       }`}
                     >
                       <Monitor className="w-4 h-4" />
@@ -359,8 +359,8 @@ export default function CustomizePage() {
                       onClick={() => setIsMobile(true)}
                       className={`p-2 rounded text-sm font-medium ${
                         isMobile
-                          ? "bg-black text-white"
-                          : "bg-gray-100 text-gray-700"
+                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                       }`}
                     >
                       <Smartphone className="w-4 h-4" />
@@ -391,8 +391,8 @@ export default function CustomizePage() {
                         onClick={() => handleTabChange(tab.id)}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           activeTab === tab.id
-                            ? "bg-black/10 text-primary"
-                            : "text-gray-600 hover:bg-gray-100"
+                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                         }`}
                       >
                         {tab.label}
