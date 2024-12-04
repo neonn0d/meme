@@ -83,7 +83,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
     {
       key: "tokenSymbol",
       label: "Token Symbol",
-      description: "Your token ticker (e.g., BTC, ETH)",
+      description: "Your token ticker (e.g., BUIDL, PEPE, etc.)",
       placeholder: "MEME",
       value: fields.tokenSymbol,
       icon: Palette,

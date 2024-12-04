@@ -43,7 +43,7 @@ export default function BuidlToken() {
   return (
     <section className="py-24 bg-zinc-50">
       <motion.div 
-        className="max-w-7xl mx-auto px-4 sm:px-6"
+        className="max-w-7xl mx-auto px-4 sm:px-8"
         variants={container}
         initial="hidden"
         whileInView="show"

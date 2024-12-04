@@ -90,9 +90,9 @@ export default function CustomizePage() {
       lpLocked: "2 Years",
     },
     seo: {
-      title: "BUIDL | Ultimate Solana Meme Generator",
+      title: "BUIDL | Ultimate Memecoin Website Generator",
       description:
-        "Launch your own memecoin on Solana with BUIDL! Fast, easy, and community-driven. Create your moon mission today! 🚀",
+        "Easily create your memecoin website with BUIDL! Fast, customizable, and perfect for building your community. Start your journey to the moon today! 🚀",
       keywords:
         "solana, memecoin generator, cryptocurrency, SPL token, defi, meme token, solana token, launch platform",
       ogImage: "https://placehold.co/1200x630/3B82F6/ffffff?text=BUIDL",
@@ -324,7 +324,7 @@ export default function CustomizePage() {
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header with Tabs */}
           <div className="border-b border-gray-200">
-            <div className="flex justify-between items-center px-6 py-4">
+            <div className="flex justify-between items-center px-8 py-4">
               <div className="space-x-4">
                 <button
                   onClick={() => setShowPreview(false)}
@@ -388,7 +388,7 @@ export default function CustomizePage() {
             {/* Edit Panel */}
             <div className={`flex-1 ${showPreview ? "hidden" : "block"}`}>
               <div className="overflow-y-auto">
-                <div className="p-4">
+                <div className="py-4 px-8">
                   <div className="flex space-x-2 mb-6">
                     {tabs.map((tab) => (
                       <button
