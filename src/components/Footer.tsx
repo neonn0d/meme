@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -17,9 +18,14 @@ export function Footer() {
           <div className="md:col-span-5 order-1 space-y-4">
             <h3 className="text-xl font-bold text-zinc-900">BUIDL</h3>
             <p className="text-sm leading-relaxed text-zinc-600 max-w-md">
-              The fastest way to launch your memecoin website. Built with modern
-              tech stack and Solana blockchain integration.
+            Generate professional memecoin websites quickly and effortlessly.
+           <br/>
+            Join thousands of creators building the future of memecoins.
             </p>
+            <div className="inline-flex items-center rounded-lg bg-zinc-100 px-3 py-1.5 text-sm font-medium text-zinc-800">
+              Powered by
+              <Image src="/solana.svg" alt="Solana Logo" width={15} height={15} className="ml-1.5" />
+            </div>
           </div>
 
           {/* Navigation */}
