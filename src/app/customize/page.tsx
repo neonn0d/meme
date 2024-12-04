@@ -18,7 +18,7 @@ import toast from "react-hot-toast";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PreviewFrame } from "@/components/PreviewFrame";
 import Link from "next/link";
-import { Monitor, Smartphone } from "lucide-react";
+import { Monitor, Smartphone, ChevronDown } from "lucide-react";
 
 interface RoadmapPhase {
   title: string;
@@ -200,6 +200,7 @@ export default function CustomizePage() {
   });
 
   const [showPreview, setShowPreview] = useState(false);
+  const [showTabsMenu, setShowTabsMenu] = useState(false);
 
   const handleFieldChange = (partialFields: Partial<CustomizationFields>) => {
     setFields((prev) => ({
@@ -319,32 +320,60 @@ export default function CustomizePage() {
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
           {/* Header with Tabs */}
           <div className="border-b border-gray-200">
-            <div className="flex justify-between items-center px-8 py-4">
-              <div className="space-x-4">
-                <button
-                  onClick={() => setShowPreview(false)}
-                  className={`px-4 py-2 font-medium rounded-lg transition-colors ${
-                    !showPreview
-                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                  }`}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => setShowPreview(true)}
-                  className={`px-4 py-2 font-medium rounded-lg transition-colors ${
-                    showPreview
-                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                  }`}
-                >
-                  Preview
-                </button>
+            <div className="flex flex-col md:flex-row md:items-center px-4 md:px-8 py-4 space-y-4 md:space-y-0 md:justify-between">
+              <div className="flex items-center justify-between md:justify-start">
+                <div className="flex space-x-2">
+                  <button
+                    onClick={() => setShowPreview(false)}
+                    className={`px-4 py-2 text-sm md:text-base font-medium rounded-lg transition-colors ${
+                      !showPreview
+                        ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                        : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                    }`}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setShowPreview(true)}
+                    className={`px-4 py-2 text-sm md:text-base font-medium rounded-lg transition-colors ${
+                      showPreview
+                        ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                        : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                    }`}
+                  >
+                    Preview
+                  </button>
+                </div>
+                {/* Show preview controls on mobile when preview is active */}
+                {showPreview && (
+                  <div className="flex md:hidden items-center gap-2">
+                    <button
+                      onClick={() => setIsMobile(false)}
+                      className={`p-2 rounded text-sm font-medium ${
+                        !isMobile
+                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                      }`}
+                    >
+                      <Monitor className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => setIsMobile(true)}
+                      className={`p-2 rounded text-sm font-medium ${
+                        isMobile
+                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                      }`}
+                    >
+                      <Smartphone className="w-4 h-4" />
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="flex items-center gap-4">
+                {/* Show preview controls on desktop when preview is active */}
                 {showPreview && (
-                  <div className="flex items-center gap-2 mr-4">
+                  <div className="hidden md:flex items-center gap-2">
                     <button
                       onClick={() => setIsMobile(false)}
                       className={`p-2 rounded text-sm font-medium ${
@@ -370,7 +399,7 @@ export default function CustomizePage() {
                 <button
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className="px-6 py-2 bg-black text-white font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
+                  className="w-full md:w-auto px-6 py-2 bg-black text-white text-sm md:text-base font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
                 >
                   {isLoading ? "Generating..." : "Generate Website"}
                 </button>
@@ -383,22 +412,62 @@ export default function CustomizePage() {
             {/* Edit Panel */}
             <div className={`flex-1 ${showPreview ? "hidden" : "block"}`}>
               <div className="overflow-y-auto">
-                <div className="py-4 px-8">
-                  <div className="flex space-x-2 mb-6">
+                <div className="py-4 px-4 md:px-8">
+                  {/* Mobile Tabs Dropdown */}
+                  <div className="md:hidden mb-6">
+                    <button
+                      onClick={() => setShowTabsMenu(!showTabsMenu)}
+                      className="w-full flex items-center justify-between px-4 py-2 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                    >
+                      <span>
+                        {tabs.find((tab) => tab.id === activeTab)?.label ||
+                          "Select Section"}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 transition-transform ${
+                          showTabsMenu ? "transform rotate-180" : ""
+                        }`}
+                      />
+                    </button>
+                    {showTabsMenu && (
+                      <div className="absolute z-10 mt-2 w-[calc(100%-4rem)] bg-white rounded-lg shadow-lg border border-gray-200">
+                        {tabs.map((tab) => (
+                          <button
+                            key={tab.id}
+                            onClick={() => {
+                              handleTabChange(tab.id);
+                              setShowTabsMenu(false);
+                            }}
+                            className={`w-full text-left px-4 py-3 font-medium transition-colors ${
+                              activeTab === tab.id
+                                ? "bg-gray-100 text-black"
+                                : "text-gray-600 hover:bg-gray-50"
+                            }`}
+                          >
+                            {tab.label}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Desktop Tabs */}
+                  <div className="hidden md:flex space-x-2 mb-6">
                     {tabs.map((tab) => (
                       <button
                         key={tab.id}
                         onClick={() => handleTabChange(tab.id)}
                         className={`px-4 py-2 rounded-lg font-medium transition-colors ${
                           activeTab === tab.id
-                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                            ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                            : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
                         }`}
                       >
                         {tab.label}
                       </button>
                     ))}
                   </div>
+
                   {/* Form Content */}
                   {activeTab === "basic" && (
                     <BasicInfoForm

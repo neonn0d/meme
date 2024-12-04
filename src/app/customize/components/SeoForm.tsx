@@ -40,7 +40,7 @@ export function SeoForm({ fields, onChange }: SeoFormProps) {
   return (
     <div className="space-y-4">
       {/* Title and Description Row */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Title */}
         <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
           <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 border-b">
@@ -99,7 +99,7 @@ export function SeoForm({ fields, onChange }: SeoFormProps) {
       </div>
 
       {/* Keywords and Social Image Row */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Keywords */}
         <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
           <div className="p-3 bg-gradient-to-br from-primary/5 to-primary/10 border-b">
