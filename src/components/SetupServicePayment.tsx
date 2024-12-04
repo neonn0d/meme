@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import SetupSuccess from './SetupSuccess';
 
 const MERCHANT_WALLET = new PublicKey(process.env.NEXT_PUBLIC_MERCHANT_WALLET!);
 const NETWORK = 'mainnet-beta';
@@ -21,6 +22,7 @@ interface SetupServicePaymentProps {
 export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentProps) {
   const { publicKey, sendTransaction } = useWallet();
   const [loading, setLoading] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
 
   const handlePayment = async () => {
@@ -55,7 +57,7 @@ export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentP
       }
 
       toast.success('Payment successful! We will contact you shortly.');
-      router.push('/setup-success');
+      setShowSuccess(true);
     } catch (error) {
       console.error('Payment error:', error);
       toast.error('Payment failed. Please try again.');
@@ -64,8 +66,12 @@ export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentP
     }
   };
 
+  if (showSuccess) {
+    return <SetupSuccess onClose={onClose} />;
+  }
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-40">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-30">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
