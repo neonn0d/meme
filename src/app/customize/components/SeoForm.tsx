@@ -17,10 +17,12 @@ export function SeoForm({ fields, onChange }: SeoFormProps) {
     if (!fields.seo.title && !fields.seo.description && !fields.seo.keywords && !fields.seo.ogImage) {
       onChange({
         seo: {
-          title: "Your Memecoin Name - The Next Big Thing in Crypto",
-          description: "Join the revolution with our community-driven memecoin project. Featuring innovative tokenomics and a vibrant ecosystem.",
-          keywords: "memecoin, crypto, blockchain, community, token",
-          ogImage: "https://your-domain.com/social-preview.jpg"
+          title: "BUIDL | Ultimate Memecoin Website Generator",
+          description:
+            "Easily create your memecoin website with BUIDL! Fast, customizable, and perfect for building your community. Start your journey to the moon today! 🚀",
+          keywords:
+            "memecoin website generator, customizable templates, crypto projects, cryptocurrency websites, blockchain templates, crypto community builder, tokenomics design, web3 tools, launchpad websites, crypto marketing tools, responsive crypto templates, degen tools, blockchain website creator, memecoin branding, crypto project showcase, Ethereum, Polygon, Solana websites, crypto growth platform, viral crypto campaigns",
+          ogImage: "https://placehold.co/1200x630/ffffff/000000?text=BUIDL",
         }
       });
     }

@@ -46,7 +46,7 @@ export function TokenomicsForm({ fields, onChange }: TokenomicsFormProps) {
       label: 'LP Lock',
       emoji: '🔒',
       value: '50',
-      suffix: '%'
+      suffix: ''
     }
   ];
 
@@ -70,7 +70,7 @@ export function TokenomicsForm({ fields, onChange }: TokenomicsFormProps) {
   }, []);
 
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 xl:grid-cols-4 gap-4">
       {tokenomicsFields.map((field) => (
         <div
           key={field.key}

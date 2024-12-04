@@ -136,7 +136,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
 
   return (
     <div className="flex flex-col h-full space-y-6 pb-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 flex-1">
         {formFields.map((field) => (
           <div
             key={field.key}

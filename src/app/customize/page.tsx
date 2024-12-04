@@ -70,7 +70,7 @@ export default function CustomizePage() {
       community: true,
     },
     primaryColor: "#3B82F6",
-    secondaryColor: "#EFF6FF",
+    secondaryColor: "#c0bfbc",
     coinName: "BUIDL Token",
     tokenSymbol: "BUIDL",
     description:
@@ -94,8 +94,8 @@ export default function CustomizePage() {
       description:
         "Easily create your memecoin website with BUIDL! Fast, customizable, and perfect for building your community. Start your journey to the moon today! 🚀",
       keywords:
-        "solana, memecoin generator, cryptocurrency, SPL token, defi, meme token, solana token, launch platform",
-      ogImage: "https://placehold.co/1200x630/3B82F6/ffffff?text=BUIDL",
+        "memecoin website generator, customizable templates, crypto projects, cryptocurrency websites, blockchain templates, crypto community builder, tokenomics design, web3 tools, launchpad websites, crypto marketing tools, responsive crypto templates, degen tools, blockchain website creator, memecoin branding, crypto project showcase, Ethereum, Polygon, Solana websites, crypto growth platform, viral crypto campaigns",
+      ogImage: "https://placehold.co/1200x630/ffffff/000000?text=BUIDL",
     },
     roadmap: {
       phases: [
@@ -150,11 +150,6 @@ export default function CustomizePage() {
         question: "How does it work? ⚡",
         answer:
           "Pick a template, add your coin’s story (and a touch of meme magic), and hit generate. Your site’s ready to download and take to the moon in minutes.",
-      },
-      {
-        question: "Is it safe? 🔒",
-        answer:
-          "You bet, fren. We don’t keep your data or host anything. What you see is what you get, and the rest is up to you. Full control, no funny business.",
       },
       {
         question: "Why BUIDL? 🌟",
