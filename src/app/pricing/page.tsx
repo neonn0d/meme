@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSubscription } from "@/hooks/useSubscription";
 import { SolanaPayment } from "@/components/SolanaPayment";
+import { PremiumSubPricing } from "@/components/PremiumSubPricing";
 
 const features = [
   {
@@ -118,7 +119,7 @@ export default function PricingPage() {
         </div>
 
         {showPaymentModal && (
-          <SolanaPayment
+          <PremiumSubPricing
             onSuccess={handlePaymentSuccess}
             onClose={() => setShowPaymentModal(false)}
           />
