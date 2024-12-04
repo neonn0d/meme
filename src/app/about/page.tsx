@@ -62,98 +62,98 @@ const aboutSections: AboutSection[] = [
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-zinc-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
         {/* Back Button */}
         <div className="flex items-center space-x-4 mb-4">
           <Link
             href="/dashboard"
-            className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
+            className="inline-flex items-center px-3 sm:px-4 py-2 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-4 h-4 mr-1 sm:mr-2" />
             Back to Dashboard
           </Link>
         </div>
 
         {/* Header Section */}
-        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-3xl font-bold text-zinc-900">About BUIDL</h1>
-          <p className="mt-2 text-zinc-600">
+        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
+          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">About BUIDL</h1>
+          <p className="mt-2 text-sm sm:text-base text-zinc-600">
             The fastest way to create your memecoin website
           </p>
         </div>
 
         {/* Key Features Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-blue-50 rounded-lg">
-                <Rocket className="w-6 h-6 text-blue-600" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-zinc-200">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-blue-50 rounded-lg">
+                <Rocket className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-zinc-900">
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900">
                   Quick Generation
                 </h3>
-                <p className="text-sm text-zinc-600">
+                <p className="text-xs sm:text-sm text-zinc-600">
                   Website files in minutes
                 </p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-green-50 rounded-lg">
-                <Shield className="w-6 h-6 text-green-600" />
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-zinc-200">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-green-50 rounded-lg">
+                <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-green-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-zinc-900">No Code Needed</h3>
-                <p className="text-sm text-zinc-600">Simple customization</p>
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900">No Code Needed</h3>
+                <p className="text-xs sm:text-sm text-zinc-600">Simple customization</p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-purple-50 rounded-lg">
-                <Zap className="w-6 h-6 text-purple-600" />
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-zinc-200">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-purple-50 rounded-lg">
+                <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-zinc-900">Memecoin Ready</h3>
-                <p className="text-sm text-zinc-600">Built for your token</p>
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900">Memecoin Ready</h3>
+                <p className="text-xs sm:text-sm text-zinc-600">Built for your token</p>
               </div>
             </div>
           </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-zinc-200">
-            <div className="flex items-center space-x-4">
-              <div className="p-3 bg-yellow-50 rounded-lg">
-                <Search className="w-6 h-6 text-yellow-600" />
+          <div className="bg-white p-4 sm:p-6 rounded-xl shadow-sm border border-zinc-200">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className="p-2 sm:p-3 bg-yellow-50 rounded-lg">
+                <Search className="w-5 h-5 sm:w-6 sm:h-6 text-yellow-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-zinc-900">SEO Optimized</h3>
-                <p className="text-sm text-zinc-600">Built for visibility</p>
+                <h3 className="font-semibold text-sm sm:text-base text-zinc-900">SEO Optimized</h3>
+                <p className="text-xs sm:text-sm text-zinc-600">Built for visibility</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* About Sections */}
-        <div className="space-y-8">
+        <div className="space-y-6 sm:space-y-8">
           {aboutSections.map((section, index) => (
             <div
               key={index}
-              className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200"
+              className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200"
             >
-              <h2 className="text-2xl font-bold text-zinc-900 mb-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-3 sm:mb-4">
                 {section.title}
               </h2>
-              <p className="text-zinc-600 whitespace-pre-line mb-6">
+              <p className="text-sm sm:text-base text-zinc-600 whitespace-pre-line mb-4 sm:mb-6">
                 {section.content}
               </p>
 
               {section.subsections?.map((subsection, subIndex) => (
-                <div key={subIndex} className="mb-6 last:mb-0">
-                  <h3 className="text-lg font-semibold text-zinc-900 mb-2">
+                <div key={subIndex} className="mb-4 sm:mb-6 last:mb-0">
+                  <h3 className="text-base sm:text-lg font-semibold text-zinc-900 mb-2">
                     {subsection.title}
                   </h3>
-                  <p className="text-zinc-600 whitespace-pre-line">
+                  <p className="text-sm sm:text-base text-zinc-600 whitespace-pre-line">
                     {subsection.content}
                   </p>
                 </div>
