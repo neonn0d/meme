@@ -29,9 +29,9 @@ export function Navbar({ children, className = "" }: NavbarProps) {
       className={`fixed w-full bg-white shadow-sm border-b border-zinc-200 z-50 ${className}`}
     >
       <div
-        className={`mx-auto ${
-          pathname === "/customize" ? "" : "max-w-7xl"
-        } px-4 sm:px-6 lg:px-8`}
+        className={`mx-auto transition-[max-width] duration-200  ${
+          pathname === "/customize" ? "max-w-full" : "max-w-7xl"
+        } px-4 sm:px-8 lg:px-8`}
       >
         <div className="flex h-16 justify-between items-center">
           <div className="flex-shrink-0">
