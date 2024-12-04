@@ -113,13 +113,13 @@ export function Navbar({ children, className = "" }: NavbarProps) {
             ) : (
               <>
                 <Link
-                  href="/signin"
+                  href="/sign-in"
                   className="text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
-                  href="/signup"
+                  href="/sign-up"
                   className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
                 >
                   Sign Up
@@ -164,14 +164,14 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                     Docs
                   </Link>
                   <Link
-                    href="/signin"
+                    href="/sign-in"
                     className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Sign In
                   </Link>
                   <Link
-                    href="/signup"
+                    href="/sign-up"
                     className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-zinc-900 text-white hover:bg-zinc-800`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
