@@ -78,9 +78,9 @@ export default function CustomizePage() {
     logoUrl: "https://i.imgur.com/saXHmxG.png",
     contractAddress: "FZL3hBhMZ6XgJJwF3LVkYJbcxrqSfVwdYzaLwR5hHjcQ",
     socialLinks: {
-      telegram: "https://t.me/BUIDL",
-      twitter: "https://twitter.com/BUIDL",
-      discord: "https://discord.gg/BUIDL",
+      telegram: "https://t.me/buidl_community",
+      twitter: "https://x.com/buidlcoin",
+      discord: "https://discord.gg/UHDdNH574Y",
     },
     buyLink: "https://raydium.io/swap/",
     tokenomics: {
