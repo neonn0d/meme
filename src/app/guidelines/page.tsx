@@ -5,10 +5,13 @@ import { FiGlobe, FiGithub, FiExternalLink, FiChevronDown, FiServer, FiStar, FiC
 import { FaTelegram, FaTwitter, FaDiscord } from 'react-icons/fa';
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { SetupServicePayment } from '@/components/SetupServicePayment';
 
 export default function GuidelinesPage() {
   const [openDropdowns, setOpenDropdowns] = useState<{ [key: string]: boolean }>({});
   const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const router = useRouter();
 
   const toggleDropdown = (id: string) => {
     setOpenDropdowns(prev => ({
@@ -357,13 +360,13 @@ export default function GuidelinesPage() {
                   </div>
 
                   <div className="flex justify-center">
-                    <Link
-                      href="/setup-service"
+                    <button
+                      onClick={() => setShowPaymentModal(true)}
                       className="w-full sm:w-auto px-6 py-3 text-base font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors shadow-sm inline-flex items-center justify-center gap-2"
                     >
                       Get Started Now
                       <FiArrowRight className="h-4 w-4" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -406,6 +409,17 @@ export default function GuidelinesPage() {
                 </div>
               </div>
             </div>
+
+            {/* Payment Modal */}
+            {showPaymentModal && (
+              <SetupServicePayment
+                onClose={() => setShowPaymentModal(false)}
+                onSuccess={() => {
+                  setShowPaymentModal(false);
+                  router.push('/setup-success');
+                }}
+              />
+            )}
           </div>
         </motion.div>
       </div>
