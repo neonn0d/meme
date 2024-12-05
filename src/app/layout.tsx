@@ -2,6 +2,7 @@ import React from 'react'
 import { ClerkProvider } from '@clerk/nextjs'
 import { Inter } from 'next/font/google'
 import { ClientLayout } from '@/components/ClientLayout'
+import { Analytics } from "@vercel/analytics/react"
 import './globals.css'
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body className={inter.className}>
           <ClientLayout>
             {children}
+            <Analytics />
           </ClientLayout>
         </body>
       </html>

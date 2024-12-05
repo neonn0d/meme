@@ -25,6 +25,7 @@
     "@solana/wallet-adapter-react-ui": "^0.9.35",
     "@solana/web3.js": "^1.90.0",
     "@types/canvas-confetti": "^1.6.4",
+    "@vercel/analytics": "^1.4.1",
     "archiver": "^7.0.1",
     "canvas-confetti": "^1.9.3",
     "class-variance-authority": "^0.7.0",
