@@ -10,8 +10,40 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "BUIDL - Memecoin Website Generator",
-  description:
-    "Create your own customized memecoin website in minutes with BUIDL",
+  description: "Create your own customized memecoin website in minutes with BUIDL",
+  keywords: ["memecoin", "cryptocurrency", "website generator", "crypto", "blockchain", "web3"],
+  openGraph: {
+    title: "BUIDL - Memecoin Website Generator",
+    description: "Create your own customized memecoin website in minutes with BUIDL",
+    type: "website",
+    locale: "en_US",
+    siteName: "BUIDL",
+    images: [
+      {
+        url: "/og-image.png", 
+        width: 1200,
+        height: 630,
+        alt: "BUIDL - Memecoin Website Generator",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "BUIDL - Memecoin Website Generator",
+    description: "Create your own customized memecoin website in minutes with BUIDL",
+    images: ["/og-image.png"], 
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 interface RootLayoutProps {
