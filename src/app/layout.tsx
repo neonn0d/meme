@@ -11,12 +11,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata = {
   title: "BUIDL - Memecoin Website Generator",
   description: "Create your own customized memecoin website in minutes with BUIDL",
-  keywords: ["memecoin", "cryptocurrency", "website generator", "crypto", "blockchain", "web3"],
   openGraph: {
+    url: "https://www.buidl.co.in",
     title: "BUIDL - Memecoin Website Generator",
     description: "Create your own customized memecoin website in minutes with BUIDL",
     type: "website",
-    locale: "en_US",
     siteName: "BUIDL",
     images: [
       {
@@ -29,6 +28,8 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
+    domain: "buidl.co.in",
+    url: "https://www.buidl.co.in",
     title: "BUIDL - Memecoin Website Generator",
     description: "Create your own customized memecoin website in minutes with BUIDL",
     images: ["https://www.buidl.co.in/og-image.png"],
