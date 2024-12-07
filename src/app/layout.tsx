@@ -20,7 +20,7 @@ export const metadata = {
     siteName: "BUIDL",
     images: [
       {
-        url: "/og-image.png", 
+        url: "https://www.buidl.co.in/og-image.png",
         width: 1200,
         height: 630,
         alt: "BUIDL - Memecoin Website Generator",
@@ -31,7 +31,7 @@ export const metadata = {
     card: "summary_large_image",
     title: "BUIDL - Memecoin Website Generator",
     description: "Create your own customized memecoin website in minutes with BUIDL",
-    images: ["/og-image.png"], 
+    images: ["https://www.buidl.co.in/og-image.png"],
   },
   robots: {
     index: true,
