@@ -57,7 +57,6 @@ export default function DashboardPage() {
             Create and manage your memecoin websites with our easy-to-use tools.
           </p>
         </div>
-
         {/* Status Overview */}
         <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-4 sm:p-6">
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-4 sm:mb-6">

@@ -176,7 +176,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
           {/* Payment History Card */}
           <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Recent Payments</h2>
+              <h2 className="text-xl font-semibold">Premium Payments</h2>
               <button
                 onClick={fetchPayments}
                 disabled={refreshing}
@@ -187,10 +187,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
               </button>
             </div>
 
-            <div className="mb-4 p-3 bg-zinc-50 rounded-lg">
-              <span className="text-zinc-600">Total Spent:</span>{" "}
-              <span className="font-medium">{totalSpent} SOL</span>
-            </div>
+
 
             <div className="space-y-4">
               {payments.length > 0 ? (
