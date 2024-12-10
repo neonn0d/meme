@@ -5,6 +5,7 @@ import Features from '@/components/Features';
 import CTA from '@/components/CTA';
 import BuidlToken from "@/components/BuidlToken";
 import FAQ from '@/components/FAQ';
+import Partners from "@/components/Partners";
 
 export default function Home() {
   return (
@@ -12,8 +13,9 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
-        <FAQ />
         <BuidlToken />
+        <FAQ />
+        <Partners />
         <CTA />
       </main>
     </div>
