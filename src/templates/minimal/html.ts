@@ -137,6 +137,7 @@ export const generateMinimalHTML = (data: PreviewData): string => {
     <!-- Hero -->
     <section class="hero">
         <div class="container">
+            <img src="${logoUrl}" class="hero-logo" alt="${coinName} logo">
             <h1>${coinName}</h1>
             <p class="hero-description">${description}</p>
             <div class="hero-actions">

@@ -1,7 +1,7 @@
-import { PreviewData } from '@/types';
+import { PreviewData } from "@/types";
 
 export const generateMinimalCSS = (_data: PreviewData): string => {
-    return `
+  return `
 /* Reset & Base Styles */
 *, *::before, *::after {
     margin: 0;
@@ -230,6 +230,12 @@ a {
         margin-bottom: var(--spacing-xl);
     }
 }
+.hero-logo {
+    max-height: 350px;
+    width: auto;
+    margin-bottom: var(--spacing-2xl);
+    filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.1));
+}
 
 .hero h1 {
     font-size: var(--font-size-4xl);
@@ -277,10 +283,11 @@ a {
 .button.secondary {
     background-color: var(--color-secondary);
     color: var(--color-text);
+    border: 1px solid var(--color-border);
 }
 
 .button.secondary:hover {
-    background-color: var(--color-hover);
+    opacity: 0.9;
 }
 
 /* Contract Address */
@@ -293,7 +300,7 @@ a {
     padding: var(--spacing-base);
     background-color: var(--color-secondary);
     font-size: var(--font-size-sm);
-    max-width: 700px;
+    max-width: 500px;
     margin: var(--spacing-xl) auto;
     border-radius: var(--border-radius-lg);
 }
@@ -310,7 +317,7 @@ a {
     color: var(--color-text);
     font-size: var(--font-size-sm);
     background: var(--color-background);
-    padding: var(--spacing-sm) var(--spacing-lg);
+    padding: var(--spacing-sm);
     border-radius: var(--border-radius-base);
     text-align: center;
     flex: 1;

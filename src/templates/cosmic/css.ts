@@ -121,6 +121,12 @@ export const generateCosmicCSS = (data: any): string => {
       z-index: -1;
     }
 
+    .hero-logo {
+      max-height: 360px;
+      width: auto;
+   
+    }
+
     .hero h1 {
       font-size: 4rem;
       margin-bottom: 1.5rem;
@@ -316,7 +322,8 @@ export const generateCosmicCSS = (data: any): string => {
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 1rem;
       margin: 2rem auto;
-      max-width: 800px;
+      width: auto;
+      max-width: 500px;
     }
 
     .contract-address span {

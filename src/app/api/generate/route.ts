@@ -3,6 +3,7 @@ import { generateModernTemplate } from "@/templates/modern/template";
 import { generateRocketTemplate } from "@/templates/rocket/template";
 import { generateCosmicTemplate } from "@/templates/cosmic/template";
 import { generateMinimalTemplate } from "@/templates/minimal/template";
+import { generatePepeTemplate } from "@/templates/pepe/template";
 import { GenerateRequestBody, GeneratedTemplate, PreviewData } from "@/types";
 import JSZip from 'jszip';
 
@@ -28,6 +29,7 @@ export async function POST(request: NextRequest) {
     const mappedTemplateId = templateId === 'modern' ? 'modern-doge-v2' :
                             templateId === 'rocket' ? 'moon-rocket-v2' :
                             templateId === 'cosmic' ? 'cosmic-space-v1' :
+                            templateId === 'pepe' ? 'pepe-space-v1' :
                             templateId === 'minimal' ? 'minimal-space-v1' :
                             templateId;
 
@@ -80,6 +82,9 @@ export async function POST(request: NextRequest) {
         break;
       case 'minimal-space-v1':
         generatedFiles = generateMinimalTemplate(previewData);
+        break;
+      case 'pepe-space-v1':
+        generatedFiles = generatePepeTemplate(previewData);
         break;
       default:
         console.error('Invalid template ID:', mappedTemplateId);

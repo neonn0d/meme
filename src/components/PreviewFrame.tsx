@@ -6,6 +6,7 @@ import { generateModernTemplate } from '@/templates/modern/template';
 import { generateRocketTemplate } from '@/templates/rocket/template';
 import { generateCosmicTemplate } from '@/templates/cosmic/template';
 import { generateMinimalTemplate } from '@/templates/minimal/template';
+import { generatePepeTemplate } from '@/templates/pepe/template';
 
 interface PreviewFrameProps {
   previewData: PreviewData;
@@ -32,6 +33,9 @@ export function PreviewFrame({ previewData, className = '' }: PreviewFrameProps)
             break;
           case 'minimal':
             generatedTemplate = generateMinimalTemplate(previewData);
+            break;
+          case 'pepe':
+            generatedTemplate = generatePepeTemplate(previewData);
             break;
           default:
             generatedTemplate = generateModernTemplate(previewData);

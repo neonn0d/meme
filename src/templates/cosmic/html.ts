@@ -1,19 +1,19 @@
 export const generateCosmicHTML = ({
-    coinName,
-    tokenSymbol,
-    description,
-    logoUrl,
-    contractAddress,
-    buyLink,
-    roadmap,
-    team,
-    socialLinks = {},
-    tokenomics = {},
-    faq = [],
-    seo = {},
-    sections = {}
-  }: any): string => {
-    return `
+  coinName,
+  tokenSymbol,
+  description,
+  logoUrl,
+  contractAddress,
+  buyLink,
+  roadmap,
+  team,
+  socialLinks = {},
+  tokenomics = {},
+  faq = [],
+  seo = {},
+  sections = {},
+}: any): string => {
+  return `
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -26,8 +26,12 @@ export const generateCosmicHTML = ({
       <meta name="keywords" content="${seo.keywords}">
       
       <!-- Open Graph Meta Tags -->
-      <meta property="og:title" content="${seo.title || `${coinName} - The Future of Memecoins`}">
-      <meta property="og:description" content="${seo.description || description}">
+      <meta property="og:title" content="${
+        seo.title || `${coinName} - The Future of Memecoins`
+      }">
+      <meta property="og:description" content="${
+        seo.description || description
+      }">
       <meta property="og:image" content="${seo.ogImage || logoUrl}">
       <meta property="og:type" content="website">
       
@@ -42,19 +46,35 @@ export const generateCosmicHTML = ({
                   <a href="#"><img src="${logoUrl}" alt="${coinName} Logo"></a>
               </div>
               <ul class="navbar-links">
-                  ${sections.tokenomics ? '<li><a href="#tokenomics">Tokenomics</a></li>' : ''}
-                  ${sections.roadmap ? '<li><a href="#roadmap">Roadmap</a></li>' : ''}
-                  ${sections.team ? '<li><a href="#team">Team</a></li>' : ''}
-                  ${sections.faq ? '<li><a href="#faq">FAQ</a></li>' : ''}
-                  ${sections.community ? '<li><a href="#community">Community</a></li>' : ''}
+                  ${
+                    sections.tokenomics
+                      ? '<li><a href="#tokenomics">Tokenomics</a></li>'
+                      : ""
+                  }
+                  ${
+                    sections.roadmap
+                      ? '<li><a href="#roadmap">Roadmap</a></li>'
+                      : ""
+                  }
+                  ${sections.team ? '<li><a href="#team">Team</a></li>' : ""}
+                  ${sections.faq ? '<li><a href="#faq">FAQ</a></li>' : ""}
+                  ${
+                    sections.community
+                      ? '<li><a href="#community">Community</a></li>'
+                      : ""
+                  }
               </ul>
               <a href="${buyLink}" class="button buy-now" target="_blank">Buy ${tokenSymbol}</a>
           </div>
       </nav>
   
-      ${sections.hero ? `
+      ${
+        sections.hero
+          ? `
       <header class="hero">
           <div class="container">
+               
+          <img  class="hero-logo" src="${logoUrl}" alt="${coinName} logo">
               <h1>${coinName}</h1>
               <p>${description}</p>
               <div class="hero-buttons">
@@ -67,17 +87,23 @@ export const generateCosmicHTML = ({
               </div>
           </div>
       </header>
-      ` : ''}
+      `
+          : ""
+      }
   
       <main>
-          ${sections.tokenomics ? `
+          ${
+            sections.tokenomics
+              ? `
           <section id="tokenomics">
               <div class="container">
                   <h2>Tokenomics</h2>
                   <div class="tokenomics-grid">
                       <div class="tokenomics-card">
                           <h3>Total Supply</h3>
-                          <p>${Number(tokenomics.totalSupply).toLocaleString()}</p>
+                          <p>${Number(
+                            tokenomics.totalSupply
+                          ).toLocaleString()}</p>
                       </div>
                       <div class="tokenomics-card">
                           <h3>Buy Tax</h3>
@@ -94,47 +120,69 @@ export const generateCosmicHTML = ({
                   </div>
               </div>
           </section>
-          ` : ''}
+          `
+              : ""
+          }
 
-          ${sections.roadmap ? `
+          ${
+            sections.roadmap
+              ? `
           <section id="roadmap">
               <div class="container">
                   <h2>Roadmap</h2>
                   <ul>
-                      ${roadmap.phases.map((phase: any, index: number) => `
+                      ${roadmap.phases
+                        .map(
+                          (phase: any, index: number) => `
                         <li>
                             <h3>${phase.title}</h3>
                             <p>${phase.description}</p>
                         </li>
-                      `).join('')}
+                      `
+                        )
+                        .join("")}
                   </ul>
               </div>
           </section>
-          ` : ''}
+          `
+              : ""
+          }
 
-          ${sections.team ? `
+          ${
+            sections.team
+              ? `
           <section id="team">
               <div class="container">
                   <h2>Meet Our Team</h2>
                   <div class="team-grid">
-                      ${team.map((member: any) => `
+                      ${team
+                        .map(
+                          (member: any) => `
                         <div>
                             <img src="${member.avatar}" alt="${member.name}">
                             <h3>${member.name}</h3>
                             <p>${member.role}</p>
                         </div>
-                      `).join('')}
+                      `
+                        )
+                        .join("")}
                   </div>
               </div>
           </section>
-          ` : ''}
+          `
+              : ""
+          }
 
-          ${sections.faq ? `
+          ${
+            sections.faq
+              ? `
           <section id="faq">
               <div class="container">
                   <h2>Frequently Asked Questions</h2>
                   <div class="faq-grid">
-                      ${faq.map((item: any, index: number) => `
+                      ${faq
+                        .map(
+                          (item: any, index: number) => `
                         <div class="faq-item" id="faq-${index}">
                             <div class="faq-question">
                                 <h3>${item.question}</h3>
@@ -144,24 +192,44 @@ export const generateCosmicHTML = ({
                                 <p>${item.answer}</p>
                             </div>
                         </div>
-                      `).join('')}
+                      `
+                        )
+                        .join("")}
                   </div>
               </div>
           </section>
-          ` : ''}
+          `
+              : ""
+          }
 
-          ${sections.community ? `
+          ${
+            sections.community
+              ? `
           <section id="community">
               <div class="container">
                   <h2>Join Our Community</h2>
                   <div class="social-links">
-                      ${socialLinks.telegram ? `<a href="${socialLinks.telegram}" class="button primary" target="_blank">Telegram</a>` : ''}
-                      ${socialLinks.twitter ? `<a href="${socialLinks.twitter}" class="button primary" target="_blank">Twitter</a>` : ''}
-                      ${socialLinks.discord ? `<a href="${socialLinks.discord}" class="button primary" target="_blank">Discord</a>` : ''}
+                      ${
+                        socialLinks.telegram
+                          ? `<a href="${socialLinks.telegram}" class="button primary" target="_blank">Telegram</a>`
+                          : ""
+                      }
+                      ${
+                        socialLinks.twitter
+                          ? `<a href="${socialLinks.twitter}" class="button primary" target="_blank">Twitter</a>`
+                          : ""
+                      }
+                      ${
+                        socialLinks.discord
+                          ? `<a href="${socialLinks.discord}" class="button primary" target="_blank">Discord</a>`
+                          : ""
+                      }
                   </div>
               </div>
           </section>
-          ` : ''}
+          `
+              : ""
+          }
       </main>
   
       <footer>
@@ -169,9 +237,15 @@ export const generateCosmicHTML = ({
               <div class="footer-content">
                   <img src="${logoUrl}" alt="${coinName} Logo" class="footer-logo">
                   <div class="footer-links">
-                      <a href="${socialLinks.telegram}" target="_blank">Telegram</a>
-                      <a href="${socialLinks.twitter}" target="_blank">Twitter</a>
-                      <a href="${socialLinks.discord}" target="_blank">Discord</a>
+                      <a href="${
+                        socialLinks.telegram
+                      }" target="_blank">Telegram</a>
+                      <a href="${
+                        socialLinks.twitter
+                      }" target="_blank">Twitter</a>
+                      <a href="${
+                        socialLinks.discord
+                      }" target="_blank">Discord</a>
                   </div>
                   <p class="copyright">&copy; ${new Date().getFullYear()} ${coinName}. All rights reserved.</p>
               </div>
@@ -209,4 +283,4 @@ export const generateCosmicHTML = ({
       </script>
   </body>
   </html>`;
-  };
+};

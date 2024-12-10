@@ -200,6 +200,45 @@ export default function TemplatesPage() {
             </div>
           </div>
 
+          {/* Pepe Template */}
+          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
+            <div className="mb-4">
+              <ExternalLink className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
+              Pepe Template
+            </h2>
+            <p className="mb-6 flex-grow text-zinc-600">
+              A Pepe-themed design with stunning space visuals and modern animations for an immersive experience.
+            </p>
+            <div className="space-y-4">
+              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
+                <li className="flex items-start">
+                  <span className="text-zinc-400 mr-2">•</span>
+                  Pepe-themed visuals
+                </li>
+                <li className="flex items-start">
+                  <span className="text-zinc-400 mr-2">•</span>
+                  Space-themed visuals
+                </li>
+                <li className="flex items-start">
+                  <span className="text-zinc-400 mr-2">•</span>
+                  Interactive star charts
+                </li>
+                <li className="flex items-start">
+                  <span className="text-zinc-400 mr-2">•</span>
+                  Galaxy gradient effects
+                </li>
+              </ul>
+              <Link
+                href="/customize?template=pepe"
+                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
+              >
+                Customize Template
+              </Link>
+            </div>
+          </div>
+
           {/* Coming Soon Template */}
           <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
             <div className="mb-4">
