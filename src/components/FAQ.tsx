@@ -23,7 +23,7 @@ const faqs: FAQItem[] = [
   },
   {
     question: "What's included in the templates?",
-    answer: "Our templates include everything a memecoin needs: Token info display, price charts, buy buttons, tokenomics section, roadmap, team profiles, meme gallery, and social links. All templates are mobile-friendly and optimized for performance."
+    answer: "Our templates include everything a memecoin needs: Token info display, buy buttons, tokenomics section, roadmap, team profiles, FAQ, and social links. All templates are mobile-friendly and optimized for performance."
   },
   {
     question: "How much does it cost?",
