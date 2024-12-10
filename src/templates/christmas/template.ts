@@ -6,7 +6,7 @@ import { generateChristmasJS } from './js';
 export const generateChristmasTemplate = (data: PreviewData): GeneratedTemplate => {
   return {
     html: generateChristmasHTML(data),
-    css: generateChristmasCSS(data),
+    css: generateChristmasCSS(),
     js: generateChristmasJS()
   };
 };

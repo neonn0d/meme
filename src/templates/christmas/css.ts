@@ -20,6 +20,9 @@ body {
   background: var(--background);
   color: var(--text);
   line-height: 1.6;
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .container {
@@ -27,6 +30,37 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
+}
+
+@media (max-width: 1400px) {
+  .container {
+    max-width: 1140px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .container {
+    max-width: 960px;
+  }
+}
+
+@media (max-width: 992px) {
+  .container {
+    max-width: 720px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    max-width: 540px;
+  }
+}
+
+@media (max-width: 576px) {
+  .container {
+    max-width: 100%;
+    padding: 0 15px;
+  }
 }
 
 /* Snow Container */
@@ -39,6 +73,24 @@ body {
   pointer-events: none;
   z-index: 1;
   overflow: hidden;
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translate3d(var(--left-ini), 0, 0);
+  }
+  100% {
+    transform: translate3d(var(--left-end), 100vh, 0);
+  }
+}
+
+.snowflake {
+  position: fixed;
+  background: white;
+  border-radius: 50%;
+  opacity: 0.8;
+  pointer-events: none;
+  z-index: 999999;
 }
 
 /* Navigation */

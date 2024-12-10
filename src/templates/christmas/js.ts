@@ -1,157 +1,132 @@
 export const generateChristmasJS = () => `
+// Immediately create snow container if it doesn't exist
+(function() {
+    if (!document.getElementById('snow-container')) {
+        const snowContainer = document.createElement('div');
+        snowContainer.id = 'snow-container';
+        snowContainer.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 1; overflow: hidden;';
+        document.body.insertBefore(snowContainer, document.body.firstChild);
+    }
+})();
+
 // Snow animation
-function createSnowflakes() {
+const createSnow = () => {
+    const snowflakes = 50;
     const container = document.getElementById('snow-container');
     if (!container) return;
 
-    // Clear existing snowflakes
+    // Clear container
     container.innerHTML = '';
 
-    // Create snowflakes
-    const numberOfSnowflakes = 50;
-    for (let i = 0; i < numberOfSnowflakes; i++) {
-        const snowflake = document.createElement('div');
-        snowflake.className = 'snowflake';
-        snowflake.style.cssText = \`
-            position: fixed;
-            background: white;
-            border-radius: 50%;
-            pointer-events: none;
-            user-select: none;
-            animation-name: snowfall-\${Math.floor(Math.random() * 4)};
-            animation-duration: \${Math.random() * 3 + 2}s;
-            animation-timing-function: linear;
-            animation-iteration-count: infinite;
-            width: \${Math.random() * 4 + 2}px;
-            height: \${Math.random() * 4 + 2}px;
-            opacity: \${Math.random() * 0.6 + 0.4};
-            left: \${Math.random() * 100}vw;
-            top: -10px;
-            will-change: transform;
-        \`;
-        container.appendChild(snowflake);
-    }
-}
-
-// Create keyframes for different snow patterns
-function createSnowKeyframes() {
-    const style = document.createElement('style');
-    const keyframes = [];
-    
-    for (let i = 0; i < 4; i++) {
-        keyframes.push(\`
-            @keyframes snowfall-\${i} {
+    // Create keyframes style if it doesn't exist
+    if (!document.getElementById('snow-keyframes')) {
+        const keyframesStyle = document.createElement('style');
+        keyframesStyle.id = 'snow-keyframes';
+        keyframesStyle.textContent = \`
+            @keyframes snowfall {
                 0% {
-                    transform: translate3d(0, -10px, 0);
+                    transform: translate3d(var(--left-ini), 0, 0);
                 }
                 100% {
-                    transform: translate3d(\${(Math.random() - 0.5) * 200}px, 100vh, 0);
+                    transform: translate3d(var(--left-end), 100vh, 0);
                 }
             }
-        \`);
+        \`;
+        document.head.appendChild(keyframesStyle);
     }
-    
-    style.textContent = keyframes.join('\\n');
-    document.head.appendChild(style);
-}
 
-// Hamburger menu
-function setupMobileMenu() {
+    // Create snowflakes
+    for (let i = 0; i < snowflakes; i++) {
+        const snowflake = document.createElement('div');
+        const randomLeft = Math.random() * 100;
+        const leftIni = randomLeft - 10;
+        const leftEnd = randomLeft + 10;
+        
+        snowflake.style.cssText = \`
+            position: fixed;
+            z-index: 999999;
+            width: \${Math.random() * 3 + 2}px;
+            height: \${Math.random() * 3 + 2}px;
+            background: white;
+            border-radius: 50%;
+            opacity: \${Math.random() * 0.6 + 0.4};
+            --left-ini: \${leftIni}vw;
+            --left-end: \${leftEnd}vw;
+            left: \${randomLeft}vw;
+            top: -5vh;
+            animation: snowfall \${Math.random() * 3 + 2}s linear infinite;
+            animation-delay: -\${Math.random() * 5}s;
+        \`;
+        
+        container.appendChild(snowflake);
+    }
+};
+
+// Create snow immediately and recreate periodically
+createSnow();
+setInterval(createSnow, 5000);
+
+// Mobile menu toggle
+function toggleMobileMenu() {
+    const nav = document.querySelector('.nav-links');
     const hamburger = document.querySelector('.hamburger');
-    const navLinks = document.querySelector('.nav-links');
-    const navLinksItems = document.querySelectorAll('.nav-link');
-
-    if (!hamburger || !navLinks) return;
-
-    hamburger.addEventListener('click', () => {
+    if (nav && hamburger) {
+        nav.classList.toggle('active');
         hamburger.classList.toggle('active');
-        navLinks.classList.toggle('active');
-    });
-
-    // Close menu when clicking a link
-    navLinksItems.forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('active');
-        });
-    });
+    }
 }
 
-// Christmas light effects
-function createChristmasLights() {
-    const lights = document.querySelector('.christmas-lights');
-    if (!lights) return;
-
-    lights.innerHTML = Array(20).fill(null)
-        .map((_, i) => \`<div class="light" style="left: \${i * 5}%"></div>\`)
-        .join('');
-}
-
-// Festive hover effects
-function addFestiveEffects() {
-    // Add sparkle effect to buttons
-    document.querySelectorAll('.christmas-btn').forEach(btn => {
-        btn.addEventListener('mouseover', () => {
-            btn.style.transform = 'scale(1.05) translateY(-2px)';
-        });
-        btn.addEventListener('mouseout', () => {
-            btn.style.transform = 'none';
-        });
-    });
-
-    // Add jingle effect to holly icons
-    document.querySelectorAll('.holly').forEach(holly => {
-        holly.addEventListener('mouseover', () => {
-            holly.style.transform = 'rotate(15deg)';
-        });
-        holly.addEventListener('mouseout', () => {
-            holly.style.transform = 'none';
-        });
-    });
-}
-
-// Copy to clipboard with festive feedback
-function copyToClipboard(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        const copyBtn = document.querySelector('.copy-btn');
-        if (copyBtn) {
-            const originalText = copyBtn.innerHTML;
-            copyBtn.innerHTML = '🎄 Copied!';
-            copyBtn.style.background = '#28a745';
-            setTimeout(() => {
-                copyBtn.innerHTML = originalText;
-                copyBtn.style.background = '';
-            }, 2000);
-        }
-    }).catch(err => console.error('Failed to copy:', err));
-}
-
-// Smooth scroll with Christmas easing
+// Smooth scrolling for navigation links
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
             target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
+                behavior: 'smooth'
             });
+            // Close mobile menu if open
+            const nav = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            if (nav && nav.classList.contains('active')) {
+                nav.classList.remove('active');
+                hamburger?.classList.remove('active');
+            }
         }
     });
 });
 
-// Initialize
-function init() {
-    createSnowKeyframes();
-    createSnowflakes();
-    setupMobileMenu();
-    createChristmasLights();
-    addFestiveEffects();
-
-    // Recreate snowflakes periodically to prevent them from getting stuck
-    setInterval(createSnowflakes, 10000);
+// Copy contract address
+function copyContractAddress() {
+    const address = document.getElementById('contract-address')?.textContent;
+    if (address) {
+        navigator.clipboard.writeText(address).then(() => {
+            const tooltip = document.getElementById('copy-tooltip');
+            if (tooltip) {
+                tooltip.textContent = 'Copied!';
+                setTimeout(() => {
+                    tooltip.textContent = 'Copy to clipboard';
+                }, 2000);
+            }
+        });
+    }
 }
 
-// Start when DOM is loaded
-document.addEventListener('DOMContentLoaded', init);
+// Initialize everything when the DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Setup mobile menu click handler
+    const hamburger = document.querySelector('.hamburger');
+    if (hamburger) {
+        hamburger.addEventListener('click', toggleMobileMenu);
+    }
+    
+    // Setup copy button click handler
+    const copyBtn = document.querySelector('.copy-btn');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', copyContractAddress);
+    }
+    
+    // Ensure snow is running
+    createSnow();
+});
 `;
