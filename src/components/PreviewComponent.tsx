@@ -8,6 +8,7 @@ import { generateRocketTemplate } from '@/templates/rocket/template';
 import { generateCosmicTemplate } from '@/templates/cosmic/template';
 import { generateMinimalTemplate } from '@/templates/minimal/template';
 import { generatePepeTemplate } from '@/templates/pepe/template';
+import { generateChristmasTemplate } from '@/templates/christmas/template';
 
 export function PreviewComponent() {
   const searchParams = useSearchParams();
@@ -55,6 +56,9 @@ export function PreviewComponent() {
             break;
           case 'pepe':
             generatedTemplate = generatePepeTemplate(previewData);
+            break;
+          case 'christmas':
+            generatedTemplate = generateChristmasTemplate(previewData);
             break;
           default:
             generatedTemplate = generateModernTemplate(previewData);
