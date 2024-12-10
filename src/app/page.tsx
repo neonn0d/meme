@@ -12,9 +12,9 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
-        <CTA />
-        <BuidlToken />
         <FAQ />
+        <BuidlToken />
+        <CTA />
       </main>
     </div>
   );

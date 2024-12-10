@@ -2,281 +2,176 @@
 
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
+import Image from "next/image";
 import {
   ArrowLeft,
-  Rocket,
-  Star,
-  Clock,
-  Code2,
-  ExternalLink,
-  Sparkles,
+  Check,
 } from "lucide-react";
 
+interface Template {
+  id: string;
+  name: string;
+  description: string;
+  image?: string;
+  features: string[];
+}
+
+const templates: Template[] = [
+  {
+    id: "modern",
+    name: "Modern Template",
+    description: "Professional landing page focused on presenting your token's value proposition.",
+    image: "/templates/modern.png",
+    features: [
+      "Hero section with token overview",
+      "Tokenomics breakdown section",
+      "Roadmap presentation",
+      "Team & partners showcase",
+    ],
+  },
+  {
+    id: "pepe",
+    name: "Pepe Template",
+    description: "Modern Pepe-themed design with smooth animations.",
+    image: "/templates/pepe.png",
+    features: [
+      "Modern, clean design",
+      "Smooth animations",
+      "Tokenomics section",
+      "Mobile responsive",
+    ],
+  },
+  {
+    id: "rocket",
+    name: "Rocket Template",
+    description: "Space-themed design perfect for moon-bound tokens with a focus on community growth.",
+    image: "/templates/rocket.png",
+    features: [
+      "Dynamic token statistics",
+      "Community milestones section",
+      "Exchange listings showcase",
+      "Integrated social media feeds",
+    ],
+  },
+  {
+    id: "minimal",
+    name: "Minimal Template",
+    description: "A clean, minimalist black and white design focused on simplicity and readability.",
+    image: "/templates/minimal.png",
+    features: [
+      "Monochromatic design",
+      "Fast loading performance",
+      "Responsive layout",
+      "Clean typography",
+    ],
+  },
+  {
+    id: "cosmic",
+    name: "Cosmic Template",
+    description: "A cosmic-themed design with stunning space visuals and modern animations for an immersive experience.",
+    image: "/templates/cosmic.png",
+    features: [
+      "Cosmic particle animations",
+      "Space-themed visuals",
+      "Interactive star charts",
+      "Galaxy gradient effects",
+    ],
+  },
+  {
+    id: "coming-soon",
+    name: "Coming Soon",
+    description: "New templates are being developed to provide even more options for your memecoin website.",
+    image: "/og-image.png",
+    features: [
+      "DeFi-focused template",
+      "Gaming theme template",
+      "Community-driven design",
+      "Advanced features",
+    ],
+  },
+];
+
 export default function TemplatesPage() {
-  const { userId } = useAuth();
+  const { isSignedIn } = useAuth();
+
 
   return (
     <div className="min-h-screen bg-zinc-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
-        {/* Back Button */}
         <div className="flex items-center space-x-4 mb-4">
           <Link
-            href="/dashboard"
+            href="/"
             className="inline-flex items-center px-4 py-2 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Dashboard
+            Back to Home
           </Link>
         </div>
 
         {/* Header Section */}
-        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
-            Choose Your Template
-          </h1>
-          <p className="mt-2 text-base text-zinc-600">
-            Select from our professionally designed templates to create your
-            memecoin website.
+        <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
+          <h1 className="text-3xl font-bold text-zinc-900">Choose a Template</h1>
+          <p className="mt-2 text-zinc-600">
+            Select a template to start customizing your meme token website. Each template comes with unique features and animations.
           </p>
         </div>
 
         {/* Templates Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Modern Template */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <Star className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Modern Template
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              Professional landing page focused on presenting your token's value
-              proposition.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Hero section with token overview
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Tokenomics breakdown section
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Roadmap presentation
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Team & partners showcase
-                </li>
-              </ul>
-              <Link
-                href="/customize?template=modern"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
-              >
-                Customize Template
-              </Link>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {templates.map((template) => (
+            <div
+              key={template.id}
+              className="group relative p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden bg-white"
+            >
+              {/* Image Preview Section */}
+              <div className="relative w-full h-48 mb-6 rounded-lg overflow-hidden border border-zinc-200">
+                <div className="absolute inset-0 w-full h-full">
+                  <Image
+                    src={template.image || "/og-image.png"}
+                    alt={`${template.name} Preview`}
+                    fill
+                    className="object-cover object-top group-hover:animate-scroll-y"
+                    priority
+                  />
+                </div>
+              </div>
 
-        {/* Pepe Template */}
-        <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <ExternalLink className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Pepe Template
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              A Pepe-themed design with smooth animations and modern layout, perfect for meme token websites.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Modern, clean design
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Smooth animations
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Tokenomics section
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Mobile responsive
-                </li>
-              </ul>
-              <Link
-                href="/customize?template=pepe"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
-              >
-                Customize Template
-              </Link>
-            </div>
-          </div>
-          {/* Rocket Template */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <Rocket className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Rocket Template
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              Space-themed design perfect for moon-bound tokens with a focus on
-              community growth.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Dynamic token statistics
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Community milestones section
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Exchange listings showcase
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Integrated social media feeds
-                </li>
-              </ul>
-              <Link
-                href="/customize?template=rocket"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
-              >
-                Customize Template
-              </Link>
-            </div>
-          </div>
+              {/* Content */}
+              <div className="flex-grow">
+                <h3 className="text-xl font-semibold text-zinc-900 mb-2">
+                  {template.name}
+                </h3>
+                <p className="text-zinc-600 mb-4">{template.description}</p>
 
-          {/* Minimal Template */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <Code2 className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Minimal Template
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              A clean, minimalist black and white design focused on simplicity and readability.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Monochromatic design
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Fast loading performance
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Responsive layout
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Clean typography
-                </li>
-              </ul>
-              <Link
-                href="/customize?template=minimal"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
-              >
-                Customize Template
-              </Link>
-            </div>
-          </div>
+                {/* Features List */}
+                <div className="space-y-2 mb-6">
+                  {template.features?.map((feature, index) => (
+                    <div key={index} className="flex items-start">
+                      <Check className="w-5 h-5 text-green-500 mr-2 mt-0.5 flex-shrink-0" />
+                      <span className="text-zinc-600">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
 
-          {/* Cosmic Template */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <Sparkles className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
+              {/* Customize Button */}
+              {template.name.includes("Coming Soon") ? (
+                <button
+                  className="w-full mt-4 px-4 py-2 text-sm font-medium rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed"
+                  disabled
+                >
+                  Coming Soon
+                </button>
+              ) : (
+                <Link
+                  href={`/customize?template=${template.id}`}
+                  className="w-full inline-flex items-center justify-center mt-4 px-4 py-2 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
+                >
+                  Customize Template
+                </Link>
+              )}
             </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Cosmic Template
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              A cosmic-themed design with stunning space visuals and modern animations for an immersive experience.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Cosmic particle animations
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Space-themed visuals
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Interactive star charts
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Galaxy gradient effects
-                </li>
-              </ul>
-              <Link
-                href="/customize?template=cosmic"
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
-              >
-                Customize Template
-              </Link>
-            </div>
-          </div>
-
-          {/* Coming Soon Template */}
-          <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200 hover:shadow-md transition-all duration-300 flex flex-col h-full">
-            <div className="mb-4">
-              <Clock className="w-7 sm:w-8 h-7 sm:h-8 text-zinc-900" />
-            </div>
-            <h2 className="text-xl sm:text-2xl font-bold text-zinc-900 mb-2">
-              Coming Soon
-            </h2>
-            <p className="mb-6 flex-grow text-zinc-600">
-              New templates are being developed to provide even more options for
-              your memecoin website.
-            </p>
-            <div className="space-y-4">
-              <ul className="text-sm space-y-3 text-zinc-600 mb-6">
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  DeFi-focused template
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Gaming theme template
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Community-driven design
-                </li>
-                <li className="flex items-start">
-                  <span className="text-zinc-400 mr-2">•</span>
-                  Advanced features
-                </li>
-              </ul>
-              <button
-                className="inline-flex items-center px-6 py-2.5 text-sm font-medium rounded-lg bg-zinc-100 text-zinc-400 cursor-not-allowed"
-                disabled
-              >
-                Coming Soon
-              </button>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
