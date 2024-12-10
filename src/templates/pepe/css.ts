@@ -270,9 +270,16 @@ export const generatePepeCSS = (data: PreviewData): string => {
     .hero-description {
         font-size: 1.2rem;
         color: var(--text-secondary);
-        margin-bottom: 2.5rem;
-        line-height: 1.6;
-        font-weight: 400;
+        margin: 1rem 0 2rem;
+        max-width: 800px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+      .hero-description {
+        font-size: 1rem;
+        margin: 0.75rem 0 1.5rem;
+      }
     }
 
     .hero-buttons {
@@ -683,41 +690,15 @@ export const generatePepeCSS = (data: PreviewData): string => {
       background-color: #2C2F33;
       border-radius: 10px;
       margin-bottom: 1rem;
-      overflow: hidden;
       border: 1px solid rgba(67, 181, 129, 0.2);
     }
 
     .faq-question {
       padding: 1.5rem;
-      cursor: pointer;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: all 0.3s ease;
-    }
-
-    .faq-question:hover {
       background-color: rgba(67, 181, 129, 0.1);
-    }
-
-    .faq-answer {
-      padding: 0;
-      max-height: 0;
-      overflow: hidden;
-      transition: all 0.3s ease;
-      position: relative;
-      background: rgba(44, 47, 51, 0.5);
-    }
-
-    .faq-item.active .faq-answer {
-      max-height: 500px;
-    }
-
-    .faq-answer p {
-      color: #B9BBBE;
-      line-height: 1.6;
-      margin: 0;
-      padding: 1.5rem 3.5rem 1.5rem 1.5rem;
     }
 
     .faq-question h3 {
@@ -725,18 +706,17 @@ export const generatePepeCSS = (data: PreviewData): string => {
       font-size: 1.2rem;
       margin: 0;
       padding-right: 2rem;
-      flex: 1;
     }
 
-    .faq-toggle {
-      color: #43B581;
-      font-size: 1.5rem;
-      font-weight: bold;
-      transition: transform 0.3s ease;
+    .faq-answer {
+      background: rgba(44, 47, 51, 0.5);
     }
 
-    .faq-item.active .faq-toggle {
-      transform: rotate(45deg);
+    .faq-answer p {
+      color: #B9BBBE;
+      line-height: 1.6;
+      margin: 0;
+      padding: 1.5rem;
     }
 
     .roadmap-list {

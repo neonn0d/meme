@@ -176,7 +176,7 @@ export const generatePepeHTML = ({
         ${sections.team ? `
         <section id="team">
             <div class="container">
-                <h2>Meet the Pepe Team 👥</h2>
+                <h2>Meet the ${tokenSymbol} Team 👥</h2>
                 <div class="team-grid">
                     ${team.map((member: any) => `
                         <div class="team-card">
@@ -202,10 +202,9 @@ export const generatePepeHTML = ({
                 <h2>Frequently Asked Questions ❓</h2>
                 <div class="faq-grid">
                     ${faq.map((item: any, index: number) => `
-                        <div class="faq-item">
+                        <div class="faq-item active">
                             <div class="faq-question">
                                 <h3>${item.question}</h3>
-                                <span class="faq-toggle">+</span>
                             </div>
                             <div class="faq-answer">
                                 <p>${item.answer}</p>
@@ -252,7 +251,7 @@ export const generatePepeHTML = ({
         <footer class="footer">
             <div class="container">
                 <div class="footer-content">
-                    <span>${tokenSymbol}</span>
+                    <span>${coinName}</span>
                     ${buyLink ? `<a href="${buyLink}" target="_blank">Buy ${tokenSymbol}</a>` : ''}
                 </div>
             </div>

@@ -66,40 +66,7 @@ export const generatePepeJS = (): string => {
       });
     });
 
-    // FAQ functionality
-    const faqItems = document.querySelectorAll('.faq-item');
-    faqItems.forEach(item => {
-      const question = item.querySelector('.faq-question');
-      const answer = item.querySelector('.faq-answer');
-      const toggle = item.querySelector('.faq-toggle');
-      
-      if (question) {
-        question.addEventListener('click', () => {
-          // Close other FAQs
-          faqItems.forEach(otherItem => {
-            if (otherItem !== item) {
-              otherItem.classList.remove('active');
-              const otherAnswer = otherItem.querySelector('.faq-answer');
-              const otherToggle = otherItem.querySelector('.faq-toggle');
-              if (otherAnswer) otherAnswer.style.maxHeight = '0px';
-              if (otherToggle) otherToggle.textContent = '+';
-            }
-          });
-
-          // Toggle current FAQ
-          item.classList.toggle('active');
-          if (answer && toggle) {
-            if (item.classList.contains('active')) {
-              answer.style.maxHeight = answer.scrollHeight + 'px';
-              toggle.textContent = '−';
-            } else {
-              answer.style.maxHeight = '0px';
-              toggle.textContent = '+';
-            }
-          }
-        });
-      }
-    });
+    // FAQ functionality removed since answers are always visible
   });
   `;
 };
