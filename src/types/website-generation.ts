@@ -1,6 +1,7 @@
 export interface WebsiteGeneration {
-  hash: string;
-  price: number;
+  transactionHash?: string;  // Optional, present for paid generations
+  hash?: string;  // Optional, present for paid generations
+  price?: number;  // Optional, present for paid generations
   timestamp: string;
 }
 

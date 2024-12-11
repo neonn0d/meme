@@ -1,6 +1,7 @@
 export interface PaymentRecord {
   timestamp: number;
   amount: number;
+  price?: number;
   transactionHash: string;
   type: 'premium' | 'website' | 'setup';
   status: 'confirmed' | 'completed';

@@ -45,7 +45,7 @@ export async function POST(req: Request) {
 
     // Create new website generation record
     const websiteGeneration = {
-      ...(hash ? { hash } : {}),  // Only include hash if provided
+      ...(hash ? { transactionHash: hash } : {}),  // Only include transactionHash if provided
       ...(price ? { price } : {}),  // Only include price if provided
       timestamp: new Date().toISOString()
     };

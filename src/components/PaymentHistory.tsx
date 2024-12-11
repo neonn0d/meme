@@ -13,10 +13,11 @@ import {
   Payment,
   formatDate,
 } from "@/types/payment";
-import { Loader2, RefreshCw, ExternalLink, ArrowLeft } from "lucide-react";
+import { Loader2, ExternalLink, ArrowLeft, Code2, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSubscription } from '@/hooks/useSubscription';
+import { WebsiteGeneration } from "@/types/website-generation";
 
 export interface PaymentHistoryRef {
   fetchPayments: () => Promise<void>;
@@ -29,40 +30,49 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
   const [error, setError] = useState<string | null>(null);
   const [payments, setPayments] = useState<PaymentRecord[]>([]);
   const [totalSpent, setTotalSpent] = useState(0);
-  const [refreshing, setRefreshing] = useState(false);
   const { subscriptionDetails } = useSubscription();
+  const [websites, setWebsites] = useState<WebsiteGeneration[]>([]);
+  const [totalGenerated, setTotalGenerated] = useState(0);
 
-  const fetchPayments = useCallback(async () => {
+  const fetchData = useCallback(async () => {
     try {
-      setRefreshing(true);
       setError(null);
 
-      const response = await fetch("/api/payments");
-      if (!response.ok) {
+      // Fetch payments
+      const paymentsResponse = await fetch("/api/payments");
+      if (!paymentsResponse.ok) {
         throw new Error("Failed to fetch payments");
       }
+      const paymentsData = await paymentsResponse.json();
+      setPayments(paymentsData.payments);
+      setTotalSpent(paymentsData.totalSpent);
 
-      const data = await response.json();
-      setPayments(data.payments);
-      setTotalSpent(data.totalSpent);
+      // Fetch websites
+      const websitesResponse = await fetch("/api/websites");
+      if (!websitesResponse.ok) {
+        throw new Error("Failed to fetch websites");
+      }
+      const websitesData = await websitesResponse.json();
+      setWebsites(websitesData.websites);
+      setTotalGenerated(websitesData.totalGenerated);
+
     } catch (err) {
-      console.error("Error fetching payments:", err);
-      setError("Failed to load payment history");
+      console.error("Error fetching data:", err);
+      setError("Failed to load history");
     } finally {
       setLoading(false);
-      setRefreshing(false);
     }
   }, []);
 
   useImperativeHandle(ref, () => ({
-    fetchPayments,
+    fetchPayments: fetchData,
   }));
 
   useEffect(() => {
     if (user) {
-      fetchPayments();
+      fetchData();
     }
-  }, [user, fetchPayments]);
+  }, [user, fetchData]);
 
   const getExplorerUrl = (hash: string) => {
     return `https://explorer.solana.com/tx/${hash}?cluster=${process.env.NEXT_PUBLIC_SOLANA_NETWORK}`;
@@ -73,7 +83,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
       <div className="min-h-screen bg-zinc-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-8">
           <div className="p-4 bg-white rounded-lg shadow-sm border border-zinc-200">
-            <p className="text-zinc-600">Please sign in to view payment history.</p>
+            <p className="text-zinc-600">Please sign in to view history.</p>
           </div>
         </div>
       </div>
@@ -122,109 +132,180 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
 
         {/* Header Section */}
         <div className="bg-white p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-3xl font-bold text-zinc-900">Payment History</h1>
+          <h1 className="text-3xl font-bold text-zinc-900">Account History</h1>
           <p className="mt-2 text-zinc-600">
-            View your subscription status and payment history.
+          Track your premium features, payments, and website generations.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Subscription Status Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6 h-max">
-            <h2 className="text-xl font-semibold mb-4">Subscription Status</h2>
-            {subscriptionDetails ? (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-600">Status</span>
-                  <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${
-                    subscriptionDetails.isActive
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                  }`}>
-                    {subscriptionDetails.isActive ? "Active" : "Expired"}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-600">Start Date</span>
-                  <span className="font-medium">
-                    {formatDate(subscriptionDetails.startDate)}
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <span className="text-zinc-600">Expiry Date</span>
-                  <span className="font-medium">
-                    {formatDate(subscriptionDetails.expiryDate)}
-                  </span>
-                </div>
-
-                {subscriptionDetails.isActive && (
-                  <div className="flex items-center justify-between">
-                    <span className="text-zinc-600">Days Remaining</span>
-                    <span className="font-medium">
-                      {subscriptionDetails.daysRemaining} days
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="text-zinc-600">No subscription found</p>
+        {/* Subscription Status Card */}
+        <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-8">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-semibold text-zinc-900">Subscription Status</h2>
+            {subscriptionDetails?.isActive && (
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-emerald-50 text-emerald-700">
+                Active Premium
+              </span>
             )}
           </div>
+          {subscriptionDetails ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="bg-zinc-50/50 rounded-xl p-4 border border-zinc-100">
+                <span className="text-zinc-500 text-sm block mb-1">Status</span>
+                <div className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${
+                  subscriptionDetails.isActive
+                    ? "bg-emerald-50 text-emerald-700"
+                    : "bg-red-50 text-red-700"
+                }`}>
+                  {subscriptionDetails.isActive ? "Active" : "Expired"}
+                </div>
+              </div>
 
-          {/* Payment History Card */}
-          <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">Premium Payments</h2>
-              <button
-                onClick={fetchPayments}
-                disabled={refreshing}
-                className="inline-flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
+              <div className="bg-zinc-50/50 rounded-xl p-4 border border-zinc-100">
+                <span className="text-zinc-500 text-sm block mb-1">Start Date</span>
+                <div className="font-medium text-zinc-900">
+                  {formatDate(subscriptionDetails.startDate)}
+                </div>
+              </div>
+
+              <div className="bg-zinc-50/50 rounded-xl p-4 border border-zinc-100">
+                <span className="text-zinc-500 text-sm block mb-1">Expiry Date</span>
+                <div className="font-medium text-zinc-900">
+                  {formatDate(subscriptionDetails.expiryDate)}
+                </div>
+              </div>
+
+              <div className="bg-zinc-50/50 rounded-xl p-4 border border-zinc-100">
+                <span className="text-zinc-500 text-sm block mb-1">Days Remaining</span>
+                <div className="font-medium text-zinc-900">
+                  {subscriptionDetails.daysRemaining} days
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-zinc-50 rounded-xl p-6 text-center">
+              <p className="text-zinc-600">No subscription found</p>
+              <Link 
+                href="/pricing" 
+                className="inline-flex items-center mt-4 text-sm font-medium text-blue-600 hover:text-blue-700"
               >
-                <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-                Refresh
-              </button>
+                View Premium Plans
+                <ArrowRight className="w-4 h-4 ml-1" />
+              </Link>
+            </div>
+          )}
+        </div>
+
+        {/* Payment and Website Cards Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* Payment History Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-semibold text-zinc-900 mb-2">Payment History</h2>
+                <p className="text-sm text-zinc-500">View your payment history and website generations</p>
+              </div>
             </div>
 
-
-
-            <div className="space-y-4">
-              {payments.length > 0 ? (
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2">
+              {payments.length === 0 ? (
+                <div className="text-center py-8 border-2 border-dashed border-zinc-200 rounded-xl">
+                  <p className="text-zinc-500">No payments yet</p>
+                </div>
+              ) : (
                 payments.map((payment, index) => (
                   <div
-                    key={index}
-                    className="group p-4 bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 transition-all"
+                    key={payment.transactionHash || index}
+                    className="group p-4 bg-white rounded-xl border border-zinc-200 hover:border-zinc-300 hover:shadow-sm transition-all"
                   >
-                    <div className="flex flex-col gap-1">
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg font-semibold text-zinc-900">
-                          {payment.amount} SOL
-                        </span>
-                        <span className="px-2 py-0.5 text-xs font-medium bg-blue-50 text-blue-600 rounded-full capitalize">
-                          {payment.type}
-                        </span>
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <p className="font-medium text-zinc-900">
+                            {payment.type === 'premium' ? "Premium Subscription" : `${payment.amount} SOL`}
+                          </p>
+                          <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                            payment.type === 'premium' 
+                              ? 'bg-blue-50 text-blue-700 border border-blue-100'
+                              : 'bg-amber-50 text-amber-700 border border-amber-100'
+                          }`}>
+                            {payment.type === 'premium' ? 'Premium' : 'Website'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-zinc-500">
+                          {formatDate(payment.timestamp)}
+                        </p>
                       </div>
-                      <div className="flex items-center gap-2 text-sm text-zinc-500">
-                        <span>{formatDate(payment.timestamp)}</span>
-                        <span>•</span>
-                        <a
-                          href={getExplorerUrl(payment.transactionHash)}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-zinc-500 hover:text-blue-500 transition-colors"
+                      {payment.transactionHash && (
+                        <button
+                          onClick={() => window.open(getExplorerUrl(payment.transactionHash!), '_blank')}
+                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg text-zinc-600 hover:text-zinc-900 bg-white border border-zinc-200 hover:border-zinc-300 transition-colors gap-1.5"
                         >
-                          <span className="hover:underline">View on Explorer</span>
-                          <ExternalLink className="w-3 h-3" />
-                        </a>
-                      </div>
+                          View
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))
+              )}
+            </div>
+          </div>
+
+          {/* Website Generation History Card */}
+          <div className="bg-white rounded-2xl shadow-sm border border-zinc-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h2 className="text-xl font-semibold text-zinc-900">Generated Websites</h2>
+                  <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                    {totalGenerated} Total Generated
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div className="space-y-4 max-h-[400px] overflow-y-auto">
+              {websites.length === 0 ? (
+                <div className="text-center py-8 border-2 border-dashed border-zinc-200 rounded-xl">
+                  <p className="text-zinc-500">No websites generated yet</p>
+                </div>
               ) : (
-                <p className="text-center text-zinc-600 py-4">
-                  No payments found
-                </p>
+                websites.map((website, index) => (
+                  <div
+                    key={website.transactionHash || index}
+                    className="p-4 bg-white rounded-xl border border-zinc-200"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2 mb-1">
+                          <p className="font-medium text-zinc-900">
+                            {website.price ? `${website.price} SOL` : 'Premium Generation'}
+                          </p>
+                          <span className={`px-2 py-0.5 text-xs font-medium rounded-full ${
+                            website.price 
+                              ? 'bg-amber-50 text-amber-700'
+                              : 'bg-blue-50 text-blue-700'
+                          }`}>
+                            {website.price ? 'Website' : 'Premium'}
+                          </span>
+                        </div>
+                        <p className="text-sm text-zinc-500">
+                          {formatDate(new Date(website.timestamp).getTime())}
+                        </p>
+                      </div>
+                      {(website.hash || website.transactionHash) && (
+                        <button
+                          onClick={() => window.open(getExplorerUrl(website.hash || website.transactionHash!), '_blank')}
+                          className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-lg text-zinc-600 hover:text-zinc-900 bg-white border border-zinc-200 hover:border-zinc-300 transition-colors gap-1.5"
+                        >
+                          View
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                ))
               )}
             </div>
           </div>
