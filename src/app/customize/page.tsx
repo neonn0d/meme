@@ -230,6 +230,19 @@ export default function CustomizePage() {
     setIsLoading(true);
 
     try {
+      // Record website generation only for premium users
+      if (isSubscribed) {
+        await fetch('/api/websites', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            isPremium: true
+          })
+        });
+      }
+
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {

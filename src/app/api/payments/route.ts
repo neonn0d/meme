@@ -12,11 +12,11 @@ export async function GET() {
 
   try {
     const user = await clerkClient.users.getUser(userId);
-    const metadata = user.publicMetadata as unknown as UserPaymentMetadata;
-    const payments = metadata?.payments || [];
+    const metadata = user.publicMetadata;
+    const payments = (metadata as any)?.payments || [];
     
     // Calculate total spent from payments
-    const totalSpent = payments.reduce((total, payment) => total + payment.amount, 0);
+    const totalSpent = payments.reduce((total: number, payment: PaymentRecord) => total + payment.amount, 0);
     
     return NextResponse.json({
       payments,
@@ -38,16 +38,17 @@ export async function POST(req: Request) {
   try {
     const { payment } = await req.json();
     const user = await clerkClient.users.getUser(userId);
-    const metadata = user.publicMetadata as unknown as UserPaymentMetadata;
+    const currentMetadata = user.publicMetadata;
 
     // Get existing payments or initialize
-    const existingPayments = metadata?.payments || [];
+    const existingPayments = (currentMetadata as any)?.payments || [];
 
-    // Create new metadata object with updated payments
+    // Create new metadata object while preserving all existing fields
     const updatedMetadata = {
+      ...currentMetadata,  // Preserve all existing metadata
       payments: [...existingPayments, payment],
       // Calculate total from all payments including the new one
-      totalSpent: [...existingPayments, payment].reduce((total, p) => total + p.amount, 0)
+      totalSpent: [...existingPayments, payment].reduce((total: number, p: PaymentRecord) => total + p.amount, 0)
     };
 
     // Update user metadata in Clerk

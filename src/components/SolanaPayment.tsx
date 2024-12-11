@@ -62,7 +62,7 @@ export function SolanaPayment({ onSuccess, onClose }: SolanaPaymentProps) {
     setTransactionHash(null);
     setErrorMessage(null);
 
-    // If user is premium, skip payment
+    // If user is premium, skip payment and recording
     if (isSubscribed) {
       onSuccess();
       onClose();
@@ -116,20 +116,25 @@ export function SolanaPayment({ onSuccess, onClose }: SolanaPaymentProps) {
       setPaymentStatus('success');
       toast.success('Payment successful!');
       
-      // Increment website count
+      // Record website generation
       try {
         const response = await fetch('/api/websites', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-          }
+          },
+          body: JSON.stringify({
+            hash: signature,
+            price: SOLANA_PRICE,
+            isPremium: false
+          })
         });
 
         if (!response.ok) {
-          console.error('Failed to update website count');
+          console.error('Failed to record website generation');
         }
       } catch (error) {
-        console.error('Error updating website count:', error);
+        console.error('Error recording website generation:', error);
       }
       
       // Wait a moment to show success state before closing
