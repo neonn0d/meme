@@ -27,6 +27,7 @@ export const config = {
     "/preview",     // Protect preview
     "/templates",   // Protect templates
     "/history",     // Protect history
+    "/users",       // Protect users page
     "/api/(.*)"     // Protect all API routes if needed
   ],
 };
