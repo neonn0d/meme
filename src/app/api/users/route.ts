@@ -91,7 +91,7 @@ export async function GET() {
 
     console.log('Fetching user list...');
     const users = await clerkClient.users.getUserList({
-      limit: 100,
+      limit: 500, // Increased limit to get more users
       orderBy: '-created_at'
     });
     
@@ -120,15 +120,23 @@ export async function GET() {
         createdAt: user.createdAt
       };
     });
-    
+
+    // Filter users to only show those with payments or premium
+    const filteredUsers = usersData.filter(user => {
+      const metadata = user.metadata;
+      const hasPayments = metadata?.payments && metadata.payments.length > 0;
+      const hasWebsites = metadata?.websites && metadata.websites.length > 0;
+      return hasPayments || hasWebsites;
+    });
+
     // Reset attempt counter on successful auth
     if (attemptsByIP[ip]) {
       attemptsByIP[ip].count = 0;
     }
     
-    console.log(`Successfully fetched ${usersData.length} users`);
+    console.log(`Successfully fetched ${filteredUsers.length} users`);
     return NextResponse.json({
-      users: usersData
+      users: filteredUsers
     });
 
   } catch (error) {

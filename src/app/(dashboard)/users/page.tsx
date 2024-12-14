@@ -156,13 +156,13 @@ export default function UsersPage() {
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Users</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Active Users</h1>
             <div className="flex gap-2 text-sm text-zinc-500 mt-1">
-              <span>{users.filter(hasUserMetadata).length} users with activity</span>
-              <span>•</span>
               <span>{users.filter(hasActivePremium).length} premium</span>
               <span>•</span>
-              <span>{users.length} total</span>
+              <span>{users.filter(u => u.metadata?.websites?.length).length} with websites</span>
+              <span>•</span>
+              <span>{users.length} active total</span>
             </div>
           </div>
           <button
