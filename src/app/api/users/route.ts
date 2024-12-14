@@ -1,10 +1,54 @@
 import { auth, clerkClient } from '@clerk/nextjs';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
+import { createHash } from 'crypto';
+
+// Simple in-memory rate limiting
+const RATE_LIMIT_WINDOW = 15 * 60 * 1000; // 15 minutes
+const MAX_ATTEMPTS = 5;
+const attemptsByIP: { [key: string]: { count: number; timestamp: number } } = {};
+
+// Clean up old rate limit entries every hour
+setInterval(() => {
+  const now = Date.now();
+  Object.keys(attemptsByIP).forEach(ip => {
+    if (now - attemptsByIP[ip].timestamp > RATE_LIMIT_WINDOW) {
+      delete attemptsByIP[ip];
+    }
+  });
+}, 60 * 60 * 1000);
+
+interface Payment {
+  type: string;
+  amount: number;
+  status: string;
+  network: string;
+  timestamp: number;
+  expiryDate: number;
+  transactionHash: string;
+}
+
+interface Website {
+  price?: number;
+  timestamp: string;
+  transactionHash?: string;
+}
+
+interface UserMetadata {
+  payments?: Payment[];
+  websites?: Website[];
+  totalSpent?: number;
+  totalGenerated?: number;
+}
+
+function hashPassword(password: string): string {
+  return createHash('sha256').update(password + process.env.ADMIN_PASSWORD).digest('hex');
+}
 
 export async function GET() {
   try {
     const { userId } = auth();
+    const headersList = headers();
     
     if (!userId) {
       console.error('Unauthorized access attempt to /api/users');
@@ -14,13 +58,31 @@ export async function GET() {
       );
     }
 
+    // Rate limiting
+    const ip = headersList.get('x-forwarded-for') || 'unknown';
+    const now = Date.now();
+    
+    if (!attemptsByIP[ip]) {
+      attemptsByIP[ip] = { count: 0, timestamp: now };
+    } else if (now - attemptsByIP[ip].timestamp > RATE_LIMIT_WINDOW) {
+      attemptsByIP[ip] = { count: 0, timestamp: now };
+    }
+
+    if (attemptsByIP[ip].count >= MAX_ATTEMPTS) {
+      console.error(`Rate limit exceeded for IP ${ip}`);
+      return NextResponse.json(
+        { error: 'Too many attempts. Please try again later.' },
+        { status: 429 }
+      );
+    }
+
     // Check admin password
-    const headersList = headers();
     const adminPassword = headersList.get('X-Admin-Password');
     const correctPassword = process.env.ADMIN_PASSWORD;
 
-    if (!adminPassword || adminPassword !== correctPassword) {
-      console.error(`Invalid password attempt from user ${userId}`);
+    if (!adminPassword || !correctPassword || hashPassword(adminPassword) !== hashPassword(correctPassword)) {
+      console.error(`Invalid password attempt from user ${userId} (IP: ${ip})`);
+      attemptsByIP[ip].count++;
       return NextResponse.json(
         { error: 'Invalid password' },
         { status: 403 }
@@ -29,33 +91,50 @@ export async function GET() {
 
     console.log('Fetching user list...');
     const users = await clerkClient.users.getUserList({
-      limit: 100, // Adjust this based on your needs
+      limit: 100,
       orderBy: '-created_at'
     });
     
-    // Map users to only include necessary data
-    const usersData = users.map(user => ({
-      id: user.id,
-      username: user.username,
-      firstName: user.firstName,
-      lastName: user.lastName,
-      imageUrl: user.imageUrl,
-      metadata: user.publicMetadata,
-      lastSignInAt: user.lastSignInAt,
-      createdAt: user.createdAt
-    }));
+    const usersData = users.map(user => {
+      const metadata = user.publicMetadata as UserMetadata;
+
+      // Ensure arrays are sorted by timestamp (newest first)
+      if (metadata?.payments) {
+        metadata.payments.sort((a, b) => b.timestamp - a.timestamp);
+      }
+
+      if (metadata?.websites) {
+        metadata.websites.sort((a, b) => 
+          new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+        );
+      }
+
+      return {
+        id: user.id,
+        username: user.username,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        imageUrl: user.imageUrl,
+        metadata: metadata,
+        lastSignInAt: user.lastSignInAt,
+        createdAt: user.createdAt
+      };
+    });
+    
+    // Reset attempt counter on successful auth
+    if (attemptsByIP[ip]) {
+      attemptsByIP[ip].count = 0;
+    }
     
     console.log(`Successfully fetched ${usersData.length} users`);
     return NextResponse.json({
       users: usersData
     });
+
   } catch (error) {
     console.error('Error in /api/users:', error);
     return NextResponse.json(
-      { 
-        error: 'Internal Server Error',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

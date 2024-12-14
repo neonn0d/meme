@@ -5,14 +5,26 @@ import { formatDistanceToNow } from 'date-fns';
 import { Loader2, Lock } from 'lucide-react';
 
 interface Payment {
-  date: string;
+  type: string;
   amount: number;
+  status: string;
+  network: string;
+  timestamp: number;
+  expiryDate: number;
+  transactionHash: string;
+}
+
+interface Website {
+  price?: number;
+  timestamp: string;
+  transactionHash?: string;
 }
 
 interface UserMetadata {
   payments?: Payment[];
+  websites?: Website[];
   totalSpent?: number;
-  websites?: string[];
+  totalGenerated?: number;
 }
 
 interface User {
@@ -71,11 +83,24 @@ export default function UsersPage() {
 
   // Helper function to check if a user has any meaningful metadata
   const hasUserMetadata = (user: User) => {
+    const websites = user.metadata?.websites;
+    const payments = user.metadata?.payments;
     return !!(
-      user.metadata?.payments && user.metadata.payments.length > 0 ||
-      user.metadata?.websites && user.metadata.websites.length > 0 ||
-      user.metadata?.totalSpent
+      (websites && websites.length > 0) ||
+      (payments && payments.length > 0) ||
+      user.metadata?.totalSpent ||
+      user.metadata?.totalGenerated
     );
+  };
+
+  // Helper function to check if user has active premium
+  const hasActivePremium = (user: User) => {
+    const payments = user.metadata?.payments;
+    if (!payments || payments.length === 0) return false;
+    
+    const latestPayment = payments[0];
+    const expiryDate = new Date(latestPayment.expiryDate);
+    return expiryDate > new Date();
   };
 
   if (!isAuthenticated) {
@@ -132,9 +157,13 @@ export default function UsersPage() {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Users</h1>
-            <p className="text-sm text-zinc-500 mt-1">
-              {users.filter(hasUserMetadata).length} users with activity / {users.length} total
-            </p>
+            <div className="flex gap-2 text-sm text-zinc-500 mt-1">
+              <span>{users.filter(hasUserMetadata).length} users with activity</span>
+              <span>•</span>
+              <span>{users.filter(hasActivePremium).length} premium</span>
+              <span>•</span>
+              <span>{users.length} total</span>
+            </div>
           </div>
           <button
             onClick={() => setIsAuthenticated(false)}
@@ -171,7 +200,11 @@ export default function UsersPage() {
                       )}
                     </div>
                     <span className="text-sm text-zinc-500">
-                      Joined {formatDistanceToNow(new Date(user.createdAt))} ago
+                      {user.createdAt ? (
+                        <>Joined {formatDistanceToNow(new Date(user.createdAt))} ago</>
+                      ) : (
+                        'Recently joined'
+                      )}
                     </span>
                   </div>
                   
@@ -181,7 +214,19 @@ export default function UsersPage() {
                     <div className="bg-zinc-50 rounded-lg p-4">
                       <h3 className="text-sm font-medium text-zinc-600 mb-1">Premium Status</h3>
                       <p className="text-zinc-900">
-                        {user.metadata?.payments && user.metadata.payments.length > 0 ? 'Premium' : 'Free'}
+                        {(() => {
+                          const payments = user.metadata?.payments;
+                          if (!payments || payments.length === 0) return 'Free';
+                          
+                          const latestPayment = payments[0];
+                          const expiryDate = new Date(latestPayment.expiryDate);
+                          const now = new Date();
+                          
+                          if (expiryDate > now) {
+                            return `Premium (expires ${formatDistanceToNow(expiryDate, { addSuffix: true })})`;
+                          }
+                          return 'Free (Premium expired)';
+                        })()}
                       </p>
                     </div>
                     
@@ -197,31 +242,113 @@ export default function UsersPage() {
                     <div className="bg-zinc-50 rounded-lg p-4">
                       <h3 className="text-sm font-medium text-zinc-600 mb-1">Websites Generated</h3>
                       <p className="text-zinc-900">
-                        {user.metadata?.websites?.length || 0}
+                        {user.metadata?.totalGenerated || 0}
                       </p>
                     </div>
                   </div>
 
                   {/* Payment History */}
-                  {user.metadata?.payments && user.metadata.payments.length > 0 && (
-                    <div className="mt-4">
-                      <h3 className="text-sm font-medium text-zinc-600 mb-2">Payment History</h3>
-                      <div className="bg-zinc-50 rounded-lg p-4">
-                        <div className="space-y-2">
-                          {user.metadata.payments.map((payment: Payment, index: number) => (
-                            <div key={index} className="flex justify-between text-sm">
-                              <span className="text-zinc-600">
-                                {new Date(payment.date).toLocaleDateString()}
-                              </span>
-                              <span className="font-medium text-zinc-900">
-                                {payment.amount} SOL
-                              </span>
-                            </div>
-                          ))}
+                  {(() => {
+                    const payments = user.metadata?.payments;
+                    if (!payments || payments.length === 0) return null;
+                    
+                    return (
+                      <div className="mt-4">
+                        <h3 className="text-sm font-medium text-zinc-600 mb-2">Premium Payments</h3>
+                        <div className="bg-zinc-50 rounded-lg p-4">
+                          <div className="space-y-2">
+                            {payments.map((payment, index) => {
+                              const timestamp = new Date(payment.timestamp);
+                              const expiryDate = new Date(payment.expiryDate);
+                              const isValidDate = !isNaN(timestamp.getTime());
+                              const hash = payment.transactionHash;
+                              
+                              return (
+                                <div key={index} className="flex justify-between text-sm">
+                                  <div className="flex flex-col">
+                                    <span className="text-zinc-600">
+                                      {isValidDate 
+                                        ? timestamp.toLocaleDateString(undefined, {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric'
+                                          })
+                                        : 'Invalid Date'}
+                                    </span>
+                                    {hash ? (
+                                      <span className="text-xs text-zinc-500 truncate max-w-[200px]" title={hash}>
+                                        {hash.slice(0, 8)}...{hash.slice(-8)}
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs text-zinc-500">No transaction hash</span>
+                                    )}
+                                    <span className="text-xs text-zinc-500">
+                                      Expires: {formatDistanceToNow(expiryDate, { addSuffix: true })}
+                                    </span>
+                                  </div>
+                                  <div className="text-right">
+                                    <span className="font-medium text-zinc-900">
+                                      {payment.amount} SOL
+                                    </span>
+                                    <span className="text-xs text-zinc-500 block">
+                                      {payment.network}
+                                    </span>
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
+                    );
+                  })()}
+
+                  {/* Website History */}
+                  {(() => {
+                    const websites = user.metadata?.websites;
+                    if (!websites || websites.length === 0) return null;
+                    
+                    return (
+                      <div className="mt-4">
+                        <h3 className="text-sm font-medium text-zinc-600 mb-2">Website History</h3>
+                        <div className="bg-zinc-50 rounded-lg p-4">
+                          <div className="space-y-2">
+                            {websites.map((website, index) => {
+                              const timestamp = new Date(website.timestamp);
+                              const isValidDate = !isNaN(timestamp.getTime());
+                              const hash = website.transactionHash;
+                              
+                              return (
+                                <div key={index} className="flex justify-between text-sm">
+                                  <div className="flex flex-col">
+                                    <span className="text-zinc-600">
+                                      {isValidDate 
+                                        ? timestamp.toLocaleDateString(undefined, {
+                                            year: 'numeric',
+                                            month: 'short',
+                                            day: 'numeric'
+                                          })
+                                        : 'Invalid Date'}
+                                    </span>
+                                    {hash ? (
+                                      <span className="text-xs text-zinc-500 truncate max-w-[200px]" title={hash}>
+                                        {hash.slice(0, 8)}...{hash.slice(-8)}
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs text-zinc-500">No transaction hash</span>
+                                    )}
+                                  </div>
+                                  <span className="font-medium text-zinc-900">
+                                    {website.price ? `${website.price} SOL` : 'Free'}
+                                  </span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
               </div>
             </div>
