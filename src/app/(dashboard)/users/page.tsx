@@ -12,7 +12,7 @@ interface Payment {
 interface UserMetadata {
   payments?: Payment[];
   totalSpent?: number;
-  websites?: any[];
+  websites?: string[];
 }
 
 interface User {
@@ -21,7 +21,7 @@ interface User {
   firstName: string | null;
   lastName: string | null;
   imageUrl: string;
-  metadata: UserMetadata;
+  metadata?: UserMetadata;
   lastSignInAt: string;
   createdAt: string;
 }
@@ -47,7 +47,19 @@ export default function UsersPage() {
       }
       
       const data = await response.json();
-      setUsers(data.users);
+      // Sort users: those with metadata first, then by creation date
+      const sortedUsers = data.users.sort((a: User, b: User) => {
+        const aHasMetadata = hasUserMetadata(a);
+        const bHasMetadata = hasUserMetadata(b);
+        
+        if (aHasMetadata && !bHasMetadata) return -1;
+        if (!aHasMetadata && bHasMetadata) return 1;
+        
+        // If both have or don't have metadata, sort by creation date (newest first)
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      });
+      
+      setUsers(sortedUsers);
       setIsAuthenticated(true);
       setError(null);
     } catch (err) {
@@ -55,6 +67,15 @@ export default function UsersPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Helper function to check if a user has any meaningful metadata
+  const hasUserMetadata = (user: User) => {
+    return !!(
+      user.metadata?.payments && user.metadata.payments.length > 0 ||
+      user.metadata?.websites && user.metadata.websites.length > 0 ||
+      user.metadata?.totalSpent
+    );
   };
 
   if (!isAuthenticated) {
@@ -109,7 +130,12 @@ export default function UsersPage() {
     <div className="min-h-screen p-6 sm:p-8">
       <div className="max-w-7xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Users</h1>
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Users</h1>
+            <p className="text-sm text-zinc-500 mt-1">
+              {users.filter(hasUserMetadata).length} users with activity / {users.length} total
+            </p>
+          </div>
           <button
             onClick={() => setIsAuthenticated(false)}
             className="text-sm text-zinc-600 hover:text-zinc-900"
@@ -122,7 +148,9 @@ export default function UsersPage() {
           {users.map((user) => (
             <div
               key={user.id}
-              className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6"
+              className={`bg-white rounded-xl shadow-sm border ${
+                hasUserMetadata(user) ? 'border-zinc-300' : 'border-zinc-200'
+              } p-6`}
             >
               <div className="flex items-start gap-4">
                 <img
@@ -132,9 +160,16 @@ export default function UsersPage() {
                 />
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-lg font-semibold text-zinc-900">
-                      {user.username || `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Anonymous User'}
-                    </h2>
+                    <div>
+                      <h2 className="text-lg font-semibold text-zinc-900">
+                        {user.username || `${user.id|| ''} ${user.username || ''}`.trim() || 'Anonymous User'}
+                      </h2>
+                      {hasUserMetadata(user) && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+                          Active User
+                        </span>
+                      )}
+                    </div>
                     <span className="text-sm text-zinc-500">
                       Joined {formatDistanceToNow(new Date(user.createdAt))} ago
                     </span>
