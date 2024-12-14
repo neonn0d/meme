@@ -171,6 +171,20 @@ export function Footer() {
                 </svg>
               </a>
             </div>
+            <div className="mt-10">
+              <a
+                href="https://www.producthunt.com/posts/buidl-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-buidl&#0045;2"
+                target="_blank"
+              >
+                <img
+                  src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=702734&theme=dark"
+                  alt="BUIDL - Memecoin&#0032;website&#0032;generator | Product Hunt"
+                  className="w-[250px] h-[54px]"
+                  width="250"
+                  height="54"
+                />
+              </a>
+            </div>
           </div>
         </div>
 
