@@ -6,6 +6,7 @@ import CTA from "@/components/CTA"
 import BuidlToken from "@/components/BuidlToken"
 import FAQ from "@/components/FAQ"
 import Partners from "@/components/Partners"
+import TemplateGrid from "@/components/templategrid"
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <main>
         <Hero />
         <Features />
+        <TemplateGrid />
         <FAQ />
         <BuidlToken />
         <Partners />
