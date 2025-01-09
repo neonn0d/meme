@@ -192,7 +192,7 @@ export function Footer() {
         <div className="mt-8 pt-4 border-t border-zinc-200">
           <div className="flex justify-between items-center">
             <p className="text-xs text-zinc-500">
-              2024 BUIDL. All rights reserved.
+              2025 BUIDL. All rights reserved.
             </p>
             <div className="flex gap-4">
               <Link
