@@ -92,10 +92,8 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link
-                  href="https://buidlcoin.medium.com/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+              <Link
+                  href="/blog"
                   className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors duration-200"
                 >
                   Blog
