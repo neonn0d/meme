@@ -196,10 +196,6 @@ export default function Terms() {
               </div>
             </div>
           </section>
-
-          <div className="text-sm text-center text-zinc-500 pt-8">
-            Last updated: {new Date().toLocaleDateString()}
-          </div>
         </div>
       </div>
     </div>

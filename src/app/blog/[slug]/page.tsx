@@ -22,6 +22,12 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   return {
     title: `${post.title} | BUIDL Blog`,
     description: post.excerpt,
+    keywords: "memecoin website template, memecoin website template free, best memecoin website, meme coin website template github, how to make a meme coin website, memecoin designer, memecoin trading, create meme coin on base, create memecoin website, build memecoin website, launch memecoin site, memecoin generator",
+    openGraph: {
+      title: post.title,
+      description: post.excerpt,
+      type: 'article',
+    }
   };
 }
 
@@ -95,6 +101,33 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <article className="container mx-auto px-4 py-16 max-w-4xl">
+      {/* Schema.org markup for search engines */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            "headline": post.title,
+            "description": post.excerpt,
+            "keywords": "memecoin website template, memecoin website template free, best memecoin website, meme coin website template github, how to make a meme coin website, memecoin designer, memecoin trading, create meme coin on base",
+            "author": {
+              "@type": "Organization",
+              "name": post.author
+            },
+            "datePublished": post.publishedAt,
+            "image": post.image,
+            "publisher": {
+              "@type": "Organization",
+              "name": "BUIDL",
+              "logo": {
+                "@type": "ImageObject",
+                "url": "/logo.png"
+              }
+            }
+          })
+        }}
+      />
       {post.image && (
         <div className="relative h-[400px] mb-8 rounded-xl overflow-hidden">
           <img
@@ -117,6 +150,10 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
       </header>
 
       <div className="prose dark:prose-invert max-w-none">
+        {/* Hidden SEO text - visible to search engines */}
+        <div className="hidden">
+          Looking for memecoin website template, best memecoin website templates, memecoin website template free, meme coin website template github, how to make a meme coin website, memecoin designer tools, memecoin trading platform, create meme coin on base chain. BUIDL offers professional memecoin website builder and templates.
+        </div>
         {renderContent(post.content)}
       </div>
     </article>
