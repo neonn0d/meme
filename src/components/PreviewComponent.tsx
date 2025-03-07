@@ -9,6 +9,7 @@ import { generateCosmicTemplate } from '@/templates/cosmic/template';
 import { generateMinimalTemplate } from '@/templates/minimal/template';
 import { generatePepeTemplate } from '@/templates/pepe/template';
 import { generateChristmasTemplate } from '@/templates/christmas/template';
+import { generatePlayfulTemplate } from '@/templates/playful/template';
 
 export function PreviewComponent() {
   const searchParams = useSearchParams();
@@ -59,6 +60,9 @@ export function PreviewComponent() {
             break;
           case 'christmas':
             generatedTemplate = generateChristmasTemplate(previewData);
+            break;
+          case 'playful':
+            generatedTemplate = generatePlayfulTemplate(previewData);
             break;
           default:
             generatedTemplate = generateModernTemplate(previewData);

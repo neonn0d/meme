@@ -272,13 +272,14 @@ export const generatePepeCSS = (data: PreviewData): string => {
         color: var(--text-secondary);
         margin: 1rem 0 2rem;
         max-width: 800px;
-        text-align: center;
+        text-align: left;
     }
 
     @media (max-width: 768px) {
       .hero-description {
         font-size: 1rem;
         margin: 0.75rem 0 1.5rem;
+        text-align: center;
       }
     }
 

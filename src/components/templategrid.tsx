@@ -77,16 +77,16 @@ const templates: Template[] = [
     ],
   },
   {
-    id: "coming-soon",
-    name: "Coming Soon",
+    id: "playful",
+    name: "Playful Template",
     description:
-      "New templates are being developed to provide even more options for your memecoin website.",
-    image: "/og-image.png",
+      "Playful, animated design with character-driven visuals and engaging animations.",
+    image: "/templates/playful.png",
     features: [
-      "DeFi-focused template",
-      "Gaming theme template",
-      "Community-driven design",
-      "Advanced features",
+      "Hero section with token overview",
+      "Tokenomics breakdown section",
+      "Roadmap presentation",
+      "Team & partners showcase",
     ],
   },
 ];

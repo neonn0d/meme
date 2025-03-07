@@ -18,7 +18,8 @@ import toast from "react-hot-toast";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PreviewFrame } from "@/components/PreviewFrame";
 import Link from "next/link";
-import { Monitor, Smartphone, ChevronDown } from "lucide-react";
+import { Monitor, Smartphone, ChevronDown, Shuffle } from "lucide-react";
+import { colorPairs } from "./components/BasicInfoForm";
 
 interface RoadmapPhase {
   title: string;
@@ -82,7 +83,7 @@ export default function CustomizePage() {
       twitter: "https://x.com/buidlcoin",
       discord: "https://discord.gg/UHDdNH574Y",
     },
-    buyLink: "https://raydium.io/swap/",
+    buyLink: "https://buidl.co.in",
     tokenomics: {
       totalSupply: "1000000000",
       taxBuy: "5",
@@ -384,6 +385,35 @@ export default function CustomizePage() {
                 )}
               </div>
               <div className="flex items-center gap-4">
+                {showPreview && (
+                  <button
+                    onClick={() => {
+                      // Get available color pairs
+                      const availableIndices = Array.from(
+                        { length: colorPairs.length },
+                        (_, i) => i
+                      );
+                      
+                      // Pick a random color pair
+                      const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                      const randomPair = colorPairs[randomIndex];
+                      
+                      // Apply the new colors
+                      setFields({
+                        ...fields,
+                        primaryColor: randomPair.primary,
+                        secondaryColor: randomPair.secondary,
+                      });
+                    }}
+                    style={{ 
+                      background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
+                    }}
+                    className="p-2 rounded-full text-white hover:opacity-90 transition-all duration-200"
+                    title="Randomize Colors"
+                  >
+                    <Shuffle className="w-4 h-4" />
+                  </button>
+                )}
                 {/* Show preview controls on desktop when preview is active */}
                 {showPreview && (
                   <div className="hidden md:flex items-center gap-2">

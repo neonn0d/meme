@@ -21,7 +21,7 @@ interface BasicInfoFormProps {
 }
 
 // Predefined color combinations that look good together
-const colorPairs = [
+export const colorPairs = [
   { primary: "#FF4081", secondary: "#7C4DFF" }, // Pink & Purple - Modern, playful
   { primary: "#00BCD4", secondary: "#FF9800" }, // Cyan & Orange - Fresh, energetic
   { primary: "#4CAF50", secondary: "#FFC107" }, // Green & Amber - Natural, warm
@@ -175,7 +175,11 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
           <h3 className="text-lg font-medium">Brand Colors</h3>
           <div
             onClick={randomizeColors}
-            className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 cursor-pointer transition-colors duration-200"
+            style={{ 
+              background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
+              color: '#FFFFFF'
+            }}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md cursor-pointer hover:opacity-90 transition-all duration-200"
           >
             <Shuffle className="w-4 h-4" />
             Randomize Colors

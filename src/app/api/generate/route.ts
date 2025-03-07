@@ -5,6 +5,7 @@ import { generateCosmicTemplate } from "@/templates/cosmic/template";
 import { generateMinimalTemplate } from "@/templates/minimal/template";
 import { generatePepeTemplate } from "@/templates/pepe/template";
 import { generateChristmasTemplate } from "@/templates/christmas/template";
+import { generatePlayfulTemplate } from "@/templates/playful/template";
 import { GenerateRequestBody, GeneratedTemplate, PreviewData } from "@/types";
 import JSZip from 'jszip';
 
@@ -33,6 +34,7 @@ export async function POST(request: NextRequest) {
                             templateId === 'pepe' ? 'pepe-space-v1' :
                             templateId === 'christmas' ? 'christmas-space-v1' :
                             templateId === 'minimal' ? 'minimal-space-v1' :
+                            templateId === 'playful' ? 'playful-character-v1' :
                             templateId;
 
     // Create preview data
@@ -90,6 +92,9 @@ export async function POST(request: NextRequest) {
         break;
       case 'pepe-space-v1':
         generatedFiles = generatePepeTemplate(previewData);
+        break;
+      case 'playful-character-v1':
+        generatedFiles = generatePlayfulTemplate(previewData);
         break;
       default:
         console.error('Invalid template ID:', mappedTemplateId);
