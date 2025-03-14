@@ -50,7 +50,7 @@ export function RoadmapForm({ fields, onChange }: RoadmapFormProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {(fields.roadmap?.phases || []).map((phase, index) => (
           <div
             key={index}

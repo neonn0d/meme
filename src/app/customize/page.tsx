@@ -18,8 +18,45 @@ import toast from "react-hot-toast";
 import { useSubscription } from "@/hooks/useSubscription";
 import { PreviewFrame } from "@/components/PreviewFrame";
 import Link from "next/link";
-import { Monitor, Smartphone, ChevronDown, Shuffle } from "lucide-react";
+import { Monitor, Smartphone, ChevronDown, Shuffle, Eye, Edit } from "lucide-react";
 import { colorPairs } from "./components/BasicInfoForm";
+import Head from "next/head";
+import { MiniNav } from "@/components/MiniNav";
+
+// Animation styles will be injected via a component
+const CustomStyles = () => {
+  return (
+    <Head>
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        
+        .animate-slideDown {
+          animation: slideDown 0.2s ease-out forwards;
+        }
+        
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .scrollbar-hide {
+          -ms-overflow-style: none;  /* IE and Edge */
+          scrollbar-width: none;  /* Firefox */
+        }
+      `}</style>
+    </Head>
+  );
+};
 
 interface RoadmapPhase {
   title: string;
@@ -125,7 +162,7 @@ export default function CustomizePage() {
     },
     buyLink: "https://buidl.co.in",
     tokenomics: {
-      totalSupply: "1000000000",
+      totalSupply: "10000000",
       taxBuy: "5",
       taxSell: "5",
       lpLocked: "2 Years",
@@ -326,6 +363,12 @@ export default function CustomizePage() {
   };
 
   const [isClient, setIsClient] = useState(false);
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const activeTabRef = useRef<HTMLButtonElement>(null);
+  const [indicatorStyle, setIndicatorStyle] = useState({
+    left: '0px',
+    width: '0px',
+  });
 
   useEffect(() => {
     // Set isClient to true when component mounts (client-side only)
@@ -357,166 +400,178 @@ export default function CustomizePage() {
     }
   }, [activeView]);
 
-  return (
-    <div className=" bg-gray-50 overflow-x-hidden">
-      <div className="w-screen min-w-full">
-        <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Header with controls */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 py-4 px-4 md:px-6 border-b border-gray-200">
-            <div>
-              <h1 className="text-2xl font-bold">Memecoin Website Generator</h1>
-              <p className="text-gray-500 text-sm">
-                Customize your website and preview in real-time
-              </p>
-            </div>
-            <div className="flex items-center gap-2 w-full md:w-auto">
-              {/* View Mode Tabs - Only visible on small screens */}
-              <div className="flex items-center mr-2 md:hidden">
-                <button
-                  onClick={() => setActiveView('edit')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-l-md ${
-                    activeView === 'edit'
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Edit
-                </button>
-                <button
-                  onClick={() => setActiveView('preview')}
-                  className={`px-3 py-1.5 text-sm font-medium rounded-r-md ${
-                    activeView === 'preview'
-                      ? 'bg-black text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  Preview
-                </button>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setIsMobile(false)}
-                  className={`p-2 rounded text-sm font-medium ${
-                    !isMobile
-                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                  }`}
-                  title="Desktop View"
-                >
-                  <Monitor className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => setIsMobile(true)}
-                  className={`p-2 rounded text-sm font-medium ${
-                    isMobile
-                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                  }`}
-                  title="Mobile View"
-                >
-                  <Smartphone className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => {
-                    // Get available color pairs
-                    const availableIndices = Array.from(
-                      { length: colorPairs.length },
-                      (_, i) => i
-                    );
-                    
-                    // Pick a random color pair
-                    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-                    const randomPair = colorPairs[randomIndex];
-                    
-                    // Apply the new colors
-                    setFields({
-                      ...fields,
-                      primaryColor: randomPair.primary,
-                      secondaryColor: randomPair.secondary,
-                    });
-                  }}
-                  style={{ 
-                    background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
-                  }}
-                  className="p-2 rounded-full text-white hover:opacity-90 transition-all duration-200"
-                  title="Randomize Colors"
-                >
-                  <Shuffle className="w-4 h-4" />
-                </button>
-              </div>
-              <button
-                onClick={handleSubmit}
-                disabled={isLoading}
-                className="w-full md:w-auto px-6 py-2 bg-black text-white text-sm md:text-base font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
-              >
-                {isLoading ? "Generating..." : "Generate"}
-              </button>
-            </div>
-          </div>
+  // Scroll active tab into view when it changes
+  useEffect(() => {
+    if (isClient && activeTabRef.current) {
+      activeTabRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center'
+      });
+    }
+  }, [activeTab, isClient]);
 
+  // Update the indicator position when the active tab changes
+  useEffect(() => {
+    if (tabsRef.current && isClient) {
+      const activeTabElement = tabsRef.current.querySelector(`[data-tab="${activeTab}"]`) as HTMLElement;
+      if (activeTabElement) {
+        const tabsRect = tabsRef.current.getBoundingClientRect();
+        const activeRect = activeTabElement.getBoundingClientRect();
+        
+        setIndicatorStyle({
+          left: `${activeRect.left - tabsRect.left}px`,
+          width: `${activeRect.width}px`,
+        });
+      }
+    }
+  }, [activeTab, isClient]);
+
+  return (
+    <div className="bg-gray-50 overflow-x-hidden">
+      <CustomStyles />
+      <div className="w-screen min-w-full">
+        <div className="bg-white shadow-lg overflow-hidden">
           {/* Main Content */}
-          <div className="flex min-h-full">
+          <div className="flex min-h-full h-screen">
             {/* Edit Panel - Always visible on larger screens, conditionally visible on small screens */}
-            <div className={`w-full md:w-1/3 border-r border-gray-200 overflow-y-auto max-h-[87.5vh] ${
+            <div className={`w-full md:w-1/4 border-r border-gray-200 overflow-y-auto max-h-[100vh] ${
               !isClient ? 'block' : activeView === 'edit' || (isClient && window.innerWidth >= 768) ? 'block' : 'hidden'
             }`}>
-              <div className="pb-4 px-4 md:px-6">
-                {/* Tab Navigation - Made sticky */}
-                <div className="sticky top-0 bg-white z-10">
-                  <div className="flex items-center justify-between mb-2">
+              <div className="pb-4 px-4 md:px-2">
+                {/* Memecoin Website Generator Title */}
+                <div className="sticky top-0 bg-white z-20 pt-2">
+                  <div className="flex items-center justify-between py-2 border-b border-gray-200 mb-2">
+                    <MiniNav />
+                    <div className="flex items-center justify-between pb-2 border-b border-gray-200 gap-2">
+                    {/* Device Switchers */}
+                    <div className="flex items-center gap-1">
+                      <button
+                        onClick={() => setIsMobile(false)}
+                        className={`p-1.5 rounded text-sm font-medium ${
+                          !isMobile
+                            ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                            : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                        }`}
+                        title="Desktop View"
+                      >
+                        <Monitor className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => setIsMobile(true)}
+                        className={`p-1.5 rounded text-sm font-medium ${
+                          isMobile
+                            ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                            : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                        }`}
+                        title="Mobile View"
+                      >
+                        <Smartphone className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => {
+                          // Get available color pairs
+                          const availableIndices = Array.from(
+                            { length: colorPairs.length },
+                            (_, i) => i
+                          );
+                          
+                          // Pick a random color pair
+                          const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                          const randomPair = colorPairs[randomIndex];
+                          
+                          // Apply the new colors
+                          setFields({
+                            ...fields,
+                            primaryColor: randomPair.primary,
+                            secondaryColor: randomPair.secondary,
+                          });
+                        }}
+                        style={{ 
+                          background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
+                        }}
+                        className="p-1.5 rounded-full text-white hover:opacity-90 transition-all duration-200"
+                        title="Randomize Colors"
+                      >
+                        <Shuffle className="w-4 h-4" />
+                      </button>
+                    </div>
+                    
+                    {/* Generate Button */}
                     <button
-                      onClick={() => setShowTabsMenu(!showTabsMenu)}
-                      className="md:hidden flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
+                      onClick={handleSubmit}
+                      disabled={isLoading}
+                      className="px-4 py-1.5 bg-black text-white text-sm font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
                     >
-                      {tabs.find((tab) => tab.id === activeTab)?.label}
-                      <ChevronDown className="w-4 h-4 ml-1" />
+                      {isLoading ? "Generating..." : "Generate"}
                     </button>
                   </div>
+                  </div>
                   
-                  {/* Mobile Dropdown Menu */}
-                  {showTabsMenu && (
-                    <div className="md:hidden absolute z-20 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200">
-                      <div className="py-1">
-                        {tabs.map((tab) => (
-                          <button
-                            key={tab.id}
-                            onClick={() => {
-                              setActiveTab(tab.id);
-                              setShowTabsMenu(false);
-                            }}
-                            className={`block w-full text-left px-4 py-2 text-sm ${
-                              activeTab === tab.id
-                                ? "bg-gray-100 text-gray-900 font-medium"
-                                : "text-gray-700 hover:bg-gray-50"
-                            }`}
-                          >
-                            {tab.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Desktop Tabs */}
-                  <div className="hidden md:flex space-x-1 overflow-x-auto pb-1 border-b">
+                
+                 
+                
+                  {/* Compact Horizontal Tabs for Desktop */}
+                  <div 
+                    ref={tabsRef} 
+                    className="hidden md:flex overflow-x-hidden border-b scrollbar-hide"
+                  >
                     {tabs.map((tab) => (
                       <button
                         key={tab.id}
+                        ref={activeTab === tab.id ? activeTabRef : null}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`px-3 py-2 text-sm font-medium rounded-t-md whitespace-nowrap ${
+                        className={`px-3 py-1.5 text-sm whitespace-nowrap transition-all duration-200 border-b-2 ${
                           activeTab === tab.id
-                            ? "bg-black text-white"
-                            : "text-gray-600 hover:bg-gray-100"
+                            ? "border-black text-black font-medium"
+                            : "border-transparent text-gray-600 hover:text-gray-900"
                         }`}
                       >
                         {tab.label}
                       </button>
                     ))}
                   </div>
+                  
+                  {/* Mobile Tab Selector - Compact Dropdown */}
+                  <div className="md:hidden mb-3">
+                    <div className="relative">
+                      <button
+                        onClick={() => setShowTabsMenu(!showTabsMenu)}
+                        className="flex items-center justify-between w-full px-3 py-1.5 text-sm font-medium bg-white border border-gray-200 rounded-md shadow-sm hover:bg-gray-50 transition-all duration-200"
+                      >
+                        <span>{tabs.find((tab) => tab.id === activeTab)?.label}</span>
+                        <ChevronDown className={`w-4 h-4 ml-1 transition-transform duration-200 ${showTabsMenu ? 'rotate-180' : ''}`} />
+                      </button>
+                      
+                      {/* Mobile Dropdown Menu */}
+                      {showTabsMenu && (
+                        <div className="absolute z-20 mt-1 w-full bg-white rounded-md shadow-lg border border-gray-200 overflow-hidden animate-slideDown">
+                          <div className="py-1">
+                            {tabs.map((tab) => (
+                              <button
+                                key={tab.id}
+                                onClick={() => {
+                                  setActiveTab(tab.id);
+                                  setShowTabsMenu(false);
+                                }}
+                                className={`block w-full text-left px-3 py-1.5 text-sm transition-colors duration-150 ${
+                                  activeTab === tab.id
+                                    ? "bg-gray-100 text-gray-900 font-medium"
+                                    : "text-gray-700 hover:bg-gray-50"
+                                }`}
+                              >
+                                {tab.label}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
-
-                {/* Tab Content */}
-                <div className="space-y-8">
+                
+                {/* Tab Content with padding to account for sticky header */}
+                <div className="space-y-6 pt-2">
                   {/* Basic Info Section */}
                   {activeTab === "basic" && (
                     <div>
@@ -601,21 +656,35 @@ export default function CustomizePage() {
             </div>
             
             {/* Preview Panel - Always visible on larger screens, conditionally visible on small screens */}
-            <div className={`w-full md:w-2/3 ${
+            <div className={`w-full md:w-3/4 ${
               !isClient ? 'block' : activeView === 'preview' || (isClient && window.innerWidth >= 768) ? 'block' : 'hidden'
             }`}>
-              <div className="w-full h-full min-h-[87.5vh] transition-all duration-300 relative pr-5">
+              <div className="w-full h-full min-h- scrollbar-hide  transition-all duration-300 relative bg-gray-100">
                 <iframe
                   src={generatePreviewUrl()}
                   className={`w-full h-full border-0 transition-all duration-300 ${
-                    isMobile ? "max-w-[375px] mx-auto border border-black" : ""
-                  }`}
+                    isLoading ? 'opacity-50' : 'opacity-100'
+                  } ${isMobile ? "max-w-[375px] mx-auto border border-black" : ""}`}
                 />
+                {isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-black"></div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Fixed Toggle Button */}
+      <button
+        onClick={() => setActiveView(activeView === 'edit' ? 'preview' : 'edit')}
+        className="fixed bottom-4 right-4 p-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 z-50 md:hidden"
+        title={activeView === 'edit' ? 'Switch to Preview' : 'Switch to Editor'}
+      >
+        {activeView === 'edit' ? <Eye className="w-5 h-5" /> : <Edit className="w-5 h-5" />}
+      </button>
 
       {/* Payment Modal */}
       {showPaymentModal && (

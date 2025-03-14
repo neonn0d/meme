@@ -37,11 +37,11 @@ export function TeamForm({ fields, onChange }: TeamFormProps) {
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2  gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {(fields.team || []).map((member, index) => (
           <div 
             key={index} 
-            className="group bg-white rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden"
+            className="group rounded-xl border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden bg-gray-100 border-gray-200"
           >
             {/* Preview Header */}
             <div className="relative p-4 bg-gradient-to-br from-primary/5 to-primary/10">

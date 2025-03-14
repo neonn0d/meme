@@ -79,7 +79,7 @@ export function SectionsForm({ fields, onChange }: SectionsFormProps) {
           break;
         case 'tokenomics':
           updatedFields.tokenomics = {
-            totalSupply: "1000000000",
+            totalSupply: "10000000",
             taxBuy: "2",
             taxSell: "3",
             lpLocked: "50%",
@@ -143,7 +143,7 @@ export function SectionsForm({ fields, onChange }: SectionsFormProps) {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {sections.map((section) => (
         <div
           key={section.id}

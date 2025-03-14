@@ -5,21 +5,21 @@ import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { SolanaProvider } from './SolanaProvider';
 
-interface ClientLayoutProps {
-  children: React.ReactNode;
-}
-
-export function ClientLayout({ children }: ClientLayoutProps) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isPreviewPage = pathname === '/preview';
+  
+  // Only hide navbar and footer on preview and customize pages
+  const isPreviewPage = pathname === "/preview";
+  const isCustomizePage = pathname === "/customize";
+  const hideNavbarAndFooter = isPreviewPage || isCustomizePage;
 
   return (
     <SolanaProvider>
-      {!isPreviewPage && <Navbar />}
-      <main className={!isPreviewPage ? "min-h-full pt-16" : "min-h-screen"}>
+      {!hideNavbarAndFooter && <Navbar />}
+      <main className={!isPreviewPage ? "min-h-screen" : "min-h-screen"}>
         {children}
       </main>
-      {!isPreviewPage && <Footer />}
+      {!hideNavbarAndFooter && <Footer />}
     </SolanaProvider>
   );
 }
