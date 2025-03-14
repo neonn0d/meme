@@ -58,108 +58,8 @@ export default function CustomizePage() {
   const rawTemplateId = searchParams.get("template");
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(false);
-
-  // Initialize fields with demo content
-  const [fields, setFields] = useState<CustomizationFields>({
-    templateId: rawTemplateId || "modern",
-    sections: {
-      hero: true,
-      tokenomics: true,
-      roadmap: true,
-      team: true,
-      faq: true,
-      community: true,
-    },
-    primaryColor: "#3B82F6",
-    secondaryColor: "#c0bfbc",
-    coinName: "BUIDL Token",
-    tokenSymbol: "BUIDL",
-    description:
-      "BUIDL helps you create and launch memecoin websites effortlessly. Build your community, showcase your coin, and get ready to moon! 🌙",
-    logoUrl: "https://www.buidl.co.in/logo.png",
-    contractAddress: "0xD0ntL34v3Th1sPl4c3h0ld3rHere",
-    socialLinks: {
-      telegram: "https://t.me/buidl_community",
-      twitter: "https://x.com/buidlcoin",
-      discord: "https://discord.gg/UHDdNH574Y",
-    },
-    buyLink: "https://buidl.co.in",
-    tokenomics: {
-      totalSupply: "1000000000",
-      taxBuy: "5",
-      taxSell: "5",
-      lpLocked: "2 Years",
-    },
-    seo: {
-      title: "BUIDL | Ultimate Memecoin Website Generator",
-      description:
-        "Easily create your memecoin website with BUIDL! Fast, customizable, and perfect for building your community. Start your journey to the moon today! 🚀",
-      keywords:
-        "memecoin website generator, customizable templates, crypto projects, cryptocurrency websites, blockchain templates, crypto community builder, tokenomics design, web3 tools, launchpad websites, crypto marketing tools, responsive crypto templates, degen tools, blockchain website creator, memecoin branding, crypto project showcase, Ethereum, Polygon, Solana websites, crypto growth platform, viral crypto campaigns",
-      ogImage: "https://placehold.co/1200x630/ffffff/000000?text=BUIDL",
-    },
-    roadmap: {
-      phases: [
-        {
-          title: "Concept & Vision",
-          description:
-            "Define your big idea and lay out the foundation for your project. Set clear goals and build excitement around what’s coming next. 🚀",
-          date: "Q1 2024",
-        },
-        {
-          title: "Build & Launch",
-          description:
-            "Start creating! Focus on getting your product, service, or community up and running. This is where things start to come to life. 🌟",
-          date: "Q2 2025",
-        },
-        {
-          title: "Growth & Expansion",
-          description:
-            "Take things to the next level! Expand your reach, grow your audience, and roll out exciting new features to keep the momentum strong. 💫",
-          date: "Q3 2025",
-        },
-      ],
-    },
-
-    team: [
-      {
-        name: "Meme Lord",
-        role: "Platform Architect",
-        avatar:
-          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&facialHairType=Blank&clotheType=BlazerShirt",
-      },
-      {
-        name: "Degen Dev",
-        role: "Smart Contract Wizard",
-        avatar:
-          "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&facialHairType=Blank&clotheType=BlazerShirt",
-      },
-      {
-        name: "Ser Launch",
-        role: "Community Lead",
-        avatar:
-          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortRound&facialHairType=BeardLight&clotheType=Hoodie",
-      },
-    ],
-    faq: [
-      {
-        question: "What is BUIDL? 🚀",
-        answer:
-          "BUIDL is the ultimate tool for degens who need a memecoin website fast. No coding, no fluff—just pick, tweak, and you’re ready to shill your coin.",
-      },
-      {
-        question: "How does it work? ⚡",
-        answer:
-          "Pick a template, add your coin’s story (and a touch of meme magic), and hit generate. Your site’s ready to download and take to the moon in minutes.",
-      },
-      {
-        question: "Why BUIDL? 🌟",
-        answer:
-          "Because you’ve got better things to do, like building hype. We make creating memecoin sites fast, fun, and simple. No stress, just vibes. LFG!",
-      },
-    ],
-  });
-
+  const [showTabsMenu, setShowTabsMenu] = useState(false);
+  const [activeView, setActiveView] = useState<'edit' | 'preview'>('edit');
   const [activeTab, setActiveTab] = useState<TabId>("basic");
   const [isLoading, setIsLoading] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -200,8 +100,105 @@ export default function CustomizePage() {
     },
   });
 
-  const [showPreview, setShowPreview] = useState(false);
-  const [showTabsMenu, setShowTabsMenu] = useState(false);
+  const [fields, setFields] = useState<CustomizationFields>({
+    templateId: rawTemplateId || "modern",
+    sections: {
+      hero: true,
+      tokenomics: true,
+      roadmap: true,
+      team: true,
+      faq: true,
+      community: true,
+    },
+    primaryColor: "#3B82F6",
+    secondaryColor: "#c0bfbc",
+    coinName: "BUIDL Token",
+    tokenSymbol: "BUIDL",
+    description:
+      "BUIDL helps you create and launch memecoin websites effortlessly. Build your community, showcase your coin, and get ready to moon!",
+    logoUrl: "https://www.buidl.co.in/logo.png",
+    contractAddress: "0xD0ntL34v3Th1sPl4c3h0ld3rHere",
+    socialLinks: {
+      telegram: "https://t.me/buidl_community",
+      twitter: "https://x.com/buidlcoin",
+      discord: "https://discord.gg/UHDdNH574Y",
+    },
+    buyLink: "https://buidl.co.in",
+    tokenomics: {
+      totalSupply: "1000000000",
+      taxBuy: "5",
+      taxSell: "5",
+      lpLocked: "2 Years",
+    },
+    seo: {
+      title: "BUIDL | Ultimate Memecoin Website Generator",
+      description:
+        "Easily create your memecoin website with BUIDL! Fast, customizable, and perfect for building your community. Start your journey to the moon today! ",
+      keywords:
+        "memecoin website generator, customizable templates, crypto projects, cryptocurrency websites, blockchain templates, crypto community builder, tokenomics design, web3 tools, launchpad websites, crypto marketing tools, responsive crypto templates, degen tools, blockchain website creator, memecoin branding, crypto project showcase, Ethereum, Polygon, Solana websites, crypto growth platform, viral crypto campaigns",
+      ogImage: "https://placehold.co/1200x630/ffffff/000000?text=BUIDL",
+    },
+    roadmap: {
+      phases: [
+        {
+          title: "Concept & Vision",
+          description:
+            "Define your big idea and lay out the foundation for your project. Set clear goals and build excitement around what’s coming next. ",
+          date: "Q1 2024",
+        },
+        {
+          title: "Build & Launch",
+          description:
+            "Start creating! Focus on getting your product, service, or community up and running. This is where things start to come to life. ",
+          date: "Q2 2025",
+        },
+        {
+          title: "Growth & Expansion",
+          description:
+            "Take things to the next level! Expand your reach, grow your audience, and roll out exciting new features to keep the momentum strong. ",
+          date: "Q3 2025",
+        },
+      ],
+    },
+
+    team: [
+      {
+        name: "Meme Lord",
+        role: "Platform Architect",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortFlat&facialHairType=Blank&clotheType=BlazerShirt",
+      },
+      {
+        name: "Degen Dev",
+        role: "Smart Contract Wizard",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=LongHairStraight&facialHairType=Blank&clotheType=BlazerShirt",
+      },
+      {
+        name: "Ser Launch",
+        role: "Community Lead",
+        avatar:
+          "https://avataaars.io/?avatarStyle=Circle&topType=ShortHairShortRound&facialHairType=BeardLight&clotheType=Hoodie",
+      },
+    ],
+    faq: [
+      {
+        question: "What is BUIDL? ",
+        answer:
+          "BUIDL is the ultimate tool for degens who need a memecoin website fast. No coding, no fluff—just pick, tweak, and you’re ready to shill your coin.",
+      },
+      {
+        question: "How does it work? ",
+        answer:
+          "Pick a template, add your coin’s story (and a touch of meme magic), and hit generate. Your site’s ready to download and take to the moon in minutes.",
+      },
+      {
+        question: "Why BUIDL? ",
+        answer:
+          "Because you’ve got better things to do, like building hype. We make creating memecoin sites fast, fun, and simple. No stress, just vibes. LFG!",
+      },
+    ],
+  });
 
   const handleFieldChange = (partialFields: Partial<CustomizationFields>) => {
     setFields((prev) => ({
@@ -328,232 +325,286 @@ export default function CustomizePage() {
     return `/preview?${params.toString()}`;
   };
 
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    // Set isClient to true when component mounts (client-side only)
+    setIsClient(true);
+    
+    // Check if we're in a browser environment
+    if (typeof window !== 'undefined') {
+      // Add a resize event listener to handle responsive behavior
+      const handleResize = () => {
+        if (window.innerWidth >= 768) {
+          // On medium screens and above, always show both panels
+          document.querySelectorAll('.md\\:block').forEach(el => {
+            (el as HTMLElement).style.display = 'block';
+          });
+        } else {
+          // On small screens, respect the activeView state
+          if (activeView === 'edit') {
+            document.querySelector('.edit-panel')?.classList.remove('hidden');
+            document.querySelector('.preview-panel')?.classList.add('hidden');
+          } else {
+            document.querySelector('.edit-panel')?.classList.add('hidden');
+            document.querySelector('.preview-panel')?.classList.remove('hidden');
+          }
+        }
+      };
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, [activeView]);
+
   return (
-    <div className=" bg-gray-50">
+    <div className=" bg-gray-50 overflow-x-hidden">
       <div className="w-screen min-w-full">
         <div className="bg-white rounded-lg shadow-lg overflow-hidden">
-          {/* Header with Tabs */}
-          <div className="border-b border-gray-200">
-            <div className="flex flex-col md:flex-row md:items-center px-4 md:px-8 py-4 space-y-4 md:space-y-0 md:justify-between">
-              <div className="flex items-center justify-between md:justify-start">
-                <div className="flex space-x-2">
-                  <button
-                    onClick={() => setShowPreview(false)}
-                    className={`px-4 py-2 text-sm md:text-base font-medium rounded-lg transition-colors ${
-                      !showPreview
-                        ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                        : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                    }`}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => setShowPreview(true)}
-                    className={`px-4 py-2 text-sm md:text-base font-medium rounded-lg transition-colors ${
-                      showPreview
-                        ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                        : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                    }`}
-                  >
-                    Preview
-                  </button>
-                </div>
-                {/* Show preview controls on mobile when preview is active */}
-                {showPreview && (
-                  <div className="flex md:hidden items-center gap-2">
-                    <button
-                      onClick={() => setIsMobile(false)}
-                      className={`p-2 rounded text-sm font-medium ${
-                        !isMobile
-                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                      }`}
-                    >
-                      <Monitor className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setIsMobile(true)}
-                      className={`p-2 rounded text-sm font-medium ${
-                        isMobile
-                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                      }`}
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
-              </div>
-              <div className="flex items-center gap-4">
-                {showPreview && (
-                  <button
-                    onClick={() => {
-                      // Get available color pairs
-                      const availableIndices = Array.from(
-                        { length: colorPairs.length },
-                        (_, i) => i
-                      );
-                      
-                      // Pick a random color pair
-                      const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-                      const randomPair = colorPairs[randomIndex];
-                      
-                      // Apply the new colors
-                      setFields({
-                        ...fields,
-                        primaryColor: randomPair.primary,
-                        secondaryColor: randomPair.secondary,
-                      });
-                    }}
-                    style={{ 
-                      background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
-                    }}
-                    className="p-2 rounded-full text-white hover:opacity-90 transition-all duration-200"
-                    title="Randomize Colors"
-                  >
-                    <Shuffle className="w-4 h-4" />
-                  </button>
-                )}
-                {/* Show preview controls on desktop when preview is active */}
-                {showPreview && (
-                  <div className="hidden md:flex items-center gap-2">
-                    <button
-                      onClick={() => setIsMobile(false)}
-                      className={`p-2 rounded text-sm font-medium ${
-                        !isMobile
-                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                      }`}
-                    >
-                      <Monitor className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => setIsMobile(true)}
-                      className={`p-2 rounded text-sm font-medium ${
-                        isMobile
-                          ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                          : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
-                      }`}
-                    >
-                      <Smartphone className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
+          {/* Header with controls */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 py-4 px-4 md:px-6 border-b border-gray-200">
+            <div>
+              <h1 className="text-2xl font-bold">Memecoin Website Generator</h1>
+              <p className="text-gray-500 text-sm">
+                Customize your website and preview in real-time
+              </p>
+            </div>
+            <div className="flex items-center gap-2 w-full md:w-auto">
+              {/* View Mode Tabs - Only visible on small screens */}
+              <div className="flex items-center mr-2 md:hidden">
                 <button
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                  className="w-full md:w-auto px-6 py-2 bg-black text-white text-sm md:text-base font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
+                  onClick={() => setActiveView('edit')}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-l-md ${
+                    activeView === 'edit'
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
                 >
-                  {isLoading ? "Generating..." : "Generate Website"}
+                  Edit
+                </button>
+                <button
+                  onClick={() => setActiveView('preview')}
+                  className={`px-3 py-1.5 text-sm font-medium rounded-r-md ${
+                    activeView === 'preview'
+                      ? 'bg-black text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  Preview
                 </button>
               </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setIsMobile(false)}
+                  className={`p-2 rounded text-sm font-medium ${
+                    !isMobile
+                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                  }`}
+                  title="Desktop View"
+                >
+                  <Monitor className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setIsMobile(true)}
+                  className={`p-2 rounded text-sm font-medium ${
+                    isMobile
+                      ? "bg-black text-white hover:opacity-90 transition-all duration-200"
+                      : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                  }`}
+                  title="Mobile View"
+                >
+                  <Smartphone className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => {
+                    // Get available color pairs
+                    const availableIndices = Array.from(
+                      { length: colorPairs.length },
+                      (_, i) => i
+                    );
+                    
+                    // Pick a random color pair
+                    const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+                    const randomPair = colorPairs[randomIndex];
+                    
+                    // Apply the new colors
+                    setFields({
+                      ...fields,
+                      primaryColor: randomPair.primary,
+                      secondaryColor: randomPair.secondary,
+                    });
+                  }}
+                  style={{ 
+                    background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
+                  }}
+                  className="p-2 rounded-full text-white hover:opacity-90 transition-all duration-200"
+                  title="Randomize Colors"
+                >
+                  <Shuffle className="w-4 h-4" />
+                </button>
+              </div>
+              <button
+                onClick={handleSubmit}
+                disabled={isLoading}
+                className="w-full md:w-auto px-6 py-2 bg-black text-white text-sm md:text-base font-medium rounded-lg hover:opacity-80 transition-opacity disabled:opacity-50"
+              >
+                {isLoading ? "Generating..." : "Generate"}
+              </button>
             </div>
           </div>
 
           {/* Main Content */}
           <div className="flex min-h-full">
-            {/* Edit Panel */}
-            <div className={`flex-1 ${showPreview ? "hidden" : "block"}`}>
-              <div className="overflow-y-auto">
-                <div className="py-4 px-4 md:px-8">
-                  {/* Mobile Tabs Dropdown */}
-                  <div className="md:hidden mb-6">
+            {/* Edit Panel - Always visible on larger screens, conditionally visible on small screens */}
+            <div className={`w-full md:w-1/3 border-r border-gray-200 overflow-y-auto max-h-[87.5vh] ${
+              !isClient ? 'block' : activeView === 'edit' || (isClient && window.innerWidth >= 768) ? 'block' : 'hidden'
+            }`}>
+              <div className="pb-4 px-4 md:px-6">
+                {/* Tab Navigation - Made sticky */}
+                <div className="sticky top-0 bg-white z-10">
+                  <div className="flex items-center justify-between mb-2">
                     <button
                       onClick={() => setShowTabsMenu(!showTabsMenu)}
-                      className="w-full flex items-center justify-between px-4 py-2 bg-gray-100 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                      className="md:hidden flex items-center text-sm font-medium text-gray-600 hover:text-gray-900"
                     >
-                      <span>
-                        {tabs.find((tab) => tab.id === activeTab)?.label ||
-                          "Select Section"}
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 transition-transform ${
-                          showTabsMenu ? "transform rotate-180" : ""
-                        }`}
-                      />
+                      {tabs.find((tab) => tab.id === activeTab)?.label}
+                      <ChevronDown className="w-4 h-4 ml-1" />
                     </button>
-                    {showTabsMenu && (
-                      <div className="absolute z-10 mt-2 w-[calc(100%-4rem)] bg-white rounded-lg shadow-lg border border-gray-200">
+                  </div>
+                  
+                  {/* Mobile Dropdown Menu */}
+                  {showTabsMenu && (
+                    <div className="md:hidden absolute z-20 mt-1 w-48 bg-white rounded-md shadow-lg border border-gray-200">
+                      <div className="py-1">
                         {tabs.map((tab) => (
                           <button
                             key={tab.id}
                             onClick={() => {
-                              handleTabChange(tab.id);
+                              setActiveTab(tab.id);
                               setShowTabsMenu(false);
                             }}
-                            className={`w-full text-left px-4 py-3 font-medium transition-colors ${
+                            className={`block w-full text-left px-4 py-2 text-sm ${
                               activeTab === tab.id
-                                ? "bg-gray-100 text-black"
-                                : "text-gray-600 hover:bg-gray-50"
+                                ? "bg-gray-100 text-gray-900 font-medium"
+                                : "text-gray-700 hover:bg-gray-50"
                             }`}
                           >
                             {tab.label}
                           </button>
                         ))}
                       </div>
-                    )}
-                  </div>
-
+                    </div>
+                  )}
+                  
                   {/* Desktop Tabs */}
-                  <div className="hidden md:flex space-x-2 mb-6">
+                  <div className="hidden md:flex space-x-1 overflow-x-auto pb-1 border-b">
                     {tabs.map((tab) => (
                       <button
                         key={tab.id}
-                        onClick={() => handleTabChange(tab.id)}
-                        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                        onClick={() => setActiveTab(tab.id)}
+                        className={`px-3 py-2 text-sm font-medium rounded-t-md whitespace-nowrap ${
                           activeTab === tab.id
-                            ? "bg-black text-white hover:opacity-90 transition-all duration-200"
-                            : "bg-gray-100 text-black hover:bg-gray-200 transition-all duration-200"
+                            ? "bg-black text-white"
+                            : "text-gray-600 hover:bg-gray-100"
                         }`}
                       >
                         {tab.label}
                       </button>
                     ))}
                   </div>
+                </div>
 
-                  {/* Form Content */}
+                {/* Tab Content */}
+                <div className="space-y-8">
+                  {/* Basic Info Section */}
                   {activeTab === "basic" && (
-                    <BasicInfoForm
-                      fields={fields}
-                      onChange={handleFieldChange}
-                    />
+                    <div>
+                      <BasicInfoForm
+                        fields={fields}
+                        onChange={handleFieldChange}
+                      />
+                    </div>
                   )}
+
+                  {/* Sections Section */}
                   {activeTab === "sections" && (
-                    <SectionsForm
-                      fields={fields}
-                      onChange={handleFieldChange}
-                    />
+                    <div>
+                      <SectionsForm
+                        fields={fields}
+                        onChange={handleFieldChange}
+                      />
+                    </div>
                   )}
+
+                  {/* Tokenomics Section */}
                   {activeTab === "tokenomics" && (
-                    <TokenomicsForm
-                      fields={fields}
-                      onChange={handleFieldChange}
-                    />
+                    <div>
+                      <TokenomicsForm
+                        fields={fields}
+                        onChange={handleFieldChange}
+                      />
+                    </div>
                   )}
-                  {activeTab === "roadmap" && (
-                    <RoadmapForm fields={fields} onChange={handleFieldChange} />
-                  )}
+
+                  {/* Team Section */}
                   {activeTab === "team" && (
-                    <TeamForm fields={fields} onChange={handleFieldChange} />
+                    <div>
+                      <TeamForm 
+                        fields={fields} 
+                        onChange={handleFieldChange} 
+                      />
+                    </div>
                   )}
+
+                  {/* Roadmap Section */}
+                  {activeTab === "roadmap" && (
+                    <div>
+                      <RoadmapForm 
+                        fields={fields} 
+                        onChange={handleFieldChange} 
+                      />
+                    </div>
+                  )}
+
+                  {/* FAQ Section */}
                   {activeTab === "faq" && (
-                    <FaqForm fields={fields} onChange={handleFieldChange} />
+                    <div>
+                      <FaqForm 
+                        fields={fields} 
+                        onChange={handleFieldChange} 
+                      />
+                    </div>
                   )}
+
+                  {/* Social Links Section */}
                   {activeTab === "social" && (
-                    <SocialLinksForm
-                      fields={fields}
-                      onChange={handleFieldChange}
-                    />
+                    <div>
+                      <SocialLinksForm 
+                        fields={fields} 
+                        onChange={handleFieldChange} 
+                      />
+                    </div>
                   )}
+
+                  {/* SEO Section */}
                   {activeTab === "seo" && (
-                    <SeoForm fields={fields} onChange={handleFieldChange} />
+                    <div>
+                      <SeoForm 
+                        fields={fields} 
+                        onChange={handleFieldChange} 
+                      />
+                    </div>
                   )}
                 </div>
               </div>
             </div>
-            {/* Preview Panel */}
-            <div className={`flex-1  ${showPreview ? "block" : "hidden"}`}>
-              <div className="w-full h-full min-h-[87.5vh] transition-all duration-300">
+            
+            {/* Preview Panel - Always visible on larger screens, conditionally visible on small screens */}
+            <div className={`w-full md:w-2/3 ${
+              !isClient ? 'block' : activeView === 'preview' || (isClient && window.innerWidth >= 768) ? 'block' : 'hidden'
+            }`}>
+              <div className="w-full h-full min-h-[87.5vh] transition-all duration-300 relative pr-5">
                 <iframe
                   src={generatePreviewUrl()}
                   className={`w-full h-full border-0 transition-all duration-300 ${

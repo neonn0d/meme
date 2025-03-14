@@ -89,6 +89,19 @@ const templates: Template[] = [
       "Team & partners showcase",
     ],
   },
+  {
+    id: "test",
+    name: "Test Template",
+    description:
+      "A modern space-themed template with Tailwind CSS and smooth animations for a professional look.",
+    image: "/templates/modern.png", // Using modern template image as placeholder
+    features: [
+      "Tailwind CSS design",
+      "Responsive layout",
+      "Smooth animations",
+      "Mobile-friendly navigation",
+    ],
+  },
 ];
 
 export default function TemplatesPage() {

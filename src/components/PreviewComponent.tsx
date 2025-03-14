@@ -10,6 +10,7 @@ import { generateMinimalTemplate } from '@/templates/minimal/template';
 import { generatePepeTemplate } from '@/templates/pepe/template';
 import { generateChristmasTemplate } from '@/templates/christmas/template';
 import { generatePlayfulTemplate } from '@/templates/playful/template';
+import { generateStellarTemplate } from '@/templates/stellar/template';
 
 export function PreviewComponent() {
   const searchParams = useSearchParams();
@@ -63,6 +64,10 @@ export function PreviewComponent() {
             break;
           case 'playful':
             generatedTemplate = generatePlayfulTemplate(previewData);
+            break;
+          case 'stellar':
+            // New name for the test template
+            generatedTemplate = generateStellarTemplate(previewData);
             break;
           default:
             generatedTemplate = generateModernTemplate(previewData);

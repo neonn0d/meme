@@ -22,6 +22,7 @@ interface BasicInfoFormProps {
 
 // Predefined color combinations that look good together
 export const colorPairs = [
+  // Original color pairs
   { primary: "#FF4081", secondary: "#7C4DFF" }, // Pink & Purple - Modern, playful
   { primary: "#00BCD4", secondary: "#FF9800" }, // Cyan & Orange - Fresh, energetic
   { primary: "#4CAF50", secondary: "#FFC107" }, // Green & Amber - Natural, warm
@@ -30,13 +31,42 @@ export const colorPairs = [
   { primary: "#F44336", secondary: "#2196F3" }, // Red & Blue - Dynamic, strong
   { primary: "#009688", secondary: "#FF5722" }, // Teal & Deep Orange - Modern, balanced
   { primary: "#673AB7", secondary: "#8BC34A" }, // Deep Purple & Light Green - Rich, fresh
-  { primary: "#2196F3", secondary: "#FF4081" }, // Blue & Pink - Playful, modern
-  { primary: "#00BCD4", secondary: "#FFA000" }, // Cyan & Amber - Tropical, warm
-  { primary: "#9C27B0", secondary: "#4CAF50" }, // Purple & Green - Creative, balanced
-  { primary: "#FF5722", secondary: "#03A9F4" }, // Deep Orange & Light Blue - Energetic, fresh
-  { primary: "#3F51B5", secondary: "#FF9800" }, // Indigo & Orange - Professional, warm
-  { primary: "#009688", secondary: "#9C27B0" }, // Teal & Purple - Sophisticated, bold
-  { primary: "#E91E63", secondary: "#00BCD4" }, // Pink & Cyan - Modern, fresh
+  
+  // Crypto/Meme themed
+  { primary: "#F7931A", secondary: "#4D4D4D" }, // Bitcoin orange & gray
+  { primary: "#627EEA", secondary: "#ECF0F1" }, // Ethereum blue & light gray
+  { primary: "#C2A633", secondary: "#222222" }, // Dogecoin gold & dark
+  { primary: "#00FF41", secondary: "#121212" }, // Matrix theme - terminal green & dark (reversed)
+  
+  // Vibrant combinations
+  { primary: "#6A0DAD", secondary: "#FF69B4" }, // Purple & Hot Pink
+  { primary: "#1E88E5", secondary: "#FFC400" }, // Blue & Amber
+  { primary: "#43A047", secondary: "#FF3D00" }, // Green & Deep Orange
+  { primary: "#D81B60", secondary: "#00ACC1" }, // Pink & Cyan
+  
+  // Dark mode inspired (reversed to have dark as secondary)
+  { primary: "#BB86FC", secondary: "#121212" }, // Purple & Dark
+  { primary: "#03DAC6", secondary: "#121212" }, // Teal & Dark
+  { primary: "#CF6679", secondary: "#121212" }, // Pink & Dark
+  { primary: "#FFDE03", secondary: "#121212" }, // Yellow & Dark
+  
+  // Pastel combinations
+  { primary: "#FFB6C1", secondary: "#ADD8E6" }, // Light Pink & Light Blue
+  { primary: "#98FB98", secondary: "#FFA07A" }, // Pale Green & Light Salmon
+  { primary: "#DDA0DD", secondary: "#AFEEEE" }, // Plum & Pale Turquoise
+  { primary: "#FFDAB9", secondary: "#B0E0E6" }, // Peach Puff & Powder Blue
+  
+  // Gradient inspired
+  { primary: "#833ab4", secondary: "#fd1d1d" }, // Instagram gradient start & mid
+  { primary: "#405DE6", secondary: "#5851DB" }, // Instagram gradient variations
+  { primary: "#fd1d1d", secondary: "#fcb045" }, // Instagram gradient mid & end
+  { primary: "#00c6ff", secondary: "#0072ff" }, // Blue gradient
+  
+  // Neon themes
+  { primary: "#FF00FF", secondary: "#00FFFF" }, // Magenta & Cyan - Cyberpunk
+  { primary: "#39FF14", secondary: "#FF3131" }, // Neon Green & Red
+  { primary: "#FF10F0", secondary: "#1CA9C9" }, // Hot Pink & Turquoise
+  { primary: "#7B4397", secondary: "#DC2430" }, // Purple & Red gradient
 ];
 
 export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
@@ -137,7 +167,7 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
 
   return (
     <div className="flex flex-col h-full space-y-6 pb-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 flex-1">
+      <div className="grid grid-cols-1 gap-6 flex-1">
         {formFields.map((field) => (
           <div
             key={field.key}
@@ -169,7 +199,6 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
       </div>
 
       <div className="space-y-4 mt-auto">
-        {" "}
         {/* Added mt-auto to push to bottom */}
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-medium">Brand Colors</h3>
@@ -258,6 +287,27 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
                 />
               </div>
             </div>
+          </div>
+        </div>
+        
+        {/* Color Scheme Swatches */}
+        <div>
+          <p className="text-sm text-gray-600 mb-2">Preset Color Schemes</p>
+          <div className="flex flex-wrap gap-2">
+            {colorPairs.map((pair, index) => (
+              <button
+                key={index}
+                className="w-8 h-8 rounded-full border border-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all duration-200"
+                style={{ 
+                  background: `linear-gradient(to right, ${pair.primary}, ${pair.secondary})` 
+                }}
+                onClick={() => onChange({
+                  primaryColor: pair.primary,
+                  secondaryColor: pair.secondary,
+                })}
+                title={`Color scheme ${index + 1}`}
+              />
+            ))}
           </div>
         </div>
       </div>
