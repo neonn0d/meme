@@ -2,15 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-
-interface Template {
-  id: string;
-  name: string;
-  image?: string;
-}
-
-// Import the templates array from the templates page
-import { templates } from "../app/templates/page";
+import { templates, Template } from "../data/templates";
 
 export default function TemplatesPage() {
   return (

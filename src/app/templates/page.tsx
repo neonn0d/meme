@@ -6,51 +6,7 @@ import Image from "next/image";
 import {
   ArrowLeft,
 } from "lucide-react";
-
-interface Template {
-  id: string;
-  name: string;
-  image?: string;
-}
-
-export const templates: Template[] = [
-  {
-    id: "modern",
-    name: "Modern",
-    image: "/templates/modern.png",
-  },
-  {
-    id: "pepe",
-    name: "Pepe",
-    image: "/templates/pepe.png",
-  },
-  {
-    id: "cosmic",
-    name: "Cosmic",
-    image: "/templates/cosmic.png",
-  },
-  {
-    id: "stellar",
-    name: "Stellar",
-    image: "/templates/stellar.png",
-  },
-  {
-    id: "rocket",
-    name: "Rocket",
-    image: "/templates/rocket.png",
-  },
-  {
-    id: "minimal",
-    name: "Minimal",
-    image: "/templates/minimal.png",
-  },
-
-  {
-    id: "playful",
-    name: "Playful",
-    image: "/templates/playful.png",
-  },
-];
+import { templates, Template } from "../../data/templates";
 
 export default function TemplatesPage() {
   const { userId } = useAuth();
@@ -80,7 +36,7 @@ export default function TemplatesPage() {
         {/* Templates Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {/* Existing Templates */}
-          {templates.map((template) => (
+          {templates.map((template: Template) => (
             <div
               key={template.id}
               className="group relative rounded-xl shadow-sm border border-zinc-200 hover:shadow-lg transition-all duration-300 flex flex-col h-full overflow-hidden bg-white"
