@@ -32,7 +32,7 @@ The crypto market moves fast. While others spend weeks searching for memecoin we
 - Buy now buttons
 - Mobile-friendly layout
 
-All for just 0.05 SOL.
+All for just 0.1 SOL.  
 
 [💎 Check Our Pricing](/pricing)
 
@@ -70,7 +70,7 @@ BUIDL gives you all these features instantly.
 3. Customize colors and branding
 4. Go live
 
-No technical skills needed. Start free, pay only 0.05 SOL when you're ready to launch.
+No technical skills needed. Start free, pay only 0.1 SOL when you're ready to launch.
 
 [🚀 Create Your Website Now](/customize)
     `,
@@ -108,7 +108,7 @@ All templates include:
 - Instant setup
 - No coding needed
 - Professional design
-- Only 0.05 SOL
+- Only 0.1 SOL
 
 [✨ Start With a Template](/customize)
 
@@ -145,7 +145,7 @@ BUIDL templates include all these features.
 - Professional templates
 - Built-in buy buttons
 - Mobile-optimized
-- Launch for 0.05 SOL
+- Launch for 0.1 SOL
 
 [💎 Choose Your Template](/templates)
 
@@ -201,7 +201,7 @@ Upload to free platforms like Netlify or Vercel, or use paid hosting like Blueho
 
 ## Why BUIDL?
 
-- 💰 Affordable: Launch for 0.05 SOL (instead of $500+)
+- 💰 Affordable: Launch for 0.1 SOL (instead of $500+)
 - 🚀 Crypto-Friendly: Includes tokenomics tables and buy buttons
 - ⭐ Proven: Trusted by over 1,200 memecoins
 

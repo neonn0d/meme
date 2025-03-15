@@ -33,7 +33,7 @@ const faqs: FAQItem[] = [
   {
     question: "How much does it cost?",
     answer:
-      "We have two pricing options: Standard generation at 0.05 SOL per website, or Premium at 0.25 SOL which gives you access to all premium features and templates. Choose the plan that best fits your needs.",
+      "We have two pricing options: Standard generation at 0.1 SOL per website, or Premium at 0.25 SOL which gives you access to all premium features and templates. Choose the plan that best fits your needs.",
   },
 ]
 
