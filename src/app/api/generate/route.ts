@@ -4,7 +4,6 @@ import { generateRocketTemplate } from "@/templates/rocket/template";
 import { generateCosmicTemplate } from "@/templates/cosmic/template";
 import { generateMinimalTemplate } from "@/templates/minimal/template";
 import { generatePepeTemplate } from "@/templates/pepe/template";
-import { generateChristmasTemplate } from "@/templates/christmas/template";
 import { generatePlayfulTemplate } from "@/templates/playful/template";
 import { generateStellarTemplate } from "@/templates/stellar/template";
 import { GenerateRequestBody, GeneratedTemplate, PreviewData } from "@/types";
@@ -33,7 +32,6 @@ export async function POST(request: NextRequest) {
                             templateId === 'rocket' ? 'moon-rocket-v2' :
                             templateId === 'cosmic' ? 'cosmic-space-v1' :
                             templateId === 'pepe' ? 'pepe-space-v1' :
-                            templateId === 'christmas' ? 'christmas-space-v1' :
                             templateId === 'minimal' ? 'minimal-space-v1' :
                             templateId === 'playful' ? 'playful-character-v1' :
                             templateId === 'stellar' ? 'test-space-v1' :
@@ -88,9 +86,6 @@ export async function POST(request: NextRequest) {
         break;
       case 'minimal-space-v1':
         generatedFiles = generateMinimalTemplate(previewData);
-        break;
-      case 'christmas-space-v1':
-        generatedFiles = generateChristmasTemplate(previewData);
         break;
       case 'pepe-space-v1':
         generatedFiles = generatePepeTemplate(previewData);

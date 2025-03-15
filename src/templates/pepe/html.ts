@@ -69,7 +69,7 @@ export const generatePepeHTML = ({
                         <h1 class="hero-title">${coinName}</h1>
                         <p class="hero-description">${description}</p>
                         <div class="hero-buttons">
-                            <a href="${buyLink}" target="_blank" class="button">Buy $${tokenSymbol} 🚀</a>
+                            <a href="${buyLink}" target="_blank" class="button">Buy $${tokenSymbol}</a>
                             <a href="#" class="button outline contract-link" data-contract="${contractAddress}">
                                 <span class="contract-text">${contractAddress}</span>
                             </a>
@@ -159,7 +159,7 @@ export const generatePepeHTML = ({
         ${sections.roadmap ? `
         <section id="roadmap">
             <div class="container">
-                <h2>Roadmap 🗺️</h2>
+                <h2>Roadmap</h2>
                 <div class="roadmap-list">
                     ${roadmap.phases.map((phase: any, index: number) => `
                         <div class="roadmap-item">
@@ -176,7 +176,7 @@ export const generatePepeHTML = ({
         ${sections.team ? `
         <section id="team">
             <div class="container">
-                <h2>Meet the ${tokenSymbol} Team 👥</h2>
+                <h2>Meet the ${tokenSymbol} Team</h2>
                 <div class="team-grid">
                     ${team.map((member: any) => `
                         <div class="team-card">
@@ -199,7 +199,7 @@ export const generatePepeHTML = ({
         ${sections.faq ? `
         <section id="faq">
             <div class="container">
-                <h2>Frequently Asked Questions ❓</h2>
+                <h2>Frequently Asked Questions</h2>
                 <div class="faq-grid">
                     ${faq.map((item: any, index: number) => `
                         <div class="faq-item active">

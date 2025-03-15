@@ -42,7 +42,7 @@ export const generateModernHTML = ({
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="space-theme">
     <nav class="nav">
@@ -100,10 +100,6 @@ export const generateModernHTML = ({
                         ${socialLinks?.telegram ? `
                         <a href="${socialLinks.telegram}" target="_blank" rel="noopener noreferrer" class="hero-button secondary">
                             Join Community
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M18.7 7.2C18.3 3.9 15.7 2 12 2C8.3 2 5.7 3.9 5.3 7.2C2.7 7.9 1 9.7 1 12C1 14.3 2.7 16.1 5.3 16.8C5.7 20.1 8.3 22 12 22C15.7 22 18.3 20.1 18.7 16.8C21.3 16.1 23 14.3 23 12C23 9.7 21.3 7.9 18.7 7.2Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                <path d="M12 15.5C14.21 15.5 16 13.71 16 11.5C16 9.29 14.21 7.5 12 7.5C9.79 7.5 8 9.29 8 11.5C8 13.71 9.79 15.5 12 15.5Z" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
                         </a>
                         ` : ''}
                     </div>
@@ -254,11 +250,9 @@ export const generateModernHTML = ({
 
     <footer class="footer">
         <div class="footer-container">
-            <p class="copyright"> ${new Date().getFullYear()} ${tokenSymbol}</p>
+            <p class="copyright"> ${new Date().getFullYear()} ${coinName}</p>
             <div class="footer-links">
-                ${buyLink ? `<a href="${buyLink}" target="_blank" class="footer-link">Buy</a>` : ''}
-                ${socialLinks.twitter ? `<a href="${socialLinks.twitter}" target="_blank" class="footer-link">Twitter</a>` : ''}
-                ${socialLinks.telegram ? `<a href="${socialLinks.telegram}" target="_blank" class="footer-link">Telegram</a>` : ''}
+                ${buyLink ? `<a href="${buyLink}" target="_blank" class="footer-link">Buy ${tokenSymbol}</a>` : ''}
             </div>
         </div>
     </footer>

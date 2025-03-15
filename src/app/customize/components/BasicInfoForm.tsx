@@ -13,14 +13,15 @@ import {
   CircleDollarSign,
   BookOpenText
 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getColorPairsForTemplate, templateColorPalettes } from "@/templates/colorPalettes";
 
 interface BasicInfoFormProps {
   fields: CustomizationFields;
   onChange: (fields: Partial<CustomizationFields>) => void;
 }
 
-// Predefined color combinations that look good together
+// Keeping the original colorPairs for backward compatibility
 export const colorPairs = [
   // Original color pairs
   { primary: "#FF4081", secondary: "#7C4DFF" }, // Pink & Purple - Modern, playful
@@ -72,23 +73,50 @@ export const colorPairs = [
 export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
   // Keep track of previously used colors to avoid repetition
   const [usedColorIndices, setUsedColorIndices] = useState<number[]>([]);
+  // Store template-specific color pairs
+  const [templateColorPairs, setTemplateColorPairs] = useState(() => {
+    // Initialize with the correct template colors based on the current template
+    return fields.templateId ? getColorPairsForTemplate(fields.templateId) : colorPairs;
+  });
+
+  // Update color pairs when template changes
+  useEffect(() => {
+    if (fields.templateId) {
+      console.log(`Template ID changed to: ${fields.templateId}`);
+      const templateColors = getColorPairsForTemplate(fields.templateId);
+      console.log(`Found ${templateColors.length} colors for template ${fields.templateId}`);
+      setTemplateColorPairs(templateColors);
+      // Reset used indices when template changes
+      setUsedColorIndices([]);
+    }
+  }, [fields.templateId]);
 
   const randomizeColors = () => {
+    // Make sure we're using the correct template colors
+    const currentTemplateColors = fields.templateId 
+      ? getColorPairsForTemplate(fields.templateId) 
+      : colorPairs;
+    
+    console.log(`Randomizing colors for template: ${fields.templateId}`);
+    console.log(`Available colors: ${currentTemplateColors.length}`);
+    
     let availableIndices = Array.from(
-      { length: colorPairs.length },
+      { length: currentTemplateColors.length },
       (_, i) => i
     ).filter((i) => !usedColorIndices.includes(i));
 
     // If we've used all colors, reset the used colors array
     if (availableIndices.length === 0) {
-      availableIndices = Array.from({ length: colorPairs.length }, (_, i) => i);
+      availableIndices = Array.from({ length: currentTemplateColors.length }, (_, i) => i);
       setUsedColorIndices([]);
     }
 
     // Pick a random color pair from available options
     const randomIndex =
       availableIndices[Math.floor(Math.random() * availableIndices.length)];
-    const randomPair = colorPairs[randomIndex];
+    const randomPair = currentTemplateColors[randomIndex];
+    
+    console.log(`Selected color pair: `, randomPair);
 
     // Update used colors
     setUsedColorIndices((prev) => [...prev, randomIndex]);
@@ -198,119 +226,122 @@ export function BasicInfoForm({ fields, onChange }: BasicInfoFormProps) {
         ))}
       </div>
 
-      <div className="space-y-4 mt-auto">
-        {/* Added mt-auto to push to bottom */}
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-medium">Brand Colors</h3>
-          <div
-            onClick={randomizeColors}
-            style={{ 
-              background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
-              color: '#FFFFFF'
-            }}
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md cursor-pointer hover:opacity-90 transition-all duration-200"
-          >
-            <Shuffle className="w-4 h-4" />
-            Randomize Colors
+      {/* Hide color options for pepe template */}
+      {fields.templateId !== "pepe" && (
+        <div className="space-y-4 mt-auto">
+          {/* Added mt-auto to push to bottom */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-medium">Brand Colors</h3>
+            <div
+              onClick={randomizeColors}
+              style={{ 
+                background: `linear-gradient(to right, ${fields.primaryColor || '#FF4081'}, ${fields.secondaryColor || '#7C4DFF'})`,
+                color: '#FFFFFF'
+              }}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-medium rounded-md cursor-pointer hover:opacity-90 transition-all duration-200"
+            >
+              <Shuffle className="w-4 h-4" />
+              Randomize Colors
+            </div>
           </div>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
-            <div className="p-4 bg-gradient-to-br from-red-500/5 to-red-500/10 border-b">
-              <div className="flex items-center gap-3">
-                <Palette className="w-6 h-6 text-red-500/70" />
-                <div>
-                  <Label
-                    htmlFor="primaryColor"
-                    className="font-medium text-base"
-                  >
-                    Primary Color
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    Main color for your website
-                  </p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+              <div className="p-4 bg-gradient-to-br from-red-500/5 to-red-500/10 border-b">
+                <div className="flex items-center gap-3">
+                  <Palette className="w-6 h-6 text-red-500/70" />
+                  <div>
+                    <Label
+                      htmlFor="primaryColor"
+                      className="font-medium text-base"
+                    >
+                      Primary Color
+                    </Label>
+                    <p className="text-sm text-gray-500">
+                      Main color for your website
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="color"
+                    id="primaryColor"
+                    value={fields.primaryColor || "#000000"}
+                    onChange={(e) => onChange({ primaryColor: e.target.value })}
+                    className="w-16 h-9 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={fields.primaryColor || "#000000"}
+                    onChange={(e) => onChange({ primaryColor: e.target.value })}
+                    placeholder="#000000"
+                    className="flex-1 h-9"
+                  />
                 </div>
               </div>
             </div>
-            <div className="p-4">
-              <div className="flex items-center gap-3">
-                <Input
-                  type="color"
-                  id="primaryColor"
-                  value={fields.primaryColor || "#000000"}
-                  onChange={(e) => onChange({ primaryColor: e.target.value })}
-                  className="w-16 h-9 p-1"
-                />
-                <Input
-                  type="text"
-                  value={fields.primaryColor || "#000000"}
-                  onChange={(e) => onChange({ primaryColor: e.target.value })}
-                  placeholder="#000000"
-                  className="flex-1 h-9"
-                />
-              </div>
-            </div>
-          </div>
 
-          <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
-            <div className="p-4 bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-b">
-              <div className="flex items-center gap-3">
-                <Palette className="w-6 h-6 text-purple-500/70" />
-                <div>
-                  <Label
-                    htmlFor="secondaryColor"
-                    className="font-medium text-base"
-                  >
-                    Secondary Color
-                  </Label>
-                  <p className="text-sm text-gray-500">
-                    Accent color for your website
-                  </p>
+            <div className="bg-white rounded-lg border shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
+              <div className="p-4 bg-gradient-to-br from-purple-500/5 to-purple-500/10 border-b">
+                <div className="flex items-center gap-3">
+                  <Palette className="w-6 h-6 text-purple-500/70" />
+                  <div>
+                    <Label
+                      htmlFor="secondaryColor"
+                      className="font-medium text-base"
+                    >
+                      Secondary Color
+                    </Label>
+                    <p className="text-sm text-gray-500">
+                      Accent color for your website
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="p-4">
+                <div className="flex items-center gap-3">
+                  <Input
+                    type="color"
+                    id="secondaryColor"
+                    value={fields.secondaryColor || "#000000"}
+                    onChange={(e) => onChange({ secondaryColor: e.target.value })}
+                    className="w-16 h-9 p-1"
+                  />
+                  <Input
+                    type="text"
+                    value={fields.secondaryColor || "#000000"}
+                    onChange={(e) => onChange({ secondaryColor: e.target.value })}
+                    placeholder="#000000"
+                    className="flex-1 h-9"
+                  />
                 </div>
               </div>
             </div>
-            <div className="p-4">
-              <div className="flex items-center gap-3">
-                <Input
-                  type="color"
-                  id="secondaryColor"
-                  value={fields.secondaryColor || "#000000"}
-                  onChange={(e) => onChange({ secondaryColor: e.target.value })}
-                  className="w-16 h-9 p-1"
+          </div>
+          
+          {/* Color Scheme Swatches */}
+          <div>
+            <p className="text-sm text-gray-600 mb-2">Preset Color Schemes</p>
+            <div className="flex flex-wrap gap-2">
+              {templateColorPairs.map((pair, index) => (
+                <button
+                  key={index}
+                  className="w-8 h-8 rounded-full border border-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all duration-200"
+                  style={{ 
+                    background: `linear-gradient(to right, ${pair.primary}, ${pair.secondary})` 
+                  }}
+                  onClick={() => onChange({
+                    primaryColor: pair.primary,
+                    secondaryColor: pair.secondary,
+                  })}
+                  title={`Color scheme ${index + 1}`}
                 />
-                <Input
-                  type="text"
-                  value={fields.secondaryColor || "#000000"}
-                  onChange={(e) => onChange({ secondaryColor: e.target.value })}
-                  placeholder="#000000"
-                  className="flex-1 h-9"
-                />
-              </div>
+              ))}
             </div>
           </div>
         </div>
-        
-        {/* Color Scheme Swatches */}
-        <div>
-          <p className="text-sm text-gray-600 mb-2">Preset Color Schemes</p>
-          <div className="flex flex-wrap gap-2">
-            {colorPairs.map((pair, index) => (
-              <button
-                key={index}
-                className="w-8 h-8 rounded-full border border-gray-200 overflow-hidden cursor-pointer hover:ring-2 hover:ring-black transition-all duration-200"
-                style={{ 
-                  background: `linear-gradient(to right, ${pair.primary}, ${pair.secondary})` 
-                }}
-                onClick={() => onChange({
-                  primaryColor: pair.primary,
-                  secondaryColor: pair.secondary,
-                })}
-                title={`Color scheme ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }

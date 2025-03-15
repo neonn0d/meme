@@ -89,12 +89,29 @@ export const generateTemplate3HTML = ({
                             <span class="btn-content">Buy Now</span>
                         </a>
                     ` : ''}
-                    ${socialLinks.telegram ? `
-                        <a href="${socialLinks.telegram}" target="_blank" class="hero-btn telegram-btn glow-btn">
-                            <i class="fab fa-telegram"></i>
-                            <span>Join Telegram</span>
-                        </a>
-                    ` : ''}
+                    <div class="social-icons-small">
+                        ${socialLinks.telegram ? `
+                            <a href="${socialLinks.telegram}" target="_blank" class="social-icon-small">
+                                <div class="icon-circle telegram-bg">
+                                    <i class="fab fa-telegram"></i>
+                                </div>
+                            </a>
+                        ` : ''}
+                        ${socialLinks.twitter ? `
+                            <a href="${socialLinks.twitter}" target="_blank" class="social-icon-small">
+                                <div class="icon-circle twitter-bg">
+                                    <i class="fab fa-twitter"></i>
+                                </div>
+                            </a>
+                        ` : ''}
+                        ${socialLinks.discord ? `
+                            <a href="${socialLinks.discord}" target="_blank" class="social-icon-small">
+                                <div class="icon-circle discord-bg">
+                                    <i class="fab fa-discord"></i>
+                                </div>
+                            </a>
+                        ` : ''}
+                    </div>
                 </div>
             </div>
             <div class="hero-image">
@@ -111,22 +128,22 @@ export const generateTemplate3HTML = ({
             <div class="tokenomics-grid">
                 <div class="tokenomics-card glow-card">
                     <div class="card-icon">💰</div>
-                    <h3>Total Supply</h3>
+                    <h3 class="descriptiontext">Total Supply</h3>
                     <p class="plasma-text">${tokenomics.totalSupply}</p>
                 </div>
                 <div class="tokenomics-card glow-card">
                     <div class="card-icon">📈</div>
-                    <h3>Buy Tax</h3>
+                    <h3 class="descriptiontext">Buy Tax</h3>
                     <p class="plasma-text">${tokenomics.taxBuy}%</p>
                 </div>
                 <div class="tokenomics-card glow-card">
                     <div class="card-icon">📉</div>
-                    <h3>Sell Tax</h3>
+                    <h3  class="descriptiontext">Sell Tax</h3>
                     <p class="plasma-text">${tokenomics.taxSell}%</p>
                 </div>
                 <div class="tokenomics-card glow-card">
                     <div class="card-icon">🔒</div>
-                    <h3>LP Lock</h3>
+                    <h3 class="descriptiontext">LP Lock</h3>
                     <p class="plasma-text">${tokenomics.lpLocked}</p>
                 </div>
             </div>
@@ -142,8 +159,8 @@ export const generateTemplate3HTML = ({
                 ${roadmap.phases.map((phase: any, index: number) => `
                     <div class="roadmap-card glow-card">
                         <div class="phase-number">Phase ${index + 1}</div>
-                        <h3 class="glow-text">${phase.title}</h3>
-                        <p>${phase.description}</p>
+                        <h3 class="plasma-text">${phase.title}</h3>
+                        <p class="plasma-text">${phase.description}</p>
                         <div class="date plasma-text">${phase.date}</div>
                     </div>
                 `).join('')}
@@ -155,7 +172,7 @@ export const generateTemplate3HTML = ({
     ${sections.team && team?.length ? `
     <section class="team">
         <div class="section-container">
-            <h2 class="section-title plasma-text">Mission Control</h2>
+            <h2 class="section-title plasma-text">Team</h2>
             <div class="team-grid">
                 ${team.map((member: any) => `
                     <div class="team-card glow-card">
@@ -167,7 +184,7 @@ export const generateTemplate3HTML = ({
                             </div>
                         `}
                         <h3 class="glow-text">${member.name}</h3>
-                        <p>${member.role}</p>
+                        <p class="descriptiontext">${member.role}</p>
                     </div>
                 `).join('')}
             </div>
@@ -178,12 +195,12 @@ export const generateTemplate3HTML = ({
     ${sections.faq && faq?.length ? `
     <section class="faq">
         <div class="section-container">
-            <h2 class="section-title plasma-text">Mission FAQ</h2>
+            <h2 class="section-title plasma-text">FAQ</h2>
             <div class="faq-grid">
                 ${faq.map((item: any) => `
                     <div class="faq-card glow-card">
-                        <h3 class="glow-text">${item.question}</h3>
-                        <p>${item.answer}</p>
+                        <h3 class="descriptiontext">${item.question}</h3>
+                        <p class="plasma-text">${item.answer}</p>
                     </div>
                 `).join('')}
             </div>

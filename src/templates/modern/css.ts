@@ -1,10 +1,26 @@
 export const generateModernCSS = (data: any) => {
   const { primaryColor = '#FF6B00', secondaryColor = '#FFB700' } = data;
 
+  // Helper function to convert hex to rgb
+  const hexToRgb = (hex: string) => {
+    // Remove # if present
+    hex = hex.replace('#', '');
+    
+    // Parse the hex values
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    // Return RGB values as a string
+    return `${r}, ${g}, ${b}`;
+  };
+
   return `
 :root {
   --primary: ${primaryColor};
   --secondary: ${secondaryColor};
+  --primary-rgb: ${hexToRgb(primaryColor)};
+  --secondary-rgb: ${hexToRgb(secondaryColor)};
   --background: #000;
   --text: #fff;
   --card-bg: rgba(255, 255, 255, 0.05);
@@ -16,7 +32,7 @@ export const generateModernCSS = (data: any) => {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Inter', sans-serif;
 }
 
 body {
@@ -32,6 +48,11 @@ body {
   min-height: 100vh;
   background: #000;
   overflow-x: hidden;
+}
+
+/* Add animated gradient background */
+.space-theme::before {
+  display: none;
 }
 
 /* Glow Effects */
@@ -278,72 +299,41 @@ body {
 
 /* Hero Section */
 .hero {
-  padding: 220px 0;
   position: relative;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  text-align: left;
   overflow: hidden;
+}
+
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--secondary-rgb), 0.3) 100%);
+  z-index: -1;
 }
 
 .hero-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
-  gap: 40px;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
   align-items: center;
 }
 
-@media (max-width: 768px) {
-  .hero {
-    padding: 120px 0 60px;
-  }
-
-  .hero-grid {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    gap: 30px;
-  }
-
-  .hero-left {
-    text-align: center;
-    order: 2;
-    width: 100%;
-    max-width: 600px;
-  }
-
-  .hero-right {
-    order: 1;
-    width: 100%;
-    max-width: 200px;
-  }
-
-  .hero-logo-wrapper {
-    max-width: 200px;
-    margin: 0 auto;
-  }
-
-  .hero-buttons {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .hero-button {
-    width: 100%;
-  }
-
-  .contract-box {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .contract-box code {
-    font-size: 12px;
-    word-break: break-all;
-  }
+.hero-content {
+  text-align: left;
+  max-width: 600px;
 }
 
-.hero-left {
-  position: relative;
-  z-index: 1;
+.hero-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .hero-title {
@@ -405,9 +395,25 @@ body {
 }
 
 @media (max-width: 768px) {
+  .hero {
+    height: auto;
+    padding: 120px 0 60px;
+    text-align: center;
+  }
+  
+  .hero-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .hero-content {
+    text-align: center;
+    margin: 0 auto;
+  }
+  
   .hero-buttons {
     flex-direction: column;
     gap: 12px;
+    justify-content: center;
   }
 
   .hero-button {
@@ -767,18 +773,26 @@ h2 {
 
 /* Footer */
 .footer {
-  background: var(--background);
-  padding: 1rem;
-  border-top: 1px solid var(--border);
+  position: relative;
+  background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.3) 0%, rgba(var(--secondary-rgb), 0.3) 100%);
+  padding: 2rem 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+
+.footer::before {
+  display: none;
 }
 
 .footer-container {
+  position: relative;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
+  padding: 0 1rem;
 }
 
 .footer-links {
@@ -795,7 +809,7 @@ h2 {
 }
 
 .footer-link:hover {
-  color: var(--accent);
+  color: var(--primary);
 }
 
 .copyright {

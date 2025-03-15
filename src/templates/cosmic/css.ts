@@ -1,3 +1,17 @@
+// Helper function to convert hex to rgb
+const hexToRgb = (hex: string) => {
+  // Remove # if present
+  hex = hex.replace('#', '');
+  
+  // Parse the hex values
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  
+  // Return RGB values as a string
+  return `${r}, ${g}, ${b}`;
+};
+
 export const generateCosmicCSS = (data: any): string => {
     const { primaryColor = '#3B82F6', secondaryColor = '#1E40AF' } = data;
   
@@ -5,6 +19,8 @@ export const generateCosmicCSS = (data: any): string => {
     :root {
       --primary-color: ${primaryColor};
       --secondary-color: ${secondaryColor};
+      --primary-rgb: ${hexToRgb(primaryColor)};
+      --secondary-rgb: ${hexToRgb(secondaryColor)};
       --background-color: #0A0A1F;
       --card-bg: rgba(255, 255, 255, 0.05);
       --text-color: #fff;
@@ -20,14 +36,14 @@ export const generateCosmicCSS = (data: any): string => {
     
     body {
       margin: 0;
-      font-family: 'Space Grotesk', 'Roboto', sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--background-color);
       color: var(--text-color);
       line-height: 1.6;
       overflow-x: hidden;
       background-image: 
-        radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.2) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(30, 64, 175, 0.2) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%, rgba(var(--primary-rgb), 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(var(--secondary-rgb), 0.2) 0%, transparent 50%);
     }
 
     .container {
@@ -94,7 +110,7 @@ export const generateCosmicCSS = (data: any): string => {
     }
 
     .navbar-links a:hover {
-      color: var(--primary-color);
+      color: var(--secondary-color);
     }
     
     .hero {
@@ -167,22 +183,22 @@ export const generateCosmicCSS = (data: any): string => {
 
     .button.primary:hover {
       transform: translateY(-2px);
-      box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4);
+      box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.4);
     }
 
     .button.secondary {
       background: transparent;
       color: var(--text-color);
-      border: 1px solid var(--primary-color);
+      border: 1px solid var(--secondary-color);
     }
 
     .button.secondary:hover {
-      background: rgba(59, 130, 246, 0.1);
+      background: rgba(var(--secondary-rgb), 0.1);
       transform: translateY(-2px);
     }
 
     .button.buy-now {
-      background: var(--primary-color);
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
       color: white;
       padding: 0.5rem 1.25rem;
       border-radius: 9999px;
@@ -194,6 +210,12 @@ export const generateCosmicCSS = (data: any): string => {
       justify-content: center;
       min-width: 100px;
       height: 40px;
+      transition: all 0.3s ease;
+    }
+    
+    .button.buy-now:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(var(--primary-rgb), 0.4);
     }
 
     section {
@@ -207,6 +229,19 @@ export const generateCosmicCSS = (data: any): string => {
       background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      position: relative;
+    }
+    
+    section h2::after {
+      content: '';
+      position: absolute;
+      bottom: -0.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+      border-radius: 3px;
     }
 
     #roadmap {
@@ -234,12 +269,12 @@ export const generateCosmicCSS = (data: any): string => {
 
     #roadmap li:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.2);
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
       border-color: var(--primary-color);
     }
 
     #roadmap h3 {
-      color: var(--primary-color);
+      color: var(--secondary-color);
       margin-bottom: 1rem;
       font-size: 1.5rem;
     }
@@ -269,6 +304,23 @@ export const generateCosmicCSS = (data: any): string => {
 
     .team-grid > div:hover {
       transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .team-grid > div:hover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      padding: 1px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     .team-grid img {
@@ -305,11 +357,12 @@ export const generateCosmicCSS = (data: any): string => {
     footer a:hover {
       color: var(--primary-color);
     }
-
-    .footer-logo {
-      width: 40px;
-      height: 40px;
-      object-fit: contain;
+    
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
     }
 
     .contract-address {
@@ -372,6 +425,23 @@ export const generateCosmicCSS = (data: any): string => {
 
     .tokenomics-card:hover {
       transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
+      border-color: var(--primary-color);
+    }
+
+    .tokenomics-card:hover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      padding: 1px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     .tokenomics-card h3 {
@@ -404,8 +474,23 @@ export const generateCosmicCSS = (data: any): string => {
 
     .faq-item:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 20px rgba(var(--primary-color-rgb), 0.2);
+      box-shadow: 0 0 20px rgba(var(--primary-rgb), 0.2);
       border-color: var(--primary-color);
+    }
+
+    .faq-item:hover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 1rem;
+      padding: 1px;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+      -webkit-mask: 
+        linear-gradient(#fff 0 0) content-box, 
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
     }
 
     .faq-question {
@@ -418,7 +503,7 @@ export const generateCosmicCSS = (data: any): string => {
     }
 
     .faq-question h3 {
-      color: var(--text-color);
+      color: var(--secondary-color);
       font-size: 1.2rem;
       margin: 0;
       padding-right: 2rem;
@@ -461,6 +546,7 @@ export const generateCosmicCSS = (data: any): string => {
       justify-content: center;
       gap: 1rem;
       margin-top: 2rem;
+      
     }
 
     @keyframes glow {

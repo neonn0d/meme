@@ -265,8 +265,6 @@ export const generateStellarHTML = ({
     <!-- Community Section -->
     <section id="community" class="py-20 relative">
         <div class="container mx-auto px-4 text-center">
-            <h2 class="text-3xl md:text-4xl font-bold mb-8">Join Our Community</h2>
-            <p class="text-lg text-gray-300 mb-12 max-w-3xl mx-auto">Be part of our growing community and stay updated with the latest news and developments.</p>
             <div class="flex justify-center gap-6 flex-wrap">
                 ${socialLinks.telegram ? `<a href="${socialLinks.telegram}" target="_blank" class="bg-gray-900/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-gray-800 hover:border-primary/50 transition flex items-center gap-3 reveal"><i class="fab fa-telegram-plane text-2xl text-primary"></i><span>Telegram</span></a>` : ''}
                 ${socialLinks.twitter ? `<a href="${socialLinks.twitter}" target="_blank" class="bg-gray-900/50 backdrop-blur-sm px-6 py-4 rounded-xl border border-gray-800 hover:border-primary/50 transition flex items-center gap-3 reveal"><i class="fab fa-twitter text-2xl text-primary"></i><span>Twitter</span></a>` : ''}

@@ -95,6 +95,7 @@ export const generateMinimalHTML = (data: PreviewData): string => {
     
     <!-- Styles -->
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
 </head>
 <body>
     <!-- Navigation -->
@@ -195,8 +196,7 @@ export const generateMinimalHTML = (data: PreviewData): string => {
             <div class="roadmap-grid">
                 ${roadmap.phases.map((phase, index) => `
                 <div class="roadmap-item">
-                    <div class="phase-marker">Phase ${index + 1}</div>
-                    <h3>${phase.title}</h3>
+                                       <h3>${phase.title}</h3>
                     <p>${phase.description}</p>
                     ${phase.date ? `<div class="phase-date">${phase.date}</div>` : ''}
                 </div>
@@ -210,6 +210,7 @@ export const generateMinimalHTML = (data: PreviewData): string => {
     ${team?.length ? `
     <section id="team" class="section">
         <div class="container">
+        <h2>Team</h2>
             <div class="team-grid">
                 ${team.map(member => `
                 <div class="team-member">
@@ -249,26 +250,25 @@ export const generateMinimalHTML = (data: PreviewData): string => {
     <section id="socials" class="section">
         <div class="container">
             <h2>Join Our Community</h2>
-            <div class="socials-grid">
+            <div class="social-grid">
                 ${socialLinks.telegram ? `
                 <a href="${socialLinks.telegram}" target="_blank" rel="noopener" class="social-item">
-                    <div class="social-icon telegram"></div>
-                    <h3>Telegram</h3>
-                    <p>Join our Telegram community</p>
+                    <i class="social-icon fa-brands fa-telegram"></i>
+                    <span class="social-name">Telegram</span>
                 </a>
                 ` : ''}
+                
                 ${socialLinks.twitter ? `
                 <a href="${socialLinks.twitter}" target="_blank" rel="noopener" class="social-item">
-                    <div class="social-icon twitter"></div>
-                    <h3>Twitter</h3>
-                    <p>Follow us on Twitter</p>
+                    <i class="social-icon fa-brands fa-twitter"></i>
+                    <span class="social-name">Twitter</span>
                 </a>
                 ` : ''}
+                
                 ${socialLinks.discord ? `
                 <a href="${socialLinks.discord}" target="_blank" rel="noopener" class="social-item">
-                    <div class="social-icon discord"></div>
-                    <h3>Discord</h3>
-                    <p>Join our Discord server</p>
+                    <i class="social-icon fa-brands fa-discord"></i>
+                    <span class="social-name">Discord</span>
                 </a>
                 ` : ''}
             </div>

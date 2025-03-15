@@ -125,6 +125,49 @@ body {
   box-shadow: 0 4px 12px rgba(255, 107, 0, 0.2);
 }
 
+.telegram-btn {
+  background: #0088cc !important;
+}
+
+.social-icons-small {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.social-icon-small {
+  margin: 0 0.5rem;
+  transition: transform 0.3s ease;
+  text-decoration: none;
+}
+
+.social-icon-small:hover {
+  transform: translateY(-2px);
+}
+
+.icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 1rem;
+}
+
+.telegram-bg {
+  background-color: #0088cc;
+}
+
+.twitter-bg {
+  background-color: #1DA1F2;
+}
+
+.discord-bg {
+  background-color: #7289DA;
+}
+
 @media (max-width: 768px) {
   .nav {
     padding: 0.5rem 1rem;
@@ -190,6 +233,10 @@ body {
   text-shadow: 0 10px 30px color-mix(in srgb, var(--secondary) 10%, transparent);
 }
 
+.descriptiontext {
+  color: var(--secondary);
+}
+
 .hero-subtitle {
   font-size: clamp(1.25rem, 2.5vw, 1.75rem);
   margin-bottom: 1.5rem;
@@ -224,6 +271,7 @@ body {
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  color: white;
 }
 
 .contract-box code {
@@ -232,12 +280,13 @@ body {
   color: var(--primary);
   word-break: break-all;
   font-size: 0.875rem;
+  color: white;
 }
 
 .copy-btn {
   background: rgba(255, 255, 255, 0.1);
   border: none;
-  color: var(--primary);
+  color: white;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -309,10 +358,6 @@ body {
 
 .hero-btn:hover::before {
   left: 100%;
-}
-
-.telegram-btn {
-  background: #0088cc !important;
 }
 
 .hero-image {
@@ -408,7 +453,6 @@ body {
 .card-icon {
   font-size: 2.5rem;
   margin-bottom: 1.5rem;
-  filter: drop-shadow(0 0 10px var(--primary));
 }
 
 .tokenomics-card h3 {
@@ -887,6 +931,7 @@ body {
   .contract-box code {
     font-size: 0.6875rem;
     letter-spacing: -0.2px;
+    color:white;
   }
 
   .copy-btn {

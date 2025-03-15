@@ -11,6 +11,7 @@ export const generatePlayfulHTML = (data: PreviewData): string => {
     roadmap, 
     team, 
     faq,
+    tokenomics,
     buyLink = '#' 
   } = data;
 
@@ -63,6 +64,7 @@ export const generatePlayfulHTML = (data: PreviewData): string => {
               ${sections.team ? '<li><a href="#team">Team</a></li>' : ''}
               ${sections.faq ? '<li><a href="#faq">FAQ</a></li>' : ''}
               ${sections.community ? '<li><a href="#community">Community</a></li>' : ''}
+              ${sections.tokenomics ? '<li><a href="#tokenomics">Tokenomics</a></li>' : ''}
             </ul>
             ${buyLink ? `<a href="${buyLink}" target="_blank" rel="noopener" class="nav-button">Buy ${tokenSymbol}</a>` : ''}
           </div>
@@ -75,11 +77,11 @@ export const generatePlayfulHTML = (data: PreviewData): string => {
         <div class="container">
           <div class="hero-content">
             <div class="hero-text">
-              <h1 class="hero-title">${coinName} <span class="highlight">${tokenSymbol}</span></h1>
+              <h1 class="hero-title">${coinName}</h1>
               <p class="hero-description">${description}</p>
               <div class="hero-buttons">
                 ${buyLink ? `<a href="${buyLink}" target="_blank" rel="noopener" class="primary-button">Buy ${tokenSymbol}</a>` : ''}
-                <a href="#about" class="secondary-button">Learn More</a>
+                <a href="#tokenomics" class="secondary-button">Learn More</a>
               </div>
             </div>
             <div class="hero-image">
@@ -90,64 +92,47 @@ export const generatePlayfulHTML = (data: PreviewData): string => {
       </section>
       ` : ''}
 
-      <!-- About Section (Yellow) -->
-      <section id="about" class="about-section yellow-section">
+
+      <!-- Tokenomics Section -->
+      ${sections.tokenomics ? `
+      <section id="tokenomics" class="tokenomics-section yellow-section">
         <div class="container">
           <div class="section-header">
-            <div class="character-small right">
-              <img src="${logoUrl || 'https://placehold.co/150x150'}" alt="${coinName} Character" class="character-img-small">
-            </div>
-            <h2 class="section-title">About ${coinName}</h2>
-            <p class="section-description">${description}</p>
+            <h2 class="section-title">Tokenomics</h2>
+            <p class="section-description">How ${coinName} tokens are distributed.</p>
           </div>
           
-          <div class="features-grid">
-            <div class="feature-card">
-              <div class="feature-icon">🚀</div>
-              <h3 class="feature-title">Fast & Secure</h3>
-              <p class="feature-description">Lightning-fast transactions with top-tier security protocols.</p>
-            </div>
-            <div class="feature-card">
-              <div class="feature-icon">🌍</div>
-              <h3 class="feature-title">Community Driven</h3>
-              <p class="feature-description">Built by the community, for the community.</p>
-            </div>
-            <div class="feature-card">
-              <div class="feature-icon">💰</div>
-              <h3 class="feature-title">Rewarding</h3>
-              <p class="feature-description">Innovative tokenomics designed to reward holders.</p>
-            </div>
-          </div>
-
-          <div class="stats-container">
-            <div class="stat-item">
-              <span class="stat-value">$${Math.floor(Math.random() * 10000)}K</span>
-              <span class="stat-label">Market Cap</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${Math.floor(Math.random() * 10000)}</span>
-              <span class="stat-label">Holders</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${Math.floor(Math.random() * 100)}K+</span>
-              <span class="stat-label">Community</span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-value">${Math.floor(Math.random() * 100)}+</span>
-              <span class="stat-label">Countries</span>
+          <div class="tokenomics-container">
+            <div class="tokenomics-details">
+              <div class="tokenomics-grid">
+                <div class="tokenomics-card">
+                  <h3 class="tokenomics-card-title">Total Supply</h3>
+                  <div class="tokenomics-card-value">${data.tokenomics.totalSupply}</div>
+                </div>
+                <div class="tokenomics-card">
+                  <h3 class="tokenomics-card-title">Buy Tax</h3>
+                  <div class="tokenomics-card-value">${data.tokenomics.taxBuy}</div>
+                </div>
+                <div class="tokenomics-card">
+                  <h3 class="tokenomics-card-title">Sell Tax</h3>
+                  <div class="tokenomics-card-value">${data.tokenomics.taxSell}</div>
+                </div>
+                <div class="tokenomics-card">
+                  <h3 class="tokenomics-card-title">LP Locked</h3>
+                  <div class="tokenomics-card-value">${data.tokenomics.lpLocked}</div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
+      ` : ''}
 
       <!-- Roadmap Section (White with accents) -->
       ${sections.roadmap && roadmap && roadmap.phases && roadmap.phases.length > 0 ? `
       <section id="roadmap" class="roadmap-section white-section">
         <div class="container">
           <div class="section-header">
-            <div class="character-small left">
-              <img src="${logoUrl || 'https://placehold.co/150x150'}" alt="${coinName} Character" class="character-img-small">
-            </div>
             <h2 class="section-title roadmap-main-title">Roadmap</h2>
             <p class="section-description">Our journey to the moon and beyond.</p>
           </div>
@@ -261,6 +246,7 @@ export const generatePlayfulHTML = (data: PreviewData): string => {
                   ${sections.team ? '<li><a href="#team">Team</a></li>' : ''}
                   ${sections.faq ? '<li><a href="#faq">FAQ</a></li>' : ''}
                   ${sections.community ? '<li><a href="#community">Community</a></li>' : ''}
+                  ${sections.tokenomics ? '<li><a href="#tokenomics">Tokenomics</a></li>' : ''}
                 </ul>
               </div>
             </div>

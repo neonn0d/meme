@@ -361,7 +361,6 @@ export const generatePepeCSS = (data: PreviewData): string => {
     }
 
     .contract-link::after {
-        content: '📋';
         margin-left: 0.5rem;
         font-size: 0.9rem;
     }

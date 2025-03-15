@@ -148,7 +148,7 @@ export default function CustomizePage() {
       community: true,
     },
     primaryColor: "#3B82F6",
-    secondaryColor: "#c0bfbc",
+    secondaryColor: "#0e376c",
     coinName: "BUIDL Token",
     tokenSymbol: "BUIDL",
     description:

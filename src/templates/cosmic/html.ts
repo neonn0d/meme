@@ -36,7 +36,8 @@ export const generateCosmicHTML = ({
       <meta property="og:type" content="website">
       
       <link rel="icon" href="${logoUrl}">
-      <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
       <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -235,7 +236,6 @@ export const generateCosmicHTML = ({
       <footer>
           <div class="container">
               <div class="footer-content">
-                  <img src="${logoUrl}" alt="${coinName} Logo" class="footer-logo">
                   <div class="footer-links">
                       <a href="${
                         socialLinks.telegram

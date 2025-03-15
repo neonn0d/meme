@@ -66,10 +66,15 @@ const config: Config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
+        "scroll-y": {
+          "0%": { objectPosition: "top" },
+          "100%": { objectPosition: "bottom" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "scroll-y": "scroll-y 3s ease-in-out alternate infinite",
       },
     },
   },

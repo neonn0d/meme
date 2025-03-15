@@ -1,10 +1,10 @@
 import { PreviewData } from '@/types';
 
 export const generatePlayfulCSS = (data: PreviewData): string => {
-  const { primaryColor = '#6A3DE8', secondaryColor = '#FFD100' } = data;
+  const { primaryColor = '#FF4DFF', secondaryColor = '#00E5FF' } = data;
   
   return `
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css');
     
     :root {
@@ -24,7 +24,7 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
     }
     
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       line-height: 1.6;
       color: var(--text-dark);
       overflow-x: hidden;
@@ -164,18 +164,31 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
       font-size: 2.5rem;
       font-weight: 700;
       margin-bottom: 15px;
+      color: var(--text-light);
+      text-align: center;
     }
     
     .section-description {
-      font-size: 1.1rem;
-      max-width: 700px;
-      margin: 0 auto;
-      opacity: 0.9;
+      font-size: 1.2rem;
+      max-width: 800px;
+      margin: 0 auto 2rem;
+      text-align: center;
+      color: var(--text-light);
     }
     
     /* Hero Section */
     .hero-section {
-      padding: 150px 0 100px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+      background: var(--primary-color);
+    }
+    
+    .hero-section::before {
+      content: none;
     }
     
     .hero-content {
@@ -183,6 +196,9 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
       align-items: center;
       justify-content: space-between;
       gap: 40px;
+      width: 100%;
+      position: relative;
+      z-index: 2;
     }
     
     .hero-text {
@@ -194,16 +210,18 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
       font-weight: 800;
       line-height: 1.2;
       margin-bottom: 20px;
+      color: var(--text-light);
     }
     
     .highlight {
-      color: var(--secondary-color);
+      color: var(--text-light);
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
     }
     
     .hero-description {
       font-size: 1.2rem;
       margin-bottom: 30px;
-      opacity: 0.9;
+      color: var(--text-light);
     }
     
     .hero-buttons {
@@ -241,10 +259,13 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
       flex: 1;
       display: flex;
       justify-content: center;
+      align-items: center;
     }
     
     .character-img {
-      max-width: 100%;
+      max-width: 350px;
+      max-height: 350px;
+      width: auto;
       height: auto;
       animation: float 3s ease-in-out infinite;
     }
@@ -305,47 +326,54 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
     }
     
     /* Tokenomics Section */
+    .tokenomics-section {
+      background-color: var(--secondary-color);
+      padding: 80px 0;
+      color: var(--text-light);
+    }
+    
     .tokenomics-container {
       display: flex;
-      align-items: center;
-      gap: 40px;
-    }
-    
-    .tokenomics-image {
-      flex: 1;
-      display: flex;
       justify-content: center;
-    }
-    
-    .character-img-medium {
-      max-width: 100%;
-      height: auto;
-      animation: float 3s ease-in-out infinite;
+      margin-top: 40px;
     }
     
     .tokenomics-details {
-      flex: 1;
+      width: 100%;
+      max-width: 800px;
+    }
+    
+    .tokenomics-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
     }
     
+    @media (max-width: 768px) {
+      .tokenomics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
     .tokenomics-card {
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.2);
       border-radius: 15px;
+      padding: 30px;
       text-align: center;
+      transition: var(--transition);
     }
     
     .tokenomics-card-title {
-      font-size: 1.1rem;
+      font-size: 1.2rem;
+      font-weight: 600;
       margin-bottom: 10px;
-      opacity: 0.9;
+      color: var(--text-light);
     }
     
     .tokenomics-card-value {
-      font-size: 1.8rem;
+      font-size: 2.5rem;
       font-weight: 700;
+      color: var(--text-light);
     }
     
     /* Roadmap Section */
@@ -577,7 +605,7 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
     
     /* Footer */
     .footer {
-      background-color: #333;
+      background-color: #000000;
       color: var(--text-light);
       padding: 60px 0 20px;
     }
@@ -616,7 +644,7 @@ export const generatePlayfulCSS = (data: PreviewData): string => {
     .footer-links-title {
       font-size: 1.1rem;
       margin-bottom: 15px;
-      color: var(--secondary-color);
+      color: var(--primary-color);
     }
     
     .footer-links-column ul {
