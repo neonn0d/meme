@@ -16,7 +16,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <SolanaProvider>
       {!hideNavbarAndFooter && <Navbar />}
-      <main className={!isPreviewPage ? "min-h-screen" : "min-h-screen"}>
+      <main className={!isPreviewPage ? "min-h-[calc(100vh-20rem)]" : "min-h-screen"}>
         {children}
       </main>
       {!hideNavbarAndFooter && <Footer />}

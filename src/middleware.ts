@@ -28,6 +28,7 @@ export const config = {
     "/templates",   // Protect templates
     "/history",     // Protect history
     "/users",       // Protect users page
+    "/telegram/(.*)",  // Protect telegram routes
     "/api/(.*)"     // Protect all API routes if needed
   ],
 };
