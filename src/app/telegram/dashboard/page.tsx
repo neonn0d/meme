@@ -184,15 +184,21 @@ export default function TelegramDashboard() {
   };
 
   return (
-    <div className="min-h-full pt-10 px-4 sm:px-8 max-w-7xl mx-auto">
-      <div className="max-w-7xl mx-auto px-4 sm:px-0 py-6 sm:py-12 space-y-4 sm:space-y-8">
+    <div className="min-h-full md:pt-10 px-4 sm:px-8 max-w-7xl mx-auto pt-16">
+      <div className="max-w-7xl mx-auto sm:px-0 py-6 sm:py-12 space-y-4 sm:space-y-8">
         {/* Header Section */}
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
-              Telegram Dashboard
-            </h1>
-            <div className="flex flex-col items-end">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
+                Telegram Dashboard
+              </h1>
+              <p className="mt-2 text-zinc-600">
+                Manage your Telegram sessions and send messages to groups.
+              </p>
+            </div>
+            
+            <div className="flex flex-col items-start md:items-end mt-4 md:mt-0">
               {isSubscriptionLoading ? (
                 <div className="animate-pulse w-32 h-8 bg-zinc-100 rounded-full"></div>
               ) : (
@@ -216,9 +222,6 @@ export default function TelegramDashboard() {
               )}
             </div>
           </div>
-          <p className="mt-2 text-zinc-600">
-            Manage your Telegram sessions and send messages to groups.
-          </p>
         </div>
 
         {error && (
@@ -229,7 +232,7 @@ export default function TelegramDashboard() {
 
         {/* Sessions Section */}
         <div className="bg-white rounded-xl shadow-sm border border-zinc-200 p-6">
-          <div className="flex justify-between items-center mb-6">
+          <div className="flex md:flex-row flex-col gap-4 justify-between items-center mb-6">
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-900">Your Telegram Sessions</h2>
             <Link 
               href="/telegram/login" 

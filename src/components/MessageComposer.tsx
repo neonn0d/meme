@@ -255,7 +255,7 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
 
       <div className="mt-4">
         <div className="flex flex-col space-y-2">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col md:flex-row md:justify-between md:items-center space-y-1 md:space-y-0">
             <label htmlFor="delay-slider" className="text-sm font-medium text-zinc-700">
               Delay between messages: {(messageDelay / 1000).toFixed(1)} seconds
             </label>
@@ -298,7 +298,7 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
           <div className="bg-white p-5 rounded-xl border border-zinc-200 mb-4">
       <h3 className="text-lg font-medium text-zinc-900 mb-3">Message Progress</h3>
           {/* Progress header with gradient background */}
-          <div className="bg-white border-b border-zinc-200 p-3">
+          <div className="bg-white border-b border-zinc-200">
             <div className="mb-2">
               <div className="flex justify-between text-sm font-medium text-zinc-700 mb-1">
                 <span>Progress: {sendProgress.current} of {sendProgress.total}</span>
@@ -342,8 +342,8 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
           
           {/* Results section */}
           {sendProgress.status === 'complete' && sendProgress.successful > 0 && sendProgress.results?.successful && sendProgress.results.successful.length > 0 && (
-            <div className="p-3 bg-white">
-              <p className="text-sm font-medium text-zinc-700 mb-3">Successfully sent to:</p>
+            <div className="bg-white">
+              <p className="text-sm font-medium text-zinc-700 my-3 md:my-0 mb-2">Successfully sent to:</p>
               
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
                 {sendProgress.results.successful.map((result, index) => (
