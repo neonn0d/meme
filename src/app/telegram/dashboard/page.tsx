@@ -233,7 +233,7 @@ export default function TelegramDashboard() {
             <h2 className="text-xl sm:text-2xl font-bold text-zinc-900">Your Telegram Sessions</h2>
             <Link 
               href="/telegram/login" 
-              className="flex items-center bg-zinc-50 hover:bg-zinc-100 text-zinc-800 px-4 py-2 rounded-lg transition-all duration-200 border border-zinc-200 shadow-sm hover:shadow"
+              className="inline-flex items-center px-4 py-2 rounded-lg bg-zinc-900 text-white hover:bg-zinc-800 transition-colors"
             >
               <span className="mr-2 font-medium text-sm">Add Telegram account</span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-5 h-5">
