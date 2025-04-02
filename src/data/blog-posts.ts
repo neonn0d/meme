@@ -236,5 +236,39 @@ Need help? [Join our Discord](https://discord.gg/buidl) for support and tips.
     publishedAt: "2025-02-01",
     author: "BUIDL Team",
     image: "/blog/memecoin-website-guide.jpg"
+  },
+  {
+    slug: "telegram-marketing-for-memecoins",
+    title: "Boost Your Memecoin Project with Our New Telegram Marketing Suite",
+    excerpt: "Learn how to effectively promote your memecoin across Telegram groups with our powerful marketing tools. Reach more potential investors and build community faster.",
+    content: `
+Promote your memecoin project across Telegram groups with our powerful marketing tools.
+
+## Key Features
+
+### Mass Messaging
+Send your marketing message to multiple Telegram groups with just a few clicks. Perfect for announcing launches and updates.
+
+### Smart Rate Limiting
+Customize message delay between 500ms and 3000ms to prevent Telegram rate limiting and ensure all your messages are delivered.
+
+### Audience Targeting
+Manage multiple Telegram sessions and target specific groups for your marketing campaigns.
+
+### Premium Access
+Free users can send up to 3 messages. Upgrade to premium for unlimited messaging capabilities.
+
+## Free vs Premium
+
+- **Free Plan**: Limited (max 3 messages)
+- **Premium Plan**: Unlimited messaging
+
+## Get Started
+
+**🚀 [Try It Now](/telegram/dashboard)**
+    `,
+    publishedAt: "2025-04-01",
+    author: "BUIDL Team",
+    image: "/blog/telegram.png"
   }
 ];

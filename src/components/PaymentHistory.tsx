@@ -80,7 +80,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-zinc-50">
+      <div className="min-h-screen bg-zinc-50 pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-8">
           <div className="p-4 bg-white rounded-lg shadow-sm border border-zinc-200">
             <p className="text-zinc-600">Please sign in to view history.</p>
@@ -92,7 +92,7 @@ const PaymentHistory = forwardRef<PaymentHistoryRef>((_, ref) => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-zinc-50">
+      <div className="min-h-screen bg-zinc-50 pt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-8 py-12 space-y-8">
           <div className="p-4 bg-white rounded-lg shadow-sm border border-zinc-200">
             <div className="flex items-center justify-center py-8">

@@ -1,0 +1,258 @@
+require('dotenv').config();
+const { Api, TelegramClient } = require("telegram");
+const { StringSession } = require("telegram/sessions");
+const fs = require("fs");
+const path = require("path");
+const readline = require("readline");
+
+// Create readline interface
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+
+// Promisify the question function
+function question(query) {
+  return new Promise(resolve => {
+    rl.question(query, resolve);
+  });
+}
+
+// Get API credentials from environment
+const apiId = parseInt(process.env.TELEGRAM_API_ID || "0");
+const apiHash = process.env.TELEGRAM_API_HASH || "";
+
+// Validate API credentials
+if (!apiId || !apiHash) {
+  console.error("Missing Telegram API credentials. Please set TELEGRAM_API_ID and TELEGRAM_API_HASH in .env file.");
+  process.exit(1);
+}
+
+// Path to sessions directory
+const sessionsDir = path.join(__dirname, "sessions");
+if (!fs.existsSync(sessionsDir)) {
+  fs.mkdirSync(sessionsDir, { recursive: true });
+}
+
+/**
+ * Get available sessions
+ * @returns {Array} - Array of session objects
+ */
+function getAvailableSessions() {
+  const sessionFiles = fs.readdirSync(sessionsDir);
+  return sessionFiles.map(file => {
+    const sessionPath = path.join(sessionsDir, file);
+    const sessionData = JSON.parse(fs.readFileSync(sessionPath, "utf8"));
+    return {
+      phone: sessionData.phone,
+      session: sessionData.session,
+      created: sessionData.created
+    };
+  });
+}
+
+/**
+ * Add random variations to a message
+ * @param {string} message - The original message
+ * @returns {string} - The message with variations
+ */
+function randomizeMessage(message) {
+  // Simple randomization - add random emojis or slight text variations
+  const emojis = ["🚀", "💰", "🔥", "✨", "💎", "🌙", "🌟"];
+  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+  
+  // 50% chance to add emoji at the end
+  if (Math.random() > 0.5) {
+    return `${message} ${randomEmoji}`;
+  }
+  
+  // 30% chance to add emoji at the beginning
+  if (Math.random() > 0.7) {
+    return `${randomEmoji} ${message}`;
+  }
+  
+  // Otherwise return original
+  return message;
+}
+
+/**
+ * Main function
+ */
+async function main() {
+  try {
+    console.log("🌊 ShillWave - Simple Telegram Shill Tool");
+    console.log("========================================\n");
+    
+    // Get available sessions
+    const sessions = getAvailableSessions();
+    if (sessions.length === 0) {
+      console.error("No sessions found. Please login first using auth/login.js");
+      rl.close();
+      return;
+    }
+    
+    // Display available sessions
+    console.log("Available sessions:");
+    console.log("------------------");
+    sessions.forEach((session, index) => {
+      const createdDate = new Date(session.created).toLocaleString();
+      console.log(`${index + 1}. ${session.phone} (created: ${createdDate})`);
+    });
+    console.log("");
+    
+    // Select a session
+    const sessionIndex = parseInt(await question("Select a session (number): ")) - 1;
+    if (sessionIndex < 0 || sessionIndex >= sessions.length) {
+      console.error("Invalid session number.");
+      rl.close();
+      return;
+    }
+    
+    const selectedSession = sessions[sessionIndex];
+    
+    // Get message and limit
+    const message = await question("Enter your shill message: ");
+    const limitInput = await question("Enter message limit (default: 5): ");
+    const limit = parseInt(limitInput) || 5;
+    
+    // Confirm settings
+    console.log("\n📋 Campaign Settings:");
+    console.log("-------------------");
+    console.log(`Session: ${selectedSession.phone}`);
+    console.log(`Message: ${message}`);
+    console.log(`Limit: ${limit} messages`);
+    console.log(`Cooldown: 20-45 seconds`);
+    
+    // Ask for confirmation
+    const confirm = await question("\nStart campaign? (y/n): ");
+    if (confirm.toLowerCase() !== "y") {
+      console.log("Campaign cancelled.");
+      rl.close();
+      return;
+    }
+    
+    console.log("\n🚀 Starting campaign...");
+    
+    // Create and connect client
+    const stringSession = new StringSession(selectedSession.session);
+    const client = new TelegramClient(stringSession, apiId, apiHash, {
+      connectionRetries: 3,
+    });
+    
+    await client.connect();
+    console.log("Connected to Telegram!");
+    
+    // Get user info
+    const me = await client.getMe();
+    console.log(`Logged in as: ${me.firstName} (${me.phone})`);
+    
+    // Fetch groups
+    console.log("\nFetching groups...");
+    const dialogs = await client.getDialogs({
+      limit: 100
+    });
+    
+    // Filter for groups
+    const groups = dialogs.filter(dialog => 
+      dialog.isChannel || dialog.isGroup || dialog.isUser === false
+    );
+    
+    console.log(`Found ${groups.length} groups:`);
+    groups.forEach((group, i) => {
+      console.log(`${i+1}. ${group.title || group.name || 'Unknown'} (ID: ${group.id})`);
+    });
+    
+    if (groups.length === 0) {
+      console.log("No groups found to send messages to.");
+      await client.disconnect();
+      rl.close();
+      return;
+    }
+    
+    // Limit the number of groups
+    const targetGroups = groups.slice(0, limit);
+    console.log(`\nTargeting ${targetGroups.length} groups for messaging.`);
+    
+    // Track results
+    const results = {
+      successful: [],
+      failed: []
+    };
+    
+    // Send messages
+    console.log("\n📤 Sending messages...");
+    for (const [index, group] of targetGroups.entries()) {
+      try {
+        console.log(`\n[${index + 1}/${targetGroups.length}] Processing: ${group.title || group.name || 'Unknown'}`);
+        
+        // Randomize message
+        const randomizedMessage = randomizeMessage(message);
+        console.log(`Message: ${randomizedMessage}`);
+        
+        // Send message
+        console.log(`Sending to group ID: ${group.id}...`);
+        const result = await client.sendMessage(group.id, { 
+          message: randomizedMessage 
+        });
+        
+        console.log("✅ Message sent successfully!");
+        console.log(`Message ID: ${result.id}`);
+        console.log(`Date: ${new Date(result.date * 1000).toISOString()}`);
+        
+        results.successful.push({
+          groupId: group.id.toString(),
+          groupTitle: group.title || group.name || 'Unknown',
+          messageId: result.id.toString(),
+          date: new Date(result.date * 1000).toISOString()
+        });
+        
+        // Apply cooldown
+        if (index < targetGroups.length - 1) {
+          const cooldownSeconds = Math.floor(Math.random() * (45 - 20 + 1)) + 20;
+          console.log(`Cooldown: ${cooldownSeconds} seconds...`);
+          await new Promise(resolve => setTimeout(resolve, cooldownSeconds * 1000));
+        }
+      } catch (error) {
+        console.error(`❌ Error sending message:`, error.message);
+        results.failed.push({
+          groupId: group.id.toString(),
+          groupTitle: group.title || group.name || 'Unknown',
+          error: error.message
+        });
+      }
+    }
+    
+    // Disconnect
+    await client.disconnect();
+    console.log("\nDisconnected from Telegram");
+    
+    // Display results
+    console.log("\n✅ Campaign completed!");
+    console.log(`\nResults Summary:`);
+    console.log(`-----------------`);
+    console.log(`Messages successfully sent: ${results.successful.length}`);
+    console.log(`Messages failed to send: ${results.failed.length}`);
+    
+    if (results.successful.length > 0) {
+      console.log(`\nSuccessful groups:`);
+      results.successful.forEach((result, i) => {
+        console.log(`${i+1}. ${result.groupTitle} (ID: ${result.groupId})`);
+      });
+    }
+    
+    if (results.failed.length > 0) {
+      console.log(`\nFailed groups:`);
+      results.failed.forEach((result, i) => {
+        console.log(`${i+1}. ${result.groupTitle} (ID: ${result.groupId}): ${result.error}`);
+      });
+    }
+    
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    rl.close();
+  }
+}
+
+// Run the main function
+main().catch(console.error);
