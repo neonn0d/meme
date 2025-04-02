@@ -7,6 +7,7 @@ import BuidlToken from "@/components/BuidlToken"
 import FAQ from "@/components/FAQ"
 import Partners from "@/components/Partners"
 import TemplateGrid from "@/components/templategrid"
+import TelegramMarketing from "@/components/TelegramMarketing"
 
 export default function Home() {
   return (
@@ -16,6 +17,7 @@ export default function Home() {
         <Features />
         <TemplateGrid />
         <FAQ />
+        <TelegramMarketing />
         <BuidlToken />
         <Partners />
         <CTA />

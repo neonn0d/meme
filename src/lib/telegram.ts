@@ -33,7 +33,7 @@ export const saveSessionToClerk = async (
         id: userInfo.id,
         firstName: userInfo.firstName ? encodeEmojiForStorage(userInfo.firstName) : '',
         lastName: userInfo.lastName ? encodeEmojiForStorage(userInfo.lastName) : '',
-        username: userInfo.username ? encodeEmojiForStorage(userInfo.username) : '',
+        username: userInfo.username || '', // Store username as plain text
         phone: userInfo.phone || phoneNumber,
         premium: userInfo.premium || false,
         verified: userInfo.verified || false

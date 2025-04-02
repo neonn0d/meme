@@ -5,19 +5,10 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@clerk/nextjs";
 import Link from "next/link";
 import { getSessionsFromClerk, decodeEmojiFromStorage } from "@/lib/telegram";
+import MessageComposer from '@/components/MessageComposer';
+import { useSubscription } from "@/hooks/useSubscription";
+import { Sparkles } from "lucide-react";
 
-// Helper function to convert emoji string to HTML entities
-const convertEmojiToHtmlEntities = (text: string) => {
-  return Array.from(text)
-    .map(char => {
-      const codePoint = char.codePointAt(0);
-      if (codePoint && codePoint > 127) {
-        return `&#${codePoint};`;
-      }
-      return char;
-    })
-    .join('');
-};
 
 interface MessageResult {
   groupId: string;
@@ -50,10 +41,8 @@ export default function TelegramDashboard() {
   const [selectedPhone, setSelectedPhone] = useState<string | null>(null);
   const [groups, setGroups] = useState<any[]>([]);
   const [loadingGroups, setLoadingGroups] = useState(false);
-  const [message, setMessage] = useState("");
+  const [fastModeMap, setFastModeMap] = useState<Record<string, boolean>>({});
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [randomize, setRandomize] = useState(false);
-  const [sendingMessage, setSendingMessage] = useState(false);
   const [messageResults, setMessageResults] = useState<MessageResults | null>(null);
   const [sendProgress, setSendProgress] = useState<SendProgress>({
     total: 0,
@@ -66,7 +55,19 @@ export default function TelegramDashboard() {
       failed: []
     }
   });
+  const PREMIUM_AMOUNT = Number(
+    process.env.NEXT_PUBLIC_PREMIUM_AMOUNT || "0.25"
+  ); // SOL
   const [deletingSession, setDeletingSession] = useState<string | null>(null);
+  const [showMessageComposer, setShowMessageComposer] = useState(false);
+  const [globalFastMode, setGlobalFastMode] = useState(true);
+  const {
+    isLoading: isSubscriptionLoading,
+    error: subscriptionError,
+    isSubscribed,
+    subscriptionDetails,
+    checkSubscription,
+  } = useSubscription();
 
   useEffect(() => {
     fetchSessions();
@@ -81,6 +82,15 @@ export default function TelegramDashboard() {
 
       if (data.success) {
         setSessions(data.sessions || []);
+        
+        // Initialize fast mode to true for all sessions by default
+        if (data.sessions && data.sessions.length > 0) {
+          const initialFastModeMap: Record<string, boolean> = {};
+          data.sessions.forEach((session: any) => {
+            initialFastModeMap[session.phone] = true;
+          });
+          setFastModeMap(initialFastModeMap);
+        }
       } else {
         setError(data.error || "Failed to fetch sessions");
       }
@@ -140,7 +150,7 @@ export default function TelegramDashboard() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ phone }),
+        body: JSON.stringify({ phone, fastMode: globalFastMode }),
       });
 
       const data = await response.json();
@@ -169,84 +179,43 @@ export default function TelegramDashboard() {
     setSelectedGroups([]);
   };
 
-  const sendMessage = async () => {
-    if (!selectedPhone || selectedGroups.length === 0 || !message.trim()) {
-      setError("Please select a phone, at least one group, and enter a message");
-      return;
-    }
-
-    setSendingMessage(true);
-    setError(null);
-    setMessageResults(null);
-
-    try {
-      const response = await fetch("/api/telegram/message", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          phone: selectedPhone,
-          groupIds: selectedGroups,
-          message,
-          randomize
-        }),
-      });
-
-      const data = await response.json();
-
-      if (data.error) {
-        setError(data.error);
-      } else {
-        setSendProgress({
-          total: data.progress.total,
-          current: data.progress.current,
-          successful: data.progress.successful,
-          failed: data.progress.failed,
-          status: data.status,
-          results: {
-            successful: [],
-            failed: []
-          }
-        });
-      }
-    } catch (error: any) {
-      console.error('Error sending message:', error);
-      setError(error.message || "Failed to send message");
-    } finally {
-      setSendingMessage(false);
-    }
+  const toggleGlobalFastMode = () => {
+    setGlobalFastMode(!globalFastMode);
   };
-
-  useEffect(() => {
-    // Add CSS for emoji support
-    const style = document.createElement('style');
-    style.textContent = `
-      p, span, div {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", Roboto, Helvetica, Arial, sans-serif;
-      }
-      .emoji {
-        font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
-        font-size: 1.2em;
-        display: inline-block;
-        vertical-align: middle;
-      }
-    `;
-    document.head.appendChild(style);
-
-    return () => {
-      document.head.removeChild(style);
-    };
-  }, []);
 
   return (
     <div className="min-h-full pt-10 px-4 sm:px-8 max-w-7xl mx-auto">
       <div className="max-w-7xl mx-auto px-4 sm:px-0 py-6 sm:py-12 space-y-4 sm:space-y-8">
         {/* Header Section */}
         <div className="bg-white p-6 sm:p-8 rounded-xl shadow-sm border border-zinc-200">
-          <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
-            Telegram Dashboard
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">
+              Telegram Dashboard
+            </h1>
+            <div className="flex flex-col items-end">
+              {isSubscriptionLoading ? (
+                <div className="animate-pulse w-32 h-8 bg-zinc-100 rounded-full"></div>
+              ) : (
+                <>
+                  {isSubscribed && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold bg-gradient-to-r from-green-50 to-green-100 text-green-700 border border-green-200 mb-1">
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                      Premium Active
+                    </span>
+                  )}
+                  {!isSubscribed && (
+                    <Link
+                      href="/pricing"
+                      className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-200 hover:from-blue-100 hover:to-blue-200 transition-colors"
+                    >
+                      <Sparkles className="w-3.5 h-3.5 mr-1.5" />
+                      Upgrade to Premium
+                    </Link>
+                  )}
+                </>
+              )}
+            </div>
+          </div>
           <p className="mt-2 text-zinc-600">
             Manage your Telegram sessions and send messages to groups.
           </p>
@@ -274,7 +243,11 @@ export default function TelegramDashboard() {
           </div>
 
           {loading ? (
-            <div className="animate-pulse h-20 bg-zinc-100 rounded-lg" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="animate-pulse h-44 bg-zinc-100 rounded-lg" />
+              <div className="animate-pulse h-44 bg-zinc-100 rounded-lg hidden sm:block" />
+              <div className="animate-pulse h-44 bg-zinc-100 rounded-lg hidden lg:block" />
+            </div>
           ) : sessions.length === 0 ? (
             <div className="bg-zinc-50 p-6 rounded-xl border border-zinc-200 text-center">
               <p className="mb-4 text-zinc-600">You don't have any Telegram sessions yet.</p>
@@ -293,71 +266,131 @@ export default function TelegramDashboard() {
               {sessions.map((session) => (
                 <div 
                   key={session.phone} 
-                  className={`border rounded-xl p-5 transition-all duration-200 ${
+                  className={`border rounded-lg overflow-hidden transition-all duration-200 ${
                     selectedPhone === session.phone 
-                      ? 'border-blue-300 bg-blue-50 shadow-sm' 
-                      : 'border-zinc-200 hover:border-zinc-300 hover:shadow-sm'
+                      ? 'border-black shadow-sm' 
+                      : 'border-zinc-100 hover:border-zinc-200'
                   }`}
                 >
-                  <div className="flex items-center mb-3">
-                    {session.userInfo && (session.userInfo.photo || session.userInfo.photoBuffer || session.userInfo.hasPhoto) ? (
-                      <div className="w-12 h-12 rounded-full overflow-hidden mr-3 border border-zinc-200 flex items-center justify-center bg-blue-50">
-                        <svg
-                          className="h-8 w-8"
-                          fill="#0088cc"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.324-.437.892-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.178.12.13.145.309.164.472-.001.089.016.181.003.288z" />
-                        </svg>
-                      </div>
-                    ) : (
-                      <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mr-3 border border-zinc-200">
-                        <span className="text-lg font-semibold">{session.phone.substring(1, 3)}</span>
-                      </div>
-                    )}
-
-                    <div>
-                      {session.userInfo && session.userInfo.username ? (
-                        <>
-                          <p className="font-semibold text-zinc-900">@{session.userInfo.username}</p>
-                          <p className="text-sm text-zinc-500">{session.phone.replace(/^\+?(\d{1})(.*)(\d{1})$/, '+$1•••••$3')}</p>
-                        </>
+                  <div className={`p-4 ${selectedPhone === session.phone ? 'bg-white' : 'bg-white'}`}>
+                    <div className="flex items-center mb-3">
+                      {session.userInfo && (session.userInfo.photo || session.userInfo.photoBuffer || session.userInfo.hasPhoto) ? (
+                        <div className="w-10 h-10 rounded-full overflow-hidden mr-3 flex items-center justify-center bg-blue-50">
+                          <svg
+                            className="h-6 w-6"
+                            fill="#0088cc"
+                            viewBox="0 0 24 24"
+                          >
+                            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.139-5.062 3.345-.479.329-.913.489-1.302.481-.428-.008-1.252-.241-1.865-.44-.752-.244-1.349-.374-1.297-.789.027-.216.324-.437.892-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.178.12.13.145.309.164.472-.001.089.016.181.003.288z" />
+                          </svg>
+                        </div>
                       ) : (
-                        <p className="font-semibold text-zinc-900 emoji-container">
-                          {decodeEmojiFromStorage(session.userInfo?.firstName || '')} {decodeEmojiFromStorage(session.userInfo?.lastName || '')}
-                        </p>
+                        <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-500 flex items-center justify-center mr-3">
+                          <span className="text-base font-medium">{session.phone.substring(1, 3)}</span>
+                        </div>
                       )}
+
+                      <div className="flex-1">
+                        <div className="flex items-center">
+                          {session.userInfo && session.userInfo.username ? (
+                            <p className="font-medium text-zinc-900">@{session.userInfo.username}</p>
+                          ) : (
+                            <p className="font-medium text-zinc-900 emoji-container">
+                              {decodeEmojiFromStorage(session.userInfo?.firstName || '')} {decodeEmojiFromStorage(session.userInfo?.lastName || '')}
+                            </p>
+                          )}
+                          
+                          {session.userInfo && session.userInfo.premium && (
+                            <span className="ml-2 inline-flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 text-blue-500">
+                                <path fillRule="evenodd" d="M8.603 3.799A4.49 4.49 0 0112 2.25c1.357 0 2.573.6 3.397 1.549a4.49 4.49 0 013.498 1.307 4.491 4.491 0 011.307 3.497A4.49 4.49 0 0121.75 12a4.49 4.49 0 01-1.549 3.397 4.491 4.491 0 01-1.307 3.497 4.491 4.491 0 01-3.497 1.307A4.49 4.49 0 0112 21.75a4.49 4.49 0 01-3.397-1.549 4.49 4.49 0 01-3.498-1.306 4.491 4.491 0 01-1.307-3.498A4.49 4.49 0 012.25 12c0-1.357.6-2.573 1.549-3.397a4.49 4.49 0 011.307-3.497 4.49 4.49 0 013.497-1.307zm7.007 6.387a.75.75 0 10-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 00-1.06 1.06l2.25 2.25a.75.75 0 001.14-.094l3.75-5.25z" clipRule="evenodd" />
+                              </svg>
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-zinc-500">{session.phone.replace(/^\+?(\d{1})(.*)(\d{1})$/, '+$1•••••$3')}</p>
+                      </div>
+                      
+                      <button
+                        onClick={() => handleDeleteSession(session.phone)}
+                        className={`p-1.5 rounded-full transition-colors ${
+                          loadingGroups || deletingSession === session.phone
+                            ? 'text-zinc-300 cursor-not-allowed'
+                            : 'text-zinc-400 hover:text-red-500 hover:bg-red-50'
+                        }`}
+                        disabled={loadingGroups || deletingSession === session.phone}
+                        title="Delete session"
+                      >
+                        {deletingSession === session.phone ? (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-spin" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                          </svg>
+                        ) : (
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        )}
+                      </button>
                     </div>
 
-                    {session.userInfo && session.userInfo.premium && (
-                      <span className="ml-auto bg-green-50 text-green-700 text-xs px-2 py-1 rounded-full border border-green-200">Premium</span>
-                    )}
-                  </div>
+                    <p className="text-xs text-zinc-400 mb-3">
+                      Account connected: <span className="text-zinc-500  bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">{new Date(session.created).toLocaleString('en-US', { hour12: true })}</span>
+                    </p>
 
-                  <p className="text-sm text-zinc-500 mb-3">
-                    Created: {new Date(session.created).toLocaleString()}
-                  </p>
-
-                  <div className="flex space-x-2">
                     <button
                       onClick={() => fetchGroups(session.phone)}
-                      className="flex-1 bg-zinc-800 hover:bg-zinc-900 text-white text-sm py-2 px-3 rounded-lg transition-colors"
+                      className={`w-full text-center text-sm py-2 px-4 rounded-md transition-colors ${
+                        loadingGroups 
+                          ? 'bg-zinc-100 text-zinc-400 cursor-not-allowed' 
+                          : selectedPhone === session.phone
+                            ? 'bg-zinc-900 text-white'
+                            : 'bg-zinc-100 text-zinc-700 hover:bg-zinc-200'
+                      }`}
                       disabled={loadingGroups}
                     >
                       {loadingGroups && selectedPhone === session.phone ? "Loading..." : "View Groups"}
-                    </button>
-                    <button
-                      onClick={() => handleDeleteSession(session.phone)}
-                      className="flex-1 bg-red-500 hover:bg-red-600 text-white text-sm py-2 px-3 rounded-lg transition-colors"
-                      disabled={deletingSession === session.phone}
-                    >
-                      {deletingSession === session.phone ? "Deleting..." : "Delete"}
                     </button>
                   </div>
                 </div>
               ))}
             </div>
           )}
+        </div>
+
+        <div className="flex justify-end mb-4">
+          <div className="flex items-center space-x-2">
+            <div 
+              className={`w-6 h-6 rounded-md border flex items-center justify-center cursor-pointer ${
+                globalFastMode
+                  ? 'bg-black border-black text-white'
+                  : 'border-black bg-white'
+              }`}
+              onClick={toggleGlobalFastMode}
+            >
+              {globalFastMode && (
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M5 13l4 4L19 7"
+                  />
+                </svg>
+              )}
+            </div>
+            <label 
+              onClick={toggleGlobalFastMode}
+              className="text-sm text-zinc-700 cursor-pointer"
+            >
+              Global Fast Mode (skip photos & details)
+            </label>
+          </div>
         </div>
 
         {selectedPhone && (
@@ -385,25 +418,35 @@ export default function TelegramDashboard() {
                 <div className="mb-4">
                   <div className="flex justify-between items-center mb-3">
                     <h3 className="text-lg font-medium text-zinc-900">Select Groups</h3>
-                    {selectedGroups.length > 0 && (
-                      <button 
-                        onClick={clearSelectedGroups}
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => setSelectedGroups(groups.map(group => group.id))}
                         className="text-sm text-zinc-500 hover:text-zinc-700"
+                        disabled={groups.length === 0}
                       >
-                        Clear selection ({selectedGroups.length})
+                        Select All
                       </button>
-                    )}
+                      {selectedGroups.length > 0 && (
+                        <button 
+                          onClick={clearSelectedGroups}
+                          className="text-sm text-zinc-500 hover:text-zinc-700"
+                        >
+                          Clear ({selectedGroups.length})
+                        </button>
+                      )}
+                    </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 max-h-60 overflow-y-auto">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6 max-h-96 overflow-y-auto border border-zinc-200 rounded-lg p-4">
                     {groups.map((group) => (
                       <div
                         key={group.id}
-                        className={`border rounded-lg p-4 transition-all duration-200 ${
+                        className={`p-4 transition-all duration-200 cursor-pointer ${
                           selectedGroups.includes(group.id)
-                            ? 'bg-blue-50 border-blue-200 shadow-sm'
-                            : 'border-zinc-200 hover:border-zinc-300 hover:shadow-sm'
+                            ? 'border rounded-lg overflow-hidden transition-all duration-200 border-black shadow-sm'
+                            : 'bg-white border border-zinc-100 hover:border-zinc-200 rounded-lg'
                         }`}
+                        onClick={() => toggleGroupSelection(group.id)}
                       >
                         <div className="flex items-center">
                           {/* Left side: Photo */}
@@ -424,7 +467,10 @@ export default function TelegramDashboard() {
                             <h3 className="font-medium text-zinc-900">{group.title}</h3>
                             <div className="flex flex-col mt-1">
                               <p className="text-sm text-zinc-500">
-                                {group.isChannel ? "Channel" : "Group"} • {group.participantsCount.toLocaleString()} {group.isChannel ? "subscribers" : "members"}
+                                {group.isChannel ? "Channel" : "Group"}
+                                {group.participantsCount !== null && (
+                                  <> • {group.participantsCount.toLocaleString()} {group.isChannel ? "subscribers" : "members"}</>
+                                )}
                               </p>
                               {group.username && (
                                 <p className="text-sm text-zinc-500">
@@ -439,7 +485,7 @@ export default function TelegramDashboard() {
                             <div
                               className={`w-6 h-6 rounded-md border flex items-center justify-center cursor-pointer ${
                                 selectedGroups.includes(group.id)
-                                  ? 'bg-blue-500 border-blue-500 text-white'
+                                  ? 'bg-black border-black text-white'
                                   : 'border-zinc-300 bg-white'
                               }`}
                               onClick={(e) => {
@@ -471,50 +517,11 @@ export default function TelegramDashboard() {
                   </div>
                 </div>
 
-                <div className="bg-zinc-50 p-5 rounded-xl border border-zinc-200 mb-4">
-                  <h3 className="text-lg font-medium text-zinc-900 mb-3">Compose Message</h3>
-                  <textarea
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="w-full p-3 border border-zinc-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    rows={4}
-                    placeholder="Enter your message here..."
-                  ></textarea>
-
-                  <div className="flex items-center my-3">
-                    <input
-                      type="checkbox"
-                      id="randomize"
-                      checked={randomize}
-                      onChange={(e) => setRandomize(e.target.checked)}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-300 rounded"
-                    />
-                    <label htmlFor="randomize" className="ml-2 block text-sm text-zinc-700">
-                      Add random emoji variations to messages
-                    </label>
-                  </div>
-
-                  <button
-                    onClick={sendMessage}
-                    disabled={sendingMessage || selectedGroups.length === 0 || !message.trim()}
-                    className={`font-medium py-2 px-4 rounded-lg transition-colors ${
-                      sendingMessage || selectedGroups.length === 0 || !message.trim()
-                        ? 'bg-zinc-300 text-zinc-500 cursor-not-allowed'
-                        : 'bg-zinc-900 hover:bg-zinc-800 text-white'
-                    }`}
-                  >
-                    {sendingMessage ? "Sending..." : `Send to ${selectedGroups.length} groups`}
-                  </button>
-
-                  {sendProgress && (
-                    <div className="mt-4 p-4 bg-zinc-100 rounded-lg border border-zinc-200">
-                      <p className="text-sm text-zinc-700">
-                        {sendProgress.status === 'complete' &&
-                          `Complete: ${sendProgress.successful} successful, ${sendProgress.failed} failed`}
-                      </p>
-                    </div>
-                  )}
-                </div>
+                <MessageComposer 
+                  selectedPhone={selectedPhone}
+                  selectedGroups={selectedGroups}
+                  disabled={loadingGroups}
+                />
               </div>
             )}
           </div>

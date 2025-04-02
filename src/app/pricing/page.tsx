@@ -23,6 +23,11 @@ const features = [
     premium: 'Priority generation',
   },
   {
+    name: 'Telegram Marketing',
+    standard: 'Limited (max 3 messages)',
+    premium: 'Unlimited messaging',
+  },
+  {
     name: 'Beta Features',
     standard: 'Not included',
     premium: 'Early access to new features',

@@ -22,6 +22,7 @@ export function Navbar({ children, className = "" }: NavbarProps) {
 
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
+    { href: "/telegram/dashboard", label: "Telegram" },
     { href: "/templates", label: "Templates" },
     { href: "/pricing", label: "Pricing" },
   ]

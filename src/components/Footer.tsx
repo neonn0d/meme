@@ -99,6 +99,17 @@ export function Footer() {
                   Blog
                 </Link>
               </li>
+              <li>
+                <Link
+                  href="/telegram"
+                  className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors duration-200 inline-flex items-center"
+                >
+                  Telegram Marketing
+                  <span className="ml-1 bg-blue-500 text-white text-[9px] px-1 py-0.5 rounded font-medium leading-none">
+                    NEW
+                  </span>
+                </Link>
+              </li>
             </ul>
           </nav>
 
@@ -184,7 +195,7 @@ export function Footer() {
                 </svg>
               </a>
             </div>
-            <div className="mt-10">
+            <div className="mt-14">
               <a
                 href="https://www.producthunt.com/posts/buidl-2?embed=true&utm_source=badge-featured&utm_medium=badge&utm_souce=badge-buidl&#0045;2"
                 target="_blank"

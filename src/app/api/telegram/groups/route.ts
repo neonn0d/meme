@@ -17,7 +17,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { phone } = await req.json();
+    const { phone, fastMode } = await req.json();
     
     if (!phone) {
       return NextResponse.json({ error: 'Phone number is required' }, { status: 400 });
@@ -60,7 +60,7 @@ export async function POST(req: Request) {
       
       // Fetch dialogs (chats, groups, channels)
       const dialogs = await client.getDialogs({
-        limit: 100 // Fetch up to 100 dialogs
+        limit: fastMode ? 50 : 100 // Fetch fewer dialogs in fast mode
       });
       
       // Filter for groups and channels
@@ -83,7 +83,7 @@ export async function POST(req: Request) {
           
           // For groups, try to get the actual participant count if it's missing
           // But only do a simplified check to avoid excessive API calls
-          if (isReallyGroup && participantsCount === 0 && dialog.id) {
+          if (!fastMode && isReallyGroup && participantsCount === 0 && dialog.id) {
             try {
               // Try to get the input entity first
               const inputEntity = await client.getInputEntity(dialog.id);
@@ -131,9 +131,17 @@ export async function POST(req: Request) {
             groupData.participantsCount = 4;
           }
           
+          // In fast mode, mark the group as loaded in fast mode instead of using placeholders
+          if (fastMode) {
+            groupData.fastMode = true;
+            // If participant count is 0 in fast mode, remove it to avoid showing it in UI
+            if (groupData.participantsCount === 0) {
+              groupData.participantsCount = null;
+            }
+          }
+          
           // Only try to get profile photos for groups without strippedThumb
-          // This significantly reduces API calls
-          if (!groupData.photo?.strippedThumb && dialog.id) {
+          if (!fastMode && !groupData.photo?.strippedThumb && dialog.id) {
             try {
               // Try to download the profile photo directly with a timeout
               const downloadPromise = client.downloadProfilePhoto(dialog.id, {

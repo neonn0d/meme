@@ -17,7 +17,31 @@ interface TelegramUserInfo {
   bot: boolean;
 }
 
-export default function TelegramLogin() {
+interface TelegramLoginProps {
+  onStepChange?: (step: 'phone' | 'code' | 'password' | 'success') => void;
+}
+
+// Utility function to decode base64 values
+const decodeBase64 = (value: string): string => {
+  try {
+    // Check if the string is base64 encoded (simple heuristic)
+    const isBase64 = /^[A-Za-z0-9+/=]+$/.test(value);
+    
+    if (isBase64) {
+      // Try to decode it
+      const decoded = Buffer.from(value, 'base64').toString('utf-8');
+      return decoded;
+    }
+    
+    // If not base64 or decoding fails, return the original value
+    return value;
+  } catch (error) {
+    console.error('Error decoding base64:', error);
+    return value;
+  }
+};
+
+export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
@@ -27,6 +51,14 @@ export default function TelegramLogin() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<TelegramUserInfo | null>(null);
+
+  // Update the parent component when step changes
+  const updateStep = (newStep: 'phone' | 'code' | 'password' | 'success') => {
+    setStep(newStep);
+    if (onStepChange) {
+      onStepChange(newStep);
+    }
+  };
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +81,7 @@ export default function TelegramLogin() {
       }
       
       setSessionInfo(data.sessionInfo);
-      setStep('code');
+      updateStep('code');
       setSuccess('Verification code sent to your Telegram account');
     } catch (error: any) {
       setError(error.message || 'Something went wrong');
@@ -82,16 +114,22 @@ export default function TelegramLogin() {
       if (data.requires2FA) {
         // 2FA is required, move to password step
         setSessionInfo(data.sessionInfo);
-        setStep('password');
+        updateStep('password');
         setSuccess('Please enter your 2FA password');
       } else {
         // Login successful
-        setStep('success');
+        updateStep('success');
         setSuccess('Successfully logged in to Telegram');
         
         // Save user info if available
         if (data.userInfo) {
-          setUserInfo(data.userInfo);
+          // Process any base64 encoded fields
+          const processedUserInfo = {
+            ...data.userInfo,
+            firstName: decodeBase64(data.userInfo.firstName),
+            lastName: decodeBase64(data.userInfo.lastName)
+          };
+          setUserInfo(processedUserInfo);
         }
         
         // Redirect to dashboard after a short delay
@@ -127,12 +165,18 @@ export default function TelegramLogin() {
       }
       
       // Login successful
-      setStep('success');
+      updateStep('success');
       setSuccess('Successfully logged in to Telegram with 2FA');
       
       // Save user info if available
       if (data.userInfo) {
-        setUserInfo(data.userInfo);
+        // Process any base64 encoded fields
+        const processedUserInfo = {
+          ...data.userInfo,
+          firstName: decodeBase64(data.userInfo.firstName),
+          lastName: decodeBase64(data.userInfo.lastName)
+        };
+        setUserInfo(processedUserInfo);
       }
       
       // Redirect to dashboard after a short delay
@@ -148,8 +192,6 @@ export default function TelegramLogin() {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-6">Connect to Telegram</h2>
-      
       {success && (
         <div className="mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg">
           {success}
@@ -227,7 +269,7 @@ export default function TelegramLogin() {
           </button>
           <button
             type="button"
-            onClick={() => setStep('phone')}
+            onClick={() => updateStep('phone')}
             className="w-full py-2 px-4 rounded-lg border border-zinc-300 bg-white text-zinc-700 font-medium hover:bg-zinc-50 transition-colors"
           >
             Back
@@ -262,7 +304,7 @@ export default function TelegramLogin() {
           </button>
           <button
             type="button"
-            onClick={() => setStep('code')}
+            onClick={() => updateStep('code')}
             className="w-full py-2 px-4 rounded-lg border border-zinc-300 bg-white text-zinc-700 font-medium hover:bg-zinc-50 transition-colors"
           >
             Back

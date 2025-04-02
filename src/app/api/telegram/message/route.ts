@@ -8,26 +8,6 @@ import { CustomTelegramClient } from '@/lib/customTelegramClient';
 const apiId = parseInt(process.env.TELEGRAM_API_ID || "0");
 const apiHash = process.env.TELEGRAM_API_HASH || "";
 
-// Add random variations to a message
-function randomizeMessage(message: string): string {
-  // Simple randomization - add random emojis or slight text variations
-  const emojis = ["🚀", "💰", "🔥", "✨", "💎", "🌙", "🌟"];
-  const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-  
-  // 50% chance to add emoji at the end
-  if (Math.random() > 0.5) {
-    return `${message} ${randomEmoji}`;
-  }
-  
-  // 30% chance to add emoji at the beginning
-  if (Math.random() > 0.7) {
-    return `${randomEmoji} ${message}`;
-  }
-  
-  // Otherwise return original
-  return message;
-}
-
 export async function POST(req: Request) {
   // Check authentication
   const { userId } = auth();
@@ -36,7 +16,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { phone, groupIds, message, randomize = false } = await req.json();
+    const { phone, groupIds, message } = await req.json();
     
     if (!phone) {
       return NextResponse.json({ error: 'Phone number is required' }, { status: 400 });
@@ -79,11 +59,8 @@ export async function POST(req: Request) {
         // Get the group entity
         const entity = await client.getEntity(groupId);
         
-        // Prepare the message text, possibly randomized
-        const messageText = randomize ? randomizeMessage(message) : message;
-        
         // Send the message
-        await client.sendMessage(entity, { message: messageText });
+        await client.sendMessage(entity, { message: message });
         
         // Increment successful count
         successful++;
