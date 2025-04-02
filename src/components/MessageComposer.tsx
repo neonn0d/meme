@@ -257,7 +257,7 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
         <div className="flex flex-col space-y-2">
           <div className="flex justify-between items-center">
             <label htmlFor="delay-slider" className="text-sm font-medium text-zinc-700">
-              Delay between messages: {messageDelay}ms
+              Delay between messages: {(messageDelay / 1000).toFixed(1)} seconds
             </label>
             <span className="text-xs text-zinc-500">
               (Higher values reduce rate limiting)

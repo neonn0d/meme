@@ -250,7 +250,7 @@ Promote your memecoin project across Telegram groups with our powerful marketing
 Send your marketing message to multiple Telegram groups with just a few clicks. Perfect for announcing launches and updates.
 
 ### Smart Rate Limiting
-Customize message delay between 500ms and 3000ms to prevent Telegram rate limiting and ensure all your messages are delivered.
+Customize message delay between 0.5 seconds and 3 seconds to prevent Telegram rate limiting and ensure all your messages are delivered.
 
 ### Audience Targeting
 Manage multiple Telegram sessions and target specific groups for your marketing campaigns.
