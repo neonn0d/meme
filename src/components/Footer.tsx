@@ -101,7 +101,7 @@ export function Footer() {
               </li>
               <li>
                 <Link
-                  href="/telegram"
+                  href="/telegram/dashboard"
                   className="text-sm text-zinc-500 hover:text-zinc-900 transition-colors duration-200 inline-flex items-center"
                 >
                   Telegram Marketing
