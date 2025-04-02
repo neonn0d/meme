@@ -1,7 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Lottie from 'lottie-react';
+import dynamic from 'next/dynamic';
+
+// Dynamically import Lottie with no SSR
+const Lottie = dynamic(() => import('lottie-react'), { ssr: false });
 
 interface TelegramAnimationProps {
   step?: 'phone' | 'code' | 'password' | 'success';

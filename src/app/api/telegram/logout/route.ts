@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@clerk/nextjs';
 import { StringSession } from 'telegram/sessions';
-import fs from 'fs';
-import path from 'path';
 import { Api } from 'telegram';
 import { getSessionFromClerk } from '@/lib/telegram';
 import { CustomTelegramClient } from '@/lib/customTelegramClient';

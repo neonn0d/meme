@@ -1,7 +1,14 @@
 'use client';
 
 import { useUser } from '@clerk/nextjs';
-import TelegramLoginContainer from '@/components/telegram/TelegramLoginContainer';
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
+
+// Dynamically import the TelegramLoginContainer with no SSR
+const TelegramLoginContainer = dynamic(
+  () => import('@/components/telegram/TelegramLoginContainer'),
+  { ssr: false }
+);
 
 export default function TelegramLoginPage() {
   const { isLoaded, isSignedIn, user } = useUser();
@@ -55,7 +62,9 @@ export default function TelegramLoginPage() {
 
         {/* Main Content */}
         <div className="bg-white rounded-xl shadow-sm border border-zinc-200 overflow-hidden mb-8">
-          <TelegramLoginContainer />
+          <Suspense fallback={<div className="text-center py-10">Loading login form...</div>}>
+            <TelegramLoginContainer />
+          </Suspense>
         </div>
 
         {/* Why Connect Section */}
