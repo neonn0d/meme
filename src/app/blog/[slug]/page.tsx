@@ -21,6 +21,9 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
     };
   }
 
+  // Construct the absolute URL for the image
+  const imageUrl = post.image ? `https://www.buidl.co.in${post.image}` : '';
+
   return {
     title: `${post.title} | BUIDL Blog`,
     description: post.excerpt,
@@ -29,6 +32,19 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       title: post.title,
       description: post.excerpt,
       type: 'article',
+      url: `https://www.buidl.co.in/blog/${post.slug}`,
+      images: post.image ? [{
+        url: imageUrl,
+        width: 1200,
+        height: 630,
+        alt: post.title
+      }] : [],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: post.title,
+      description: post.excerpt,
+      images: imageUrl ? [imageUrl] : [],
     }
   };
 }
