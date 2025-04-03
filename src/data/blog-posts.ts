@@ -290,16 +290,16 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   
   ## Sample Groups You Can Target
   
-  1. Crypto Pump Station  
-  2. ICO Hunters  
-  3. NFT Alpha Lounge  
-  4. Memecoin Central  
-  5. DeFi Shilling Space  
-  6. Telegram Airdrops Hub  
-  7. Web3 Signals Chat  
-  8. Solana Shillers Only  
-  9. Meme Coin Degens  
-  10. Telegram Crypto Marketing 🔥
+  1. https://t.me/shillgrow  
+  2. https://t.me/GubbinLounge  
+  3. https://t.me/nano_caps  
+  4. https://t.me/suitscallsEUA  
+  5. https://t.me/anbucryptotalk  
+  6. https://t.me/RobShillingGemOfficial  
+  7. https://t.me/cryptoprodsshills  
+  8. https://t.me/diamondhandsB  
+  9. https://t.me/latinosBSC  
+  10. https://t.me/Shillqueen
   
   ## Why Our Tool Beats Manual Shilling
   
