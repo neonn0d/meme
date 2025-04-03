@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -25,6 +24,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TelegramRedirect() {
-  redirect('/telegram/dashboard');
+export default function TelegramLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <div>{children}</div>
+  );
 }

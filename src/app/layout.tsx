@@ -12,6 +12,15 @@ export const metadata = {
   title: "BUIDL - Memecoin Website Generator",
   description: "Create your own customized memecoin website in minutes with BUIDL",
   metadataBase: new URL('https://www.buidl.co.in'),
+  icons: {
+    icon: '/buidl-black.ico',
+    shortcut: '/buidl-black.ico',
+    apple: '/buidl-black.ico',
+    other: {
+      rel: 'apple-touch-icon-precomposed',
+      url: '/buidl-black.ico',
+    },
+  },
   openGraph: {
     url: "https://www.buidl.co.in",
     title: "BUIDL - Memecoin Website Generator",
