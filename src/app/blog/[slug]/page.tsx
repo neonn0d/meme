@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
   }
 
   // Construct the absolute URL for the image
-  const imageUrl = post.image ? `https://www.buidl.co.in${post.image}` : '';
+  const imageUrl = post.image ? `https://buidl.co.in${post.image}` : '';
 
   return {
     title: `${post.title} | BUIDL Blog`,
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: BlogPostPageProps) {
       title: post.title,
       description: post.excerpt,
       type: 'article',
-      url: `https://www.buidl.co.in/blog/${post.slug}`,
+      url: `https://buidl.co.in/blog/${post.slug}`,
       images: post.image ? [{
         url: imageUrl,
         width: 1200,
@@ -57,69 +57,170 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const renderContent = (content: string) => {
-    return content.split("\n").map((paragraph, index) => {
+    // Process content by grouping list items together
+    const lines = content.split("\n");
+    const processedLines = [];
+    let currentListType = null; // 'ul' for unordered, 'ol' for ordered
+    let currentListItems = [];
+
+    // Process lines to group list items
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      const trimmedLine = line.trim();
+
+      // Check if this is a list item
+      const isUnorderedListItem = trimmedLine.startsWith('- ');
+      const isOrderedListItem = /^\d+\.\s/.test(trimmedLine);
+
+      if (isUnorderedListItem || isOrderedListItem) {
+        const newListType = isUnorderedListItem ? 'ul' : 'ol';
+        
+        // If we're starting a new list or switching list types
+        if (currentListType !== newListType) {
+          // If we have a previous list, add it to processed lines
+          if (currentListItems.length > 0) {
+            processedLines.push({ type: currentListType, items: [...currentListItems] });
+            currentListItems = [];
+          }
+          currentListType = newListType;
+        }
+        
+        // Add the item to the current list
+        const content = isUnorderedListItem 
+          ? trimmedLine.slice(2) // Remove '- '
+          : trimmedLine.replace(/^\d+\.\s/, ''); // Remove the number and dot
+        currentListItems.push(content);
+      } else {
+        // If we have a list in progress, add it to processed lines
+        if (currentListItems.length > 0) {
+          processedLines.push({ type: currentListType, items: [...currentListItems] });
+          currentListItems = [];
+          currentListType = null;
+        }
+        
+        // Add the regular line
+        processedLines.push(line);
+      }
+    }
+
+    // Add any remaining list
+    if (currentListItems.length > 0) {
+      processedLines.push({ type: currentListType, items: [...currentListItems] });
+    }
+
+    // Render the processed content
+    return processedLines.map((item, index) => {
+      // If this is a list
+      if (typeof item !== 'string') {
+        const ListTag = item.type === 'ul' ? 'ul' : 'ol';
+        return (
+          <ListTag key={index} className={`ml-6 mb-6 ${item.type === 'ul' ? 'list-disc' : 'list-decimal'}`}>
+            {item.items.map((listItem, itemIndex) => {
+              // Process markdown within list items (bold, links, etc.)
+              return <li key={itemIndex} className="mb-2">{renderMarkdownText(listItem, `${index}-${itemIndex}`)}</li>;
+            })}
+          </ListTag>
+        );
+      }
+
+      const paragraph = item;
+
+      // Skip empty lines but preserve spacing
+      if (!paragraph.trim()) {
+        return <div key={index} className="h-4"></div>;
+      }
+
       // Check if paragraph contains HTML tags
       if (paragraph.includes("<u>") || paragraph.includes("<strong>") || paragraph.includes("<em>")) {
         return <p key={index} className="mb-4" dangerouslySetInnerHTML={{ __html: paragraph }} />;
       }
       
       // Handle headings
-      if (paragraph.startsWith("#")) {
-        const headingMatch = paragraph.match(/^#+/);
+      if (paragraph.trim().startsWith("#")) {
+        const headingMatch = paragraph.trim().match(/^#+/);
         if (headingMatch) {
           const level = Math.min(headingMatch[0].length, 6);
-          const text = paragraph.replace(/^#+\s/, "");
+          const text = paragraph.trim().replace(/^#+\s/, "");
           const HeadingTag = `h${level}` as keyof JSX.IntrinsicElements;
-          return <HeadingTag key={index} className="mt-6 mb-4">{text}</HeadingTag>;
+          return <HeadingTag key={index} className="mt-6 mb-4 font-bold">{renderMarkdownText(text, `heading-${index}`)}</HeadingTag>;
         }
       }
 
-      // Handle markdown links
-      if (paragraph.includes("[") && paragraph.includes("]")) {
-        const segments = [];
-        let lastIndex = 0;
-        const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
-        let match;
-
-        while ((match = linkRegex.exec(paragraph)) !== null) {
-          // Add text before the link
-          if (match.index > lastIndex) {
-            segments.push(paragraph.slice(lastIndex, match.index));
-          }
-
-          // Add the link
-          const [, text, url] = match;
-          segments.push(
-            url.startsWith("/") ? (
-              <Link key={`${index}-${match.index}`} href={url} className="blog-link">
-                {text}
-              </Link>
-            ) : (
-              <a key={`${index}-${match.index}`} href={url} target="_blank" rel="noopener noreferrer" className="blog-link">
-                {text}
-              </a>
-            )
-          );
-
-          lastIndex = match.index + match[0].length;
-        }
-
-        // Add any remaining text
-        if (lastIndex < paragraph.length) {
-          segments.push(paragraph.slice(lastIndex));
-        }
-
-        return <p key={index} className="mb-4">{segments}</p>;
-      }
-
-      // Handle lists
-      if (paragraph.trim().startsWith("- ")) {
-        return <li key={index} className="ml-6 mb-2">{paragraph.trim().slice(2)}</li>;
+      // Handle markdown links and bold/italic text
+      if (paragraph.includes("[") || paragraph.includes("*") || paragraph.includes("_")) {
+        return <p key={index} className="mb-4">{renderMarkdownText(paragraph, index)}</p>;
       }
 
       // Regular paragraph
       return paragraph.trim() && <p key={index} className="mb-4">{paragraph}</p>;
     });
+  };
+
+  // Helper function to render markdown text elements (bold, italic, links)
+  const renderMarkdownText = (text: string, keyPrefix: string | number) => {
+    const segments = [];
+    let lastIndex = 0;
+
+    // Process links
+    const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+    let linkMatch;
+
+    while ((linkMatch = linkRegex.exec(text)) !== null) {
+      // Add text before the link
+      if (linkMatch.index > lastIndex) {
+        segments.push(processTextSegment(text.slice(lastIndex, linkMatch.index), `${keyPrefix}-t${segments.length}`));
+      }
+
+      // Add the link
+      const [, linkText, url] = linkMatch;
+      segments.push(
+        url.startsWith("/") ? (
+          <Link key={`${keyPrefix}-l${segments.length}`} href={url} className="blog-link text-primary hover:underline">
+            {processTextSegment(linkText, `${keyPrefix}-lt${segments.length}`)}
+          </Link>
+        ) : (
+          <a key={`${keyPrefix}-a${segments.length}`} href={url} target="_blank" rel="noopener noreferrer" className="blog-link text-primary hover:underline">
+            {processTextSegment(linkText, `${keyPrefix}-at${segments.length}`)}
+          </a>
+        )
+      );
+
+      lastIndex = linkMatch.index + linkMatch[0].length;
+    }
+
+    // Add any remaining text
+    if (lastIndex < text.length) {
+      segments.push(processTextSegment(text.slice(lastIndex), `${keyPrefix}-t${segments.length}`));
+    }
+
+    return segments.length > 0 ? segments : text;
+  };
+
+  // Process bold and italic text
+  const processTextSegment = (text: string, key: string | number) => {
+    // Process bold text (both ** and __ syntax)
+    let processedText = text;
+    const boldRegex = /\*\*([^*]+?)\*\*|__([^_]+?)__/g;
+    
+    // Replace bold markers with JSX
+    processedText = processedText.replace(boldRegex, (match, p1, p2) => {
+      const content = p1 || p2;
+      return `<strong>${content}</strong>`;
+    });
+
+    // Process italic text (both * and _ syntax)
+    const italicRegex = /\*([^*]+?)\*|_([^_]+?)_/g;
+    processedText = processedText.replace(italicRegex, (match, p1, p2) => {
+      const content = p1 || p2;
+      return `<em>${content}</em>`;
+    });
+
+    // If we made any replacements, use dangerouslySetInnerHTML
+    if (processedText !== text) {
+      return <span key={key} dangerouslySetInnerHTML={{ __html: processedText }} />;
+    }
+
+    return processedText;
   };
 
   return (
@@ -261,34 +362,65 @@ export default function BlogPostPage({ params }: BlogPostPageProps) {
         <div className="max-w-7xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">More Articles</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {blogPosts
-              .filter(relatedPost => relatedPost.slug !== post.slug)
-              .slice(0, 3)
-              .map(relatedPost => (
-                <Link
-                  key={relatedPost.slug}
-                  href={`/blog/${relatedPost.slug}`}
-                  className="group flex bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-primary/30 dark:hover:border-primary/30"
-                >
-                  {relatedPost.image && (
-                    <div className="relative w-1/3 overflow-hidden">
-                      <img
-                        src={relatedPost.image}
-                        alt={relatedPost.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="p-4 flex flex-col flex-grow w-2/3">
-                    <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
-                      {relatedPost.title}
-                    </h3>
-                    <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
-                      {relatedPost.excerpt}
-                    </p>
+            {/* Get related posts based on topic similarity */}
+            {(() => {
+              // Check if current post is Telegram-related
+              const isTelegramPost = post.slug.includes('telegram') || post.title.toLowerCase().includes('telegram');
+              
+              // Filter posts that aren't the current one
+              const otherPosts = blogPosts.filter(relatedPost => relatedPost.slug !== post.slug);
+              
+              // Prepare the related posts array
+              let relatedPosts: typeof blogPosts = [];
+              
+              if (isTelegramPost) {
+                // Get Telegram-related posts first
+                const telegramPosts = otherPosts.filter(p => 
+                  p.slug.includes('telegram') || 
+                  p.title.toLowerCase().includes('telegram') ||
+                  p.excerpt.toLowerCase().includes('telegram')
+                );
+                
+                // Get non-Telegram posts
+                const nonTelegramPosts = otherPosts.filter(p => 
+                  !p.slug.includes('telegram') && 
+                  !p.title.toLowerCase().includes('telegram') &&
+                  !p.excerpt.toLowerCase().includes('telegram')
+                );
+                
+                // Combine them, prioritizing Telegram posts
+                relatedPosts = [...telegramPosts, ...nonTelegramPosts].slice(0, 3);
+              } else {
+                // For non-Telegram posts, just take the first 3
+                relatedPosts = otherPosts.slice(0, 3);
+              }
+              
+              return relatedPosts;
+            })().map(relatedPost => (
+              <Link
+                key={relatedPost.slug}
+                href={`/blog/${relatedPost.slug}`}
+                className="group flex bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 h-full border border-gray-100 dark:border-gray-700 hover:border-primary/30 dark:hover:border-primary/30"
+              >
+                {relatedPost.image && (
+                  <div className="relative w-1/3 overflow-hidden">
+                    <img
+                      src={relatedPost.image}
+                      alt={relatedPost.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
                   </div>
-                </Link>
-              ))}
+                )}
+                <div className="p-4 flex flex-col flex-grow w-2/3">
+                  <h3 className="text-lg font-bold mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                    {relatedPost.title}
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-2">
+                    {relatedPost.excerpt}
+                  </p>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </div>
