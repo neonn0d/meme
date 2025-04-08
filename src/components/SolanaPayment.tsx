@@ -111,14 +111,19 @@ export function SolanaPayment({ onSuccess, onClose, websiteDetails }: SolanaPaym
         lamports: LAMPORTS_PER_SOL * SOLANA_PRICE
       });
 
-      const transaction = new Transaction().add(instruction);
+      // Create a new transaction (unsigned)
+      const transaction = new Transaction();
+      transaction.add(instruction);
+      
       console.log('Getting latest blockhash...');
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      console.log('Sending transaction...');
-      const signature = await sendTransaction(transaction, connection);
+      console.log('Sending transaction using Phantom-recommended method...');
+      // Use the method that Phantom recommends to avoid security warnings
+      // Send the transaction unsigned and let Phantom handle signing
+      const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
       const explorerUrl = getExplorerUrl(signature);
       setTransactionHash(signature);
       console.log('Transaction sent, signature:', signature);

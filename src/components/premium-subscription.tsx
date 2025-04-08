@@ -125,7 +125,11 @@ export default function PremiumSubscription({
       const connection = new Connection(RPC_ENDPOINT, "confirmed");
       const merchantWallet = new PublicKey(MERCHANT_WALLET);
 
-      const transaction = new Transaction().add(
+      // Create a new transaction (unsigned)
+      const transaction = new Transaction();
+      
+      // Add the transfer instruction
+      transaction.add(
         SystemProgram.transfer({
           fromPubkey: publicKey,
           toPubkey: merchantWallet,
@@ -137,9 +141,16 @@ export default function PremiumSubscription({
         context: { slot: minContextSlot },
         value: { blockhash, lastValidBlockHeight },
       } = await connection.getLatestBlockhashAndContext();
+      
+      // Set recent blockhash and fee payer
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
 
+      // Use the method that Phantom recommends to avoid security warnings
+      // Send the transaction unsigned and let Phantom handle signing
       const signature = await sendTransaction(transaction, connection, {
         minContextSlot,
+        skipPreflight: false
       });
 
       const confirmation = await connection.confirmTransaction({

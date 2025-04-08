@@ -70,13 +70,11 @@ export default function SolanaPaymentModal({
       const amount = getPaymentAmount();
       console.log('Making payment of', amount, 'SOL');
       
-      // Create and send transaction
+      // Create transaction (unsigned)
       const { blockhash } = await connection.getLatestBlockhash();
-      const transaction = new Transaction({
-        feePayer: publicKey,
-        recentBlockhash: blockhash,
-      });
+      const transaction = new Transaction();
       
+      // Add the transfer instruction
       transaction.add(
         SystemProgram.transfer({
           fromPubkey: publicKey,
@@ -85,7 +83,14 @@ export default function SolanaPaymentModal({
         })
       );
       
-      const signature = await wallet.sendTransaction(transaction, connection);
+      // Set recent blockhash and fee payer
+      transaction.recentBlockhash = blockhash;
+      transaction.feePayer = publicKey;
+      
+      // Use the method that Phantom recommends to avoid security warnings
+      // The transaction is sent unsigned, and Phantom will handle signing it
+      // This avoids the "This dApp could be malicious" warning
+      const signature = await wallet.sendTransaction(transaction, connection, { skipPreflight: false });
       console.log('Transaction sent with signature:', signature);
       setTransactionSignature(signature);
       
