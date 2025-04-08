@@ -1,12 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useWallet } from '@solana/wallet-adapter-react';
 import { WalletMultiButton } from '@solana/wallet-adapter-react-ui';
 import { Connection, PublicKey, LAMPORTS_PER_SOL, Transaction, SystemProgram } from '@solana/web3.js';
 import toast from 'react-hot-toast';
 import { motion } from 'framer-motion';
-import { X, ArrowRight, LogOut } from 'lucide-react';
+import { ArrowRight, LogOut, X, CheckCircle, XCircle, ExternalLink } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSubscription } from '@/hooks/useSubscription';
 
@@ -204,68 +204,80 @@ export function SolanaPayment({ onSuccess, onClose, websiteDetails }: SolanaPaym
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center p-4 z-40">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-40">
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="bg-gradient-to-b from-white to-gray-50/90 rounded-3xl p-8 max-w-md w-full shadow-2xl relative border border-white/20"
+        className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg relative border border-gray-100"
       >
-        <motion.button
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 transition-colors"
-        >
-          <X className="w-5 h-5" />
-        </motion.button>
-
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Complete Payment</h2>
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Complete Payment</h2>
+          <button
+            onClick={onClose}
+            disabled={loading}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
 
         {paymentStatus === 'success' ? (
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+          <div className="text-center py-4">
+            <div className="rounded-full bg-green-50 p-4 border border-green-100 w-20 h-20 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Payment Successful!</h3>
-            <p className="text-gray-600 mb-4">Your transaction has been confirmed.</p>
+            <p className="text-sm text-gray-600 mb-4">Your transaction has been confirmed on the Solana blockchain.</p>
             {transactionHash && (
               <a 
                 href={getExplorerUrl(transactionHash)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-500 hover:text-blue-700 underline text-sm"
+                className="text-blue-500 hover:text-blue-700 text-sm inline-flex items-center"
               >
                 View on Solana Explorer
+                <ExternalLink className="w-3 h-3 ml-1" />
               </a>
             )}
+            <div className="mt-6">
+              <button
+                onClick={onClose}
+                className="w-full rounded-lg text-sm font-medium transition-colors bg-blue-600 text-white hover:bg-blue-700 h-10 py-2 px-4"
+              >
+                Continue
+              </button>
+            </div>
           </div>
         ) : paymentStatus === 'error' ? (
-          <div className="text-center py-6">
-            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-8 h-8 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+          <div className="text-center py-4">
+            <div className="rounded-full bg-red-50 p-4 border border-red-100 w-20 h-20 flex items-center justify-center mx-auto mb-4">
+              <XCircle className="w-10 h-10 text-red-500" />
             </div>
             <h3 className="text-xl font-semibold text-gray-800 mb-2">Payment Failed</h3>
-            <p className="text-gray-600 mb-4">{errorMessage || 'There was an error processing your payment.'}</p>
-            <button
-              onClick={handlePayment}
-              className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-            >
-              Try Again
-            </button>
+            <p className="text-sm text-gray-600 mb-4">{errorMessage || 'There was an issue processing your transaction. Please try again.'}</p>
+            <div className="flex space-x-3">
+              <button
+                onClick={onClose}
+                className="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePayment}
+                className="flex-1 py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm"
+              >
+                Try Again
+              </button>
+            </div>
           </div>
         ) : (
           <>
-            <div className="bg-gray-50 rounded-xl p-4 mb-6 border border-blue-100">
+            <div className="p-4 bg-gray-50 rounded-lg border border-gray-100 mb-5">
               <div className="flex justify-between items-center">
                 <div>
                   <p className="text-gray-600 text-sm">Payment Amount</p>
-                  <p className="text-2xl font-bold text-gray-800">{SOLANA_PRICE} SOL</p>
-                  {usdPrice && <p className="text-sm text-gray-500">≈ ${usdPrice.toFixed(2)} USD</p>}
+                  <p className="text-xl font-semibold text-gray-900 mt-1">{SOLANA_PRICE} SOL</p>
+                  {usdPrice && <p className="text-xs text-gray-500 mt-0.5">≈ ${usdPrice.toFixed(2)} USD</p>}
                 </div>
                 <img src="/solana.svg" alt="Solana" className="h-8 w-8" />
               </div>
@@ -273,28 +285,23 @@ export function SolanaPayment({ onSuccess, onClose, websiteDetails }: SolanaPaym
 
             {!publicKey ? (
               <div className="mb-6">
-                <p className="text-gray-600 mb-4">Connect your wallet to continue with the payment.</p>
+                <p className="text-gray-700 mb-3 text-sm">Connect your wallet to continue:</p>
                 <div className="flex justify-center">
                   <WalletMultiButton />
                 </div>
               </div>
             ) : (
               <div className="mb-6">
-                <div className="flex items-center justify-between bg-gray-50 p-3 rounded-lg border border-gray-200 mb-4">
+                <div className="flex items-center justify-between p-3 bg-blue-50 text-blue-700 rounded-lg border border-blue-100 mb-5">
                   <div className="flex items-center">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                      <svg className="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                      </svg>
-                    </div>
                     <div>
-                      <p className="text-sm font-medium text-gray-700">Connected Wallet</p>
-                      <p className="text-xs text-gray-500">{publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-4)}</p>
+                      <p className="text-sm font-medium">Wallet connected</p>
+                      <p className="text-xs font-mono">{publicKey.toString().slice(0, 6)}...{publicKey.toString().slice(-4)}</p>
                     </div>
                   </div>
                   <button
                     onClick={() => disconnect()}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-blue-500 hover:text-blue-700 p-1.5 rounded-full hover:bg-blue-100/50 transition-colors"
                     title="Disconnect wallet"
                   >
                     <LogOut className="w-4 h-4" />
@@ -304,30 +311,30 @@ export function SolanaPayment({ onSuccess, onClose, websiteDetails }: SolanaPaym
                 <button
                   onClick={handlePayment}
                   disabled={loading}
-                  className={`w-full py-3 px-4 rounded-xl flex items-center justify-center transition-colors ${
+                  className={`w-full py-2.5 px-4 rounded-lg flex items-center justify-center transition-colors text-sm font-medium ${
                     loading
-                      ? 'bg-gray-300 cursor-not-allowed'
+                      ? 'bg-gray-400 text-white cursor-not-allowed'
                       : 'bg-blue-600 hover:bg-blue-700 text-white'
                   }`}
                 >
                   {loading ? (
                     <div className="flex items-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
-                      Processing...
+                      Processing Payment...
                     </div>
                   ) : (
                     <>
-                      Pay with Solana <ArrowRight className="ml-2 w-5 h-5" />
+                      Complete Payment <ArrowRight className="ml-2 w-4 h-4" />
                     </>
                   )}
                 </button>
               </div>
             )}
 
-            <p className="text-xs text-gray-500 text-center">
+            <p className="text-xs text-gray-500 text-center mt-4">
               By completing this payment, you agree to our Terms of Service and Privacy Policy.
             </p>
           </>

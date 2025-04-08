@@ -20,7 +20,7 @@ interface SetupServicePaymentProps {
 }
 
 export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentProps) {
-  const { publicKey, sendTransaction } = useWallet();
+  const { publicKey } = useWallet();
   const [loading, setLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const router = useRouter();
@@ -49,7 +49,14 @@ export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentP
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      const signature = await sendTransaction(transaction, connection);
+      // Get the Phantom wallet provider
+      const provider = (window as any).phantom?.solana;
+      if (!provider) {
+        throw new Error("Phantom wallet not found");
+      }
+
+      // Use the recommended signAndSendTransaction method from Phantom
+      const { signature } = await provider.signAndSendTransaction(transaction);
       const confirmation = await connection.confirmTransaction(signature);
       
       if (confirmation.value.err) {

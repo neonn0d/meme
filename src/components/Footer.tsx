@@ -106,7 +106,7 @@ export function Footer() {
                 >
                   Telegram Marketing
                   <span className="ml-1 bg-blue-500 text-white text-[9px] px-1 py-0.5 rounded font-medium leading-none">
-                    NEW
+                    NEW!
                   </span>
                 </Link>
               </li>

@@ -251,64 +251,87 @@ export default function SolanaPaymentModal({
   if (!isOpen) return null;
   
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-4">Complete Payment</h2>
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+      <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-lg border border-gray-100">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Complete Payment</h2>
+          <button 
+            onClick={onClose}
+            disabled={isProcessing}
+            className="text-gray-400 hover:text-gray-600 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
         
-        <div className="mb-6">
-          <p className="text-gray-700 mb-2">
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-100">
+          <p className="text-gray-600 text-sm">
             {paymentType === 'website' 
               ? 'Payment for website generation' 
               : `Payment for ${plan} subscription`}
           </p>
-          <p className="text-xl font-bold">{getPaymentAmount()} SOL</p>
+          <p className="text-xl font-semibold text-gray-900 mt-1">{getPaymentAmount()} SOL</p>
         </div>
         
         {!connected ? (
-          <div className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg">
-            <p className="font-medium">Wallet not connected</p>
-            <p className="text-sm mt-1">Please connect your wallet using the button at the top of the page</p>
+          <div className="mb-6">
+            <p className="text-gray-700 mb-3 text-sm">Connect your wallet to continue:</p>
+            <div className="flex justify-center">
+              <WalletMultiButton />
+            </div>
           </div>
         ) : (
-          <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg">
-            <p className="font-medium">Wallet connected</p>
-            <p className="text-sm mt-1 font-mono break-all">{publicKey?.toString()}</p>
+          <div className="mb-6 p-3 bg-blue-50 text-blue-700 rounded-lg border border-blue-100">
+            <p className="font-medium text-sm">Wallet connected</p>
+            <p className="text-xs mt-1 font-mono break-all">{publicKey?.toString()}</p>
           </div>
         )}
         
         {transactionSignature && (
-          <div className="mb-4 p-2 bg-gray-100 rounded">
-            <p className="text-sm font-mono break-all">
-              Transaction: {transactionSignature}
+          <div className="mb-4 p-3 bg-green-50 rounded-lg border border-green-100">
+            <p className="text-sm text-green-700 font-medium">Transaction successful!</p>
+            <p className="text-xs mt-1 font-mono break-all text-green-600">
+              {transactionSignature}
             </p>
+            <a 
+              href={`https://explorer.solana.com/tx/${transactionSignature}?cluster=${process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet'}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-700 text-xs mt-2 inline-block"
+            >
+              View on Solana Explorer
+            </a>
           </div>
         )}
         
         {error && (
-          <div className="mb-4 p-2 bg-red-100 text-red-700 rounded">
-            {error}
+          <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg border border-red-100">
+            <p className="font-medium text-sm">Error</p>
+            <p className="text-xs mt-1">{error}</p>
           </div>
         )}
         
-        <div className="flex justify-end space-x-4">
+        <div className="flex justify-end space-x-3 mt-6">
           <button
             onClick={onClose}
             disabled={isProcessing}
-            className="px-4 py-2 border border-gray-300 rounded"
+            className="px-4 py-2 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
           >
             Cancel
           </button>
-          <button
-            onClick={handlePayment}
-            disabled={isProcessing || !connected}
-            className={`px-4 py-2 rounded ${
-              isProcessing 
-                ? 'bg-gray-400' 
-                : 'bg-blue-600 hover:bg-blue-700 text-white'
-            }`}
-          >
-            {isProcessing ? 'Processing...' : 'Pay'}
-          </button>
+          {connected && (
+            <button
+              onClick={handlePayment}
+              disabled={isProcessing}
+              className={`px-4 py-2 text-sm rounded-lg ${isProcessing 
+                ? 'bg-gray-400 text-white cursor-not-allowed' 
+                : 'bg-blue-600 hover:bg-blue-700 text-white transition-colors'}`}
+            >
+              {isProcessing ? 'Processing...' : 'Complete Payment'}
+            </button>
+          )}
         </div>
       </div>
     </div>

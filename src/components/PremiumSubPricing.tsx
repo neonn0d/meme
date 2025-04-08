@@ -24,7 +24,7 @@ interface PremiumSubPricingProps {
 }
 
 export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps) {
-  const { publicKey, sendTransaction, disconnect } = useWallet();
+  const { publicKey, disconnect } = useWallet();
   const [loading, setLoading] = useState(false);
   const [usdPrice, setUsdPrice] = useState<number | null>(null);
   const [paymentStatus, setPaymentStatus] = useState<'idle' | 'success' | 'error'>('idle');
@@ -163,8 +163,15 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      console.log('Sending transaction...');
-      const signature = await sendTransaction(transaction, connection);
+      // Get the Phantom wallet provider
+      const provider = (window as any).phantom?.solana;
+      if (!provider) {
+        throw new Error("Phantom wallet not found");
+      }
+
+      console.log('Sending transaction using Phantom\'s signAndSendTransaction...');
+      // Use the recommended signAndSendTransaction method from Phantom
+      const { signature } = await provider.signAndSendTransaction(transaction);
       const explorerUrl = getExplorerUrl(signature);
       setTransactionHash(signature);
       console.log('Transaction sent, signature:', signature);

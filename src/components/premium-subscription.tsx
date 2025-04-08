@@ -214,6 +214,8 @@ export default function PremiumSubscription({
         isOpen={showModal}
         onClose={handleModalClose}
         state={modalState}
+        transactionHash={transactionHash || undefined}
+        errorMessage={error || undefined}
       />
     </div>
   );
