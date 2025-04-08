@@ -1,34 +1,49 @@
-import { authMiddleware } from "@clerk/nextjs";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
 
-export default authMiddleware({
-  publicRoutes: [
-    "/",          // Home page
-    "/sign-in",   // Sign-in page
-    "/sign-up",    // Sign-up page
-    "/pricing",   // Pricing page
-    "/docs",      // Docs page
-  ],
-  afterAuth(auth, req, evt) {
-    if (!auth.userId && !auth.isPublicRoute) {
-      const signInUrl = new URL('/sign-in', req.url);
-      signInUrl.searchParams.set('redirect_url', req.url);
-      return Response.redirect(signInUrl);
-    }
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  
+  // Define public routes that don't need authentication
+  const publicPaths = [
+    '/',                // Home page
+    '/sign-in',         // Sign-in page
+    '/pricing',         // Pricing page
+    '/docs',            // Documentation
+    '/check-payments',  // Payment debugging page
+    '/_next',           // Next.js assets
+    '/favicon.ico',     // Favicon
+    '/api/auth/solana', // Auth API endpoint
+    '/api/debug-db',    // Debug database endpoint
+    '/api/public'       // Public API routes
+  ];
+  
+  // Check if the current path is public
+  const isPublicPath = publicPaths.some(path => 
+    request.nextUrl.pathname === path || 
+    request.nextUrl.pathname.startsWith(path + '/')
+  );
+  
+  // Allow access to public paths
+  if (isPublicPath) {
+    return response;
   }
-});
+  
+  // For API routes that are not public, check for authentication
+  if (request.nextUrl.pathname.startsWith('/api/')) {
+    // For API routes, we could check for a valid session token
+    // But for now, we'll let the API route handlers handle authentication
+    return response;
+  }
+  
+  // For all other routes, let the app handle authentication via the ProtectedRoute component
+  // This allows client-side authentication with the wallet adapter
+  return response;
+}
 
 export const config = {
   matcher: [
-    "/dashboard",   // Protect dashboard
-    "/customize",   // Protect customize
-    "/templates",   // Protect templates
-    "/guidelines",  // Protect guidelines
-    "/success",     // Protect success
-    "/preview",     // Protect preview
-    "/templates",   // Protect templates
-    "/history",     // Protect history
-    "/users",       // Protect users page
-    "/telegram/(.*)",  // Protect telegram routes
-    "/api/(.*)"     // Protect all API routes if needed
+    // Match all routes except static files and _next
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 };

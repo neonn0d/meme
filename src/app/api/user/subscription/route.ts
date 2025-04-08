@@ -1,27 +1,39 @@
-import { NextResponse } from 'next/server';
-import { auth, currentUser } from '@clerk/nextjs';
+import { NextRequest, NextResponse } from 'next/server';
+import { requireAuth, errorResponse } from '@/lib/api-auth';
+import { supabase } from '@/lib/supabase';
 
-export async function GET() {
-  // Check authentication
-  const { userId } = auth();
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+export async function GET(req: NextRequest) {
+  const authResult = await requireAuth(req);
+  
+  if (!authResult.success) {
+    return authResult.response;
   }
+  
+  const userId = authResult.userId;
 
   try {
-    // Get the current user
-    const user = await currentUser();
-    if (!user) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    // Get user's public metadata from Supabase
+    const { data: userData, error } = await supabase
+      .from('user_public_metadata')
+      .select('payments')
+      .eq('user_id', userId)
+      .single();
+    
+    if (error) {
+      console.error('Error fetching user data:', error);
+      return errorResponse('Error fetching user data', 500);
+    }
+    
+    if (!userData) {
+      return errorResponse('User not found', 404);
     }
 
-    // Check if user has premium from public metadata
-    const publicMetadata = user.publicMetadata || {};
-    const payments = publicMetadata.payments as any[] || [];
+    // Get payments from user metadata
+    const payments = userData.payments || [];
     
     // Find active premium subscription
     const now = Date.now();
-    const activePremium = payments.find(payment => 
+    const activePremium = payments.find((payment: any) => 
       payment.type === 'premium' && 
       payment.status === 'completed' && 
       payment.expiryDate > now
@@ -38,8 +50,6 @@ export async function GET() {
     });
   } catch (error: any) {
     console.error('Error checking subscription:', error);
-    return NextResponse.json({ 
-      error: error.message || 'Failed to check subscription status' 
-    }, { status: 500 });
+    return errorResponse(error.message || 'Failed to check subscription status', 500);
   }
 }

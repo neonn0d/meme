@@ -4,6 +4,8 @@ import { usePathname } from 'next/navigation';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { SolanaProvider } from './SolanaProvider';
+import { AuthProvider } from '@/contexts/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -15,11 +17,14 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
 
   return (
     <SolanaProvider>
-      {!hideNavbarAndFooter && <Navbar />}
-      <main className={!isPreviewPage ? "min-h-[calc(100vh-20rem)]" : "min-h-screen"}>
-        {children}
-      </main>
-      {!hideNavbarAndFooter && <Footer />}
+      <AuthProvider>
+        {!hideNavbarAndFooter && <Navbar />}
+        <main className={!isPreviewPage ? "min-h-[calc(100vh-20rem)]" : "min-h-screen"}>
+          {children}
+        </main>
+        {!hideNavbarAndFooter && <Footer />}
+        <Toaster position="bottom-right" />
+      </AuthProvider>
     </SolanaProvider>
   );
 }

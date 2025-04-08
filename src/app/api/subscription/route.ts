@@ -1,38 +1,43 @@
-import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
-import { clerkClient } from '@clerk/nextjs';
-import { calculateSubscriptionStatus } from '@/types/payment';
+import { NextRequest, NextResponse } from 'next/server';
+import { withAuth, AuthenticatedRequest } from '@/lib/api-middleware';
+import { getSubscriptionStatus } from '@/lib/auth-utils';
+import { supabase } from '@/lib/supabase';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  return withAuth(req, handleGetSubscription);
+}
+
+async function handleGetSubscription(req: AuthenticatedRequest) {
   try {
-    const { userId } = auth();
+    const userId = req.userId;
     
-    if (!userId) {
-      return NextResponse.json(
-        { 
-          status: 'error',
-          error: 'Authentication required',
-          data: { isSubscribed: false, subscriptionDetails: null }
-        },
-        { status: 401 }
-      );
+    // Get subscription from Supabase
+    const { isSubscribed, subscription } = await getSubscriptionStatus(userId);
+    
+    // Get payment history
+    const { data: payments, error: paymentsError } = await supabase
+      .from('payments')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    
+    if (paymentsError) {
+      console.error('Error fetching payment history:', paymentsError);
     }
-
-    const user = await clerkClient.users.getUser(userId);
-    const privateMetadata = user.privateMetadata as { payments?: any[] } || {};
-    const payments = privateMetadata.payments || [];
-
-    const subscriptionStatus = calculateSubscriptionStatus(payments);
-    const lastPayment = payments[payments.length - 1];
+    
+    const lastPayment = payments && payments.length > 0 ? payments[0] : null;
 
     return NextResponse.json({
       status: 'success',
       data: {
-        isSubscribed: subscriptionStatus?.isActive || false,
-        subscriptionDetails: subscriptionStatus ? {
-          ...subscriptionStatus,
-          lastPaymentDate: lastPayment?.date || null,
-          nextBillingDate: subscriptionStatus.expiryDate,
+        isSubscribed: isSubscribed,
+        subscriptionDetails: subscription ? {
+          startDate: subscription.created_at,
+          expiryDate: subscription.current_period_end,
+          lastPaymentDate: lastPayment?.created_at || null,
+          nextBillingDate: subscription.current_period_end,
+          planId: subscription.price_id,
+          status: subscription.status
         } : null,
       }
     });

@@ -9,13 +9,14 @@ import { motion } from 'framer-motion';
 import { X, ArrowRight } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useSubscription } from '@/hooks/useSubscription';
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/contexts/AuthContext';
 import { PaymentRecord } from '@/types/payment';
 import { LogOut } from 'lucide-react';
 
-const MERCHANT_WALLET = new PublicKey(process.env.NEXT_PUBLIC_MERCHANT_WALLET!);
+const MERCHANT_WALLET = new PublicKey(process.env.NEXT_PUBLIC_MERCHANT_WALLET || 'DRtXHDgC312wpNdNCSb8vCoXDcofCJcPHdAX1cQGrLV9');
 const PREMIUM_AMOUNT = Number(process.env.NEXT_PUBLIC_PREMIUM_AMOUNT!) || 0.0017;
 const NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK || 'devnet';
+const RPC_ENDPOINT = process.env.NEXT_PUBLIC_SOLANA_RPC_URL || 'https://api.devnet.solana.com';
 
 interface PremiumSubPricingProps {
   onSuccess: () => void;
@@ -30,8 +31,9 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
-  const { isSubscribed } = useSubscription();
-  const { user } = useUser();
+  const { subscriptionData } = useSubscription();
+  const isSubscribed = subscriptionData.isSubscribed;
+  const { userProfile } = useAuth();
 
   const getExplorerUrl = (hash: string) => {
     return `https://explorer.solana.com/tx/${hash}?cluster=${process.env.NEXT_PUBLIC_SOLANA_NETWORK}`;
@@ -76,30 +78,42 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
   const recordPayment = async (hash: string) => {
     try {
       const timestamp = Date.now();
-      const payment: PaymentRecord = {
+      const payment = {
         amount: PREMIUM_AMOUNT,
-        timestamp,
-        type: 'premium',
         transactionHash: hash,
-        status: 'completed',
-        network: NETWORK,
-        expiryDate: calculateExpiryDate(timestamp)
+        network: NETWORK
       };
 
+      console.log('Recording subscription payment:', payment);
+      
+      // Get wallet address to include in authorization header
+      const walletAddress = publicKey?.toString();
+      if (!walletAddress) {
+        throw new Error('Wallet address not available');
+      }
+
+      // Simple direct API call with wallet address in Authorization header
       const response = await fetch('/api/payments', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${walletAddress}`
         },
-        body: JSON.stringify({ payment }),
+        body: JSON.stringify({ payment })
       });
 
+      const responseData = await response.json();
+      
       if (!response.ok) {
-        throw new Error('Failed to record payment');
+        console.error('Payment API error response:', responseData);
+        throw new Error(responseData.error || 'Failed to record payment');
       }
+      
+      console.log('Payment recorded successfully:', responseData);
+      return responseData;
     } catch (err) {
       console.error('Error recording payment:', err);
-      throw new Error('Failed to record payment metadata');
+      throw new Error(`Failed to record payment metadata: ${err instanceof Error ? err.message : 'Unknown error'}`);
     }
   };
 
@@ -130,8 +144,9 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
       setLoading(true);
       console.log('Initiating premium subscription payment...');
       
+      console.log('Using RPC endpoint:', RPC_ENDPOINT);
       const connection = new Connection(
-        process.env.NEXT_PUBLIC_SOLANA_RPC_ENDPOINT!,
+        RPC_ENDPOINT,
         'confirmed'
       );
 
@@ -179,16 +194,22 @@ export function PremiumSubPricing({ onSuccess, onClose }: PremiumSubPricingProps
 
     } catch (error: any) {
       console.error('Payment error:', error);
+      console.error('Error details:', JSON.stringify(error, null, 2));
       setPaymentStatus('error');
+      
       if (error.message?.includes('insufficient funds')) {
         setErrorMessage('Insufficient funds in wallet. Please add more SOL and try again.');
         toast.error('Insufficient funds in wallet. Please add more SOL and try again.');
       } else if (error.message?.includes('User rejected')) {
         setErrorMessage('Transaction was cancelled.');
         toast.error('Transaction was cancelled.');
+      } else if (error.message?.includes('metadata')) {
+        // This is specifically for the payment recording error
+        setErrorMessage(`Payment failed: ${error.message}`);
+        toast.error(`Transaction completed but failed to record payment: ${error.message}`);
       } else {
-        setErrorMessage('Payment failed. Please try again.');
-        toast.error('Payment failed. Please try again.');
+        setErrorMessage(`Payment failed: ${error.message || 'Unknown error'}. Please try again.`);
+        toast.error(`Payment failed: ${error.message || 'Unknown error'}. Please try again.`);
       }
     } finally {
       setLoading(false);

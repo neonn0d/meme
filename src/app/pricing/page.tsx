@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useSubscription } from "@/hooks/useSubscription";

@@ -25,8 +25,10 @@ export interface Payment {
 export interface SubscriptionStatus {
   isActive: boolean;
   startDate: number;
-  expiryDate: number;
-  daysRemaining: number;
+  endDate: number;
+  plan: string;
+  paymentAmount: number;
+  transactionHash: string;
 }
 
 export interface UserSubscriptionData {
@@ -47,6 +49,7 @@ export const formatDate = (timestamp: number): string => {
   }).format(date);
 };
 
+// This function is kept for backward compatibility but we're now using the subscription table directly
 export const calculateSubscriptionStatus = (payments: Payment[]): SubscriptionStatus | null => {
   if (!payments.length) return null;
 
@@ -55,15 +58,16 @@ export const calculateSubscriptionStatus = (payments: Payment[]): SubscriptionSt
   const latestPayment = sortedPayments[0];
 
   const now = Date.now();
-  const msPerDay = 24 * 60 * 60 * 1000;
   
-  // Use the stored expiry date
-  const daysRemaining = Math.max(0, Math.ceil((latestPayment.expiryDate - now) / msPerDay));
+  // Calculate end date (30 days from payment date)
+  const endDate = latestPayment.timestamp + (30 * 24 * 60 * 60 * 1000);
   
   return {
-    isActive: now < latestPayment.expiryDate,
+    isActive: now < endDate,
     startDate: latestPayment.timestamp,
-    expiryDate: latestPayment.expiryDate,
-    daysRemaining
+    endDate: endDate,
+    plan: 'monthly',
+    paymentAmount: latestPayment.amount,
+    transactionHash: latestPayment.transactionHash
   };
 };

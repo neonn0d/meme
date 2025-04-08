@@ -2,7 +2,15 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { UserButton, SignInButton, SignUpButton, useUser } from "@clerk/nextjs"
+import { useAuth } from "@/contexts/AuthContext"
+import { useWallet } from "@solana/wallet-adapter-react"
+import dynamic from "next/dynamic"
+
+// Dynamically import the wallet button to prevent hydration errors
+const ClientWalletButton = dynamic(
+  () => import('./ClientWalletButton'),
+  { ssr: false }
+)
 import { useState } from "react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline"
 
@@ -12,7 +20,8 @@ interface NavbarProps {
 }
 
 export function Navbar({ children, className = "" }: NavbarProps) {
-  const { isSignedIn, isLoaded } = useUser()
+  const { isSignedIn, isLoading } = useAuth()
+  const { connected, publicKey } = useWallet()
   const pathname = usePathname()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
@@ -22,9 +31,9 @@ export function Navbar({ children, className = "" }: NavbarProps) {
 
   const navLinks = [
     { href: "/dashboard", label: "Dashboard" },
-    { href: "/telegram/dashboard", label: "Telegram" },
+    { href: "/telegram", label: "Telegram" },
     { href: "/templates", label: "Templates" },
-    { href: "/pricing", label: "Pricing" },
+    { href: "/pricing", label: "Pricing" }
   ]
 
   return (
@@ -50,14 +59,7 @@ export function Navbar({ children, className = "" }: NavbarProps) {
           <div className="flex items-center gap-2">
             {isSignedIn && (
               <div className="md:hidden">
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8",
-                    },
-                  }}
-                />
+                <ClientWalletButton className="!bg-blue-600 hover:!bg-blue-700 transition-colors !py-1 !px-2 !text-xs" />
               </div>
             )}
             <div className="flex md:hidden">
@@ -78,7 +80,7 @@ export function Navbar({ children, className = "" }: NavbarProps) {
 
           {/* Desktop menu */}
           <div className="hidden md:flex items-center gap-6">
-            {!isLoaded ? (
+            {isLoading ? (
               // Skeleton loading state
               <>
                 <div className="h-4 w-20 bg-zinc-200 rounded animate-pulse"></div>
@@ -102,28 +104,15 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                   </Link>
                 ))}
                 {children}
-                <UserButton
-                  afterSignOutUrl="/"
-                  appearance={{
-                    elements: {
-                      avatarBox: "w-8 h-8",
-                    },
-                  }}
-                />
+                <ClientWalletButton className="!bg-blue-600 hover:!bg-blue-700 transition-colors" />
               </>
             ) : (
               <>
                 <Link
                   href="/sign-in"
-                  className="text-sm text-zinc-600 hover:text-zinc-900 font-medium transition-colors"
-                >
-                  Sign In
-                </Link>
-                <Link
-                  href="/sign-up"
                   className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 transition-colors"
                 >
-                  Sign Up
+                  Sign In
                 </Link>
               </>
             )}
@@ -166,17 +155,10 @@ export function Navbar({ children, className = "" }: NavbarProps) {
                   </Link>
                   <Link
                     href="/sign-in"
-                    className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium text-zinc-600 hover:text-zinc-900 hover:bg-zinc-50`}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                  >
-                    Sign In
-                  </Link>
-                  <Link
-                    href="/sign-up"
                     className={`block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-zinc-900 text-white hover:bg-zinc-800`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
-                    Sign Up
+                    Sign In
                   </Link>
                 </>
               )}

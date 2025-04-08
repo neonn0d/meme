@@ -2,11 +2,18 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { SignUpButton, useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
+import dynamic from "next/dynamic";
+
+// Dynamically import the wallet button to prevent hydration errors
+const ClientWalletButton = dynamic(
+  () => import('./ClientWalletButton'),
+  { ssr: false }
+);
 import { ArrowRight, ChevronRight } from "lucide-react";
 
 export default function Hero() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useAuth();
 
   return (
     <div className="min-h-[94vh] flex flex-col justify-center relative">
@@ -77,9 +84,7 @@ export default function Hero() {
                   </motion.button>
                 </Link>
               ) : (
-                <SignUpButton 
-                
-                >
+                <Link href="/sign-in">
                   <motion.button
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
@@ -95,7 +100,7 @@ export default function Hero() {
                       </motion.span>
                     </span>
                   </motion.button>
-                </SignUpButton>
+                </Link>
               )}
               <Link href="#features">
                 <motion.button

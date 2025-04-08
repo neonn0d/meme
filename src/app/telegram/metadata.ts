@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Telegram Marketing Dashboard | BUIDL',
     description: 'Manage your Telegram marketing campaigns with BUIDL. Send messages to multiple crypto groups with customizable delays to avoid bans.',
-    url: 'https://buidl.co.in/telegram/dashboard',
+    url: 'https://buidl.co.in/telegram',
     images: [{
       url: '/blog/ogimage.webp',
       width: 1200,

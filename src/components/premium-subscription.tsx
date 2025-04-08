@@ -10,7 +10,7 @@ import {
   Transaction,
   SystemProgram,
 } from "@solana/web3.js";
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 import { PaymentRecord } from "@/types/payment";
 import PaymentModal from "./PaymentModal";
 
@@ -31,7 +31,7 @@ export default function PremiumSubscription({
   onPaymentSuccess,
 }: PremiumSubscriptionProps) {
   const { publicKey, sendTransaction } = useWallet();
-  const { user } = useUser();
+  const { userProfile } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showModal, setShowModal] = useState(false);
@@ -82,10 +82,15 @@ export default function PremiumSubscription({
         expiryDate: calculateExpiryDate(timestamp),
       };
 
+      if (!userProfile?.wallet_address) {
+        throw new Error('No wallet address available');
+      }
+
       const response = await fetch("/api/payments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${userProfile.wallet_address}`
         },
         body: JSON.stringify({ payment }),
       });

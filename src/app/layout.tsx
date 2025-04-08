@@ -1,5 +1,4 @@
 import React from "react";
-import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import ClientLayout from "@/components/ClientLayout";
 import { SpeedInsights } from "@vercel/speed-insights/next";
@@ -64,35 +63,41 @@ interface RootLayoutProps {
   children: React.ReactNode;
 }
 
+// Import our providers
+import { SolanaProvider } from '@/components/SolanaProvider';
+import { AuthProvider } from '@/contexts/AuthContext';
+
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <ClerkProvider>
-      <html lang="en">
-        <head>
-          <Script
-            strategy="afterInteractive"
-            src={`https://www.googletagmanager.com/gtag/js?id=G-J8F5NSD35N`}
-          />
-          <Script
-            id="google-analytics"
-            strategy="afterInteractive"
-            dangerouslySetInnerHTML={{
-              __html: `
-                window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
-                gtag('js', new Date());
-                gtag('config', 'G-J8F5NSD35N');
-              `,
-            }}
-          />
-        </head>
-        <body className={inter.className}>
-          <ClientLayout>
-            {children}
-            <SpeedInsights />
-          </ClientLayout>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang="en">
+      <head>
+        <Script
+          strategy="afterInteractive"
+          src={`https://www.googletagmanager.com/gtag/js?id=G-J8F5NSD35N`}
+        />
+        <Script
+          id="google-analytics"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-J8F5NSD35N');
+            `,
+          }}
+        />
+      </head>
+      <body className={inter.className}>
+        <SolanaProvider>
+          <AuthProvider>
+            <ClientLayout>
+              {children}
+              <SpeedInsights />
+            </ClientLayout>
+          </AuthProvider>
+        </SolanaProvider>
+      </body>
+    </html>
   );
 }

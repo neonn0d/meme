@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { useSearchParams } from "next/navigation";
 import { BasicInfoForm } from "./components/BasicInfoForm";
 import { TokenomicsForm } from "./components/TokenomicsForm";
@@ -90,7 +91,9 @@ type TabId = (typeof tabs)[number]["id"];
 
 export default function CustomizePage() {
   const { userId } = useAuth();
-  const { isSubscribed } = useSubscription();
+  const { publicKey } = useWallet();
+  const { subscriptionData } = useSubscription();
+  const isSubscribed = subscriptionData.isSubscribed;
   const searchParams = useSearchParams();
   const rawTemplateId = searchParams.get("template");
   const router = useRouter();
@@ -252,25 +255,42 @@ export default function CustomizePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('Generate button clicked');
     if (isSubscribed) {
       // Skip payment for premium users
       handlePaymentSuccess();
     } else {
       setShowPaymentModal(true);
+      console.log('Payment modal should be shown now');
     }
   };
 
-  const handlePaymentSuccess = async () => {
+  const handlePaymentSuccess = async (paymentInfo?: {
+    paymentTx: string;
+    paymentAmount: number;
+    explorerUrl: string;
+  }) => {
     setShowPaymentModal(false);
     setIsLoading(true);
 
     try {
+      // Get wallet address for authentication
+      const walletAddress = publicKey ? publicKey.toString() : null;
+      
+      if (!walletAddress) {
+        throw new Error("Wallet not connected");
+      }
+      
+      console.log('Using wallet address for authentication:', walletAddress);
+      console.log('Payment info:', paymentInfo);
+      
       // Record website generation only for premium users
       if (isSubscribed) {
         await fetch('/api/websites', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${walletAddress}`,
           },
           body: JSON.stringify({
             isPremium: true
@@ -278,14 +298,24 @@ export default function CustomizePage() {
         });
       }
 
+      // We already have the wallet address from above
+      console.log('Sending generate request with wallet address:', walletAddress);
+      
       const response = await fetch("/api/generate", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${walletAddress}`,
         },
         body: JSON.stringify({
           userId,
           ...fields,
+          // Include payment information if available
+          ...(paymentInfo ? {
+            paymentTx: paymentInfo.paymentTx,
+            paymentAmount: paymentInfo.paymentAmount,
+            explorerUrl: paymentInfo.explorerUrl
+          } : {})
         }),
       });
 
@@ -694,6 +724,11 @@ export default function CustomizePage() {
             <SolanaPayment
               onSuccess={handlePaymentSuccess}
               onClose={() => setShowPaymentModal(false)}
+              websiteDetails={{
+                coinName: fields.coinName,
+                tokenSymbol: fields.tokenSymbol,
+                contractAddress: fields.contractAddress
+              }}
             />
             <button
               onClick={() => setShowPaymentModal(false)}

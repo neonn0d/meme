@@ -265,7 +265,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
 
 ## Get Started
 
-**🚀 [Try It Now](/telegram/dashboard)**
+**🚀 [Try It Now](/telegram)**
     `,
     publishedAt: "2025-04-01",
     author: "BUIDL Team",
@@ -308,7 +308,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   - Free users can post in up to 3 groups  
   - Premium unlocks unlimited targeting
   
-  ⚡ Ready to shill smarter? [Try It Now](/telegram/dashboard)
+  ⚡ Ready to shill smarter? [Try It Now](/telegram)
     `,
     publishedAt: "2025-04-04",
     author: "BUIDL Team",
@@ -341,7 +341,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   
   Forget GitHub scripts or Python errors. If you're looking for a **Telegram shilling bot**, this is it.
   
-  🤖 [Launch Your Shill Bot Now](/telegram/dashboard)
+  🤖 [Launch Your Shill Bot Now](/telegram)
     `,
     publishedAt: "2025-04-04",
     author: "BUIDL Team",
@@ -378,7 +378,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   
   This isn’t just another Telegram spam bot — it’s your crypto promotion engine.
   
-  📢 [Start Marketing Your Coin](/telegram/dashboard)
+  📢 [Start Marketing Your Coin](/telegram)
     `,
     publishedAt: "2025-04-04",
     author: "BUIDL Team",
@@ -408,7 +408,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   
   Built for crypto founders. Battle-tested for memecoins.
   
-  💥 [Start Shilling Now](/telegram/dashboard)
+  💥 [Start Shilling Now](/telegram)
     `,
     publishedAt: "2025-04-04",
     author: "BUIDL Team",
@@ -441,7 +441,7 @@ Free users can send up to 3 messages. Upgrade to premium for unlimited messaging
   
   Whether you’re launching, relaunching, or airdropping, this tool puts your coin in front of eyeballs.
   
-  ⚙️ [Promote on Telegram Now](/telegram/dashboard)
+  ⚙️ [Promote on Telegram Now](/telegram)
     `,
     publishedAt: "2025-04-04",
     author: "BUIDL Team",

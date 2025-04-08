@@ -1,26 +1,37 @@
 import { StringSession } from 'telegram/sessions';
-import { clerkClient } from '@clerk/nextjs';
+import { supabase, supabaseAdmin } from './supabase';
 
-// Function to save session to Clerk's private metadata
-export const saveSessionToClerk = async (
+// Function to save session to Supabase user_private_metadata table
+export const saveSessionToSupabase = async (
   userId: string, 
   phoneNumber: string, 
   sessionString: string,
   userInfo?: any
 ): Promise<void> => {
   try {
-    console.log(`Saving session to Clerk for phone: ${phoneNumber}, userId: ${userId}`);
+    console.log(`Saving Telegram session to Supabase for userId: ${userId}, phone: ${phoneNumber}`);
     
-    // Get the user from Clerk
-    const user = await clerkClient.users.getUser(userId);
-    console.log(`Retrieved user from Clerk: ${user.id}`);
+    // Check if Supabase admin client is available
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not available');
+      return;
+    }
     
-    // Get existing private metadata
-    const privateMetadata = user.privateMetadata || {};
+    // First, get the current telegram_sessions array
+    const { data: privateMetadata, error: fetchError } = await supabaseAdmin
+      .from('user_private_metadata')
+      .select('telegram_sessions')
+      .eq('user_id', userId)
+      .single();
+    
+    if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "not found"
+      console.error('Error fetching user_private_metadata:', fetchError);
+      throw fetchError;
+    }
     
     // Get existing telegram sessions or create an empty array
-    const telegramSessions = (privateMetadata as any)?.telegramSessions || [];
-    console.log(`Found ${telegramSessions.length} existing sessions in Clerk metadata`);
+    const telegramSessions = privateMetadata?.telegram_sessions || [];
+    console.log(`Found ${telegramSessions.length} existing Telegram sessions in Supabase`);
     
     // Check if a session with this phone number already exists
     const existingSessionIndex = telegramSessions.findIndex((s: any) => s.phone === phoneNumber);
@@ -31,20 +42,18 @@ export const saveSessionToClerk = async (
       // Create a copy of userInfo with only essential fields
       optimizedUserInfo = {
         id: userInfo.id,
-        firstName: userInfo.firstName ? encodeEmojiForStorage(userInfo.firstName) : '',
-        lastName: userInfo.lastName ? encodeEmojiForStorage(userInfo.lastName) : '',
-        username: userInfo.username || '', // Store username as plain text
+        firstName: userInfo.firstName || '',
+        lastName: userInfo.lastName || '',
+        username: userInfo.username || '',
         phone: userInfo.phone || phoneNumber,
         premium: userInfo.premium || false,
         verified: userInfo.verified || false
       };
       
-      // Handle photo separately - resize/compress if needed
+      // Handle photo separately if needed
       if (userInfo.photo) {
         try {
-          // Store a smaller version of the photo or just a flag that photo exists
-          // For now, we'll just indicate that a photo exists but not store it
-          // This significantly reduces the metadata size
+          // Just indicate that a photo exists to save space
           optimizedUserInfo.hasPhoto = true;
         } catch (photoError) {
           console.error('Error processing photo:', photoError);
@@ -60,7 +69,7 @@ export const saveSessionToClerk = async (
       ...(optimizedUserInfo ? { userInfo: optimizedUserInfo } : {})
     };
     
-    // Calculate the size of the updated metadata
+    // Update the sessions array
     const updatedSessions = [...telegramSessions];
     if (existingSessionIndex !== -1) {
       updatedSessions[existingSessionIndex] = {
@@ -71,120 +80,118 @@ export const saveSessionToClerk = async (
       updatedSessions.push(sessionObject);
     }
     
-    const updatedMetadata = {
-      ...privateMetadata,
-      telegramSessions: updatedSessions
-    };
-    
-    // Check if the size exceeds Clerk's limit (8KB)
-    const metadataSize = Buffer.from(JSON.stringify(updatedMetadata)).length;
-    console.log(`Metadata size: ${metadataSize} bytes (limit: 8192 bytes)`);
-    
-    if (metadataSize > 8000) { // Leave some buffer
-      console.warn('Metadata size is approaching the limit, removing non-essential data');
-      
-      // Further optimize by keeping only the most recent sessions if needed
-      if (updatedSessions.length > 1) {
-        // Sort sessions by creation date (newest first)
-        updatedSessions.sort((a, b) => 
-          new Date(b.created).getTime() - new Date(a.created).getTime()
-        );
-        
-        // Keep only the most recent session
-        const optimizedSessions = [updatedSessions[0]];
-        
-        // Update the metadata with optimized sessions
-        const finalMetadata = {
-          ...privateMetadata,
-          telegramSessions: optimizedSessions
-        };
-        
-        // Check if we're still over the limit
-        const finalSize = Buffer.from(JSON.stringify(finalMetadata)).length;
-        console.log(`Optimized metadata size: ${finalSize} bytes`);
-        
-        if (finalSize > 8000) {
-          // If still too large, remove userInfo completely
-          optimizedSessions[0].userInfo = {
-            id: optimizedUserInfo?.id,
-            firstName: optimizedUserInfo?.firstName,
-            username: optimizedUserInfo?.username
-          };
-          
-          // Update the metadata with minimal userInfo
-          const minimalMetadata = {
-            ...privateMetadata,
-            telegramSessions: optimizedSessions
-          };
-          
-          await clerkClient.users.updateUser(userId, {
-            privateMetadata: minimalMetadata
-          });
-          console.log(`Saved session with minimal user info due to size constraints`);
-          return;
-        }
-        
-        // Save the optimized metadata
-        await clerkClient.users.updateUser(userId, {
-          privateMetadata: finalMetadata
+    // If we don't have a record yet, create one
+    if (!privateMetadata) {
+      const { error: insertError } = await supabaseAdmin
+        .from('user_private_metadata')
+        .insert({
+          user_id: userId,
+          telegram_sessions: updatedSessions
         });
-        console.log(`Saved most recent session only due to size constraints`);
-        return;
+      
+      if (insertError) {
+        console.error('Error creating user_private_metadata record:', insertError);
+        throw insertError;
+      }
+    } else {
+      // Update the existing record
+      const { error: updateError } = await supabaseAdmin
+        .from('user_private_metadata')
+        .update({
+          telegram_sessions: updatedSessions
+        })
+        .eq('user_id', userId);
+      
+      if (updateError) {
+        console.error('Error updating user_private_metadata record:', updateError);
+        throw updateError;
       }
     }
     
-    // Update the user's private metadata with the original plan if size is acceptable
-    await clerkClient.users.updateUser(userId, {
-      privateMetadata: updatedMetadata
-    });
-    
-    console.log(`Successfully saved session to Clerk for ${phoneNumber}`);
+    console.log(`Successfully saved Telegram session to Supabase for ${phoneNumber}`);
   } catch (error) {
-    console.error('Error saving Telegram session to Clerk:', error);
+    console.error('Error saving Telegram session to Supabase:', error);
     throw error;
   }
 };
 
-// Function to get available sessions from Clerk
-export const getSessionsFromClerk = async (userId: string) => {
+// Function to get available sessions from Supabase
+export const getSessionsFromSupabase = async (userId: string) => {
+  console.log('getSessionsFromSupabase called for user ID:', userId);
+  
+  if (!supabaseAdmin) {
+    console.error('Supabase admin client not available');
+    return [];
+  }
+  
   try {
-    console.log(`Getting sessions from Clerk for userId: ${userId}`);
+    console.log('Fetching telegram_sessions from user_private_metadata table');
     
-    const user = await clerkClient.users.getUser(userId);
-    console.log(`Retrieved user from Clerk: ${user.id}`);
+    // Directly query the user_private_metadata table
+    const { data: privateMetadata, error } = await supabaseAdmin
+      .from('user_private_metadata')
+      .select('telegram_sessions')
+      .eq('user_id', userId)
+      .single();
     
-    const privateMetadata = user.privateMetadata || {};
+    if (error) {
+      console.error('Error fetching user_private_metadata:', error);
+      // Log more details for debugging
+      console.log('Error details:', JSON.stringify(error));
+      return [];
+    }
     
-    // Get telegram sessions or return empty array if none exist
-    const telegramSessions = (privateMetadata as any)?.telegramSessions || [];
-    console.log(`Found ${telegramSessions.length} sessions in Clerk metadata`);
+    if (!privateMetadata || !privateMetadata.telegram_sessions) {
+      console.log('No telegram_sessions found for user:', userId);
+      return [];
+    }
+    
+    // Get telegram sessions
+    const telegramSessions = privateMetadata.telegram_sessions;
+    console.log('Telegram sessions found:', Array.isArray(telegramSessions) ? telegramSessions.length : 'Not an array');
+    console.log('Sessions data type:', typeof telegramSessions);
+    
+    // Handle both array and object formats
+    const sessionsArray = Array.isArray(telegramSessions) ? telegramSessions : [telegramSessions];
     
     // Return sessions with minimal info for the client
-    return telegramSessions.map((session: any) => ({
+    return sessionsArray.map((session: any) => ({
       phone: session.phone,
       created: session.created,
       userInfo: session.userInfo || null
     }));
   } catch (error) {
-    console.error('Error getting Telegram sessions from Clerk:', error);
+    console.error('Error getting Telegram sessions from Supabase:', error);
     return [];
   }
 };
 
-// Function to get a specific session from Clerk
-export const getSessionFromClerk = async (userId: string, phoneNumber: string) => {
+// Function to get a specific session from Supabase
+export const getSessionFromSupabase = async (userId: string, phoneNumber: string) => {
   try {
-    console.log(`Getting session from Clerk for phone: ${phoneNumber}, userId: ${userId}`);
+    console.log(`Getting session from Supabase for userId: ${userId}, phone: ${phoneNumber}`);
     
-    const user = await clerkClient.users.getUser(userId);
-    console.log(`Retrieved user from Clerk: ${user.id}`);
+    // Check if Supabase admin client is available
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not available');
+      return null;
+    }
     
-    const privateMetadata = user.privateMetadata || {};
-    console.log(`Private metadata:`, JSON.stringify(privateMetadata).substring(0, 100) + '...');
+    // Get the user's private metadata from Supabase using admin client to bypass RLS
+    const { data: privateMetadata, error } = await supabaseAdmin
+      .from('user_private_metadata')
+      .select('telegram_sessions')
+      .filter('user_id', 'eq', userId)
+      .single();
+    
+    if (error) {
+      console.error('Error fetching user_private_metadata:', error);
+      return null;
+    }
     
     // Get telegram sessions or return null if none exist
-    const telegramSessions = (privateMetadata as any)?.telegramSessions || [];
-    console.log(`Found ${telegramSessions.length} sessions in Clerk metadata`);
+    const telegramSessions = privateMetadata?.telegram_sessions || [];
+    console.log(`Found ${telegramSessions.length} sessions in Supabase`);
     
     // Find the session with the matching phone number
     const session = telegramSessions.find((s: any) => s.phone === phoneNumber);
@@ -192,24 +199,37 @@ export const getSessionFromClerk = async (userId: string, phoneNumber: string) =
     
     return session;
   } catch (error) {
-    console.error('Error getting Telegram session from Clerk:', error);
+    console.error('Error getting Telegram session from Supabase:', error);
     return null;
   }
 };
 
-// Function to delete a session from Clerk
-export const deleteSessionFromClerk = async (userId: string, phoneNumber: string): Promise<boolean> => {
+// Function to delete a session from Supabase
+export const deleteSessionFromSupabase = async (userId: string, phoneNumber: string): Promise<boolean> => {
   try {
-    console.log(`Deleting session from Clerk for phone: ${phoneNumber}, userId: ${userId}`);
+    console.log(`Deleting Telegram session from Supabase for userId: ${userId}, phone: ${phoneNumber}`);
     
-    const user = await clerkClient.users.getUser(userId);
-    console.log(`Retrieved user from Clerk: ${user.id}`);
+    // Check if Supabase admin client is available
+    if (!supabaseAdmin) {
+      console.error('Supabase admin client not available');
+      return false;
+    }
     
-    const privateMetadata = user.privateMetadata || {};
+    // First, get the current telegram_sessions array
+    const { data: privateMetadata, error: fetchError } = await supabaseAdmin
+      .from('user_private_metadata')
+      .select('telegram_sessions')
+      .eq('user_id', userId)
+      .single();
+    
+    if (fetchError) {
+      console.error('Error fetching user_private_metadata:', fetchError);
+      return false;
+    }
     
     // Get existing telegram sessions
-    const telegramSessions = (privateMetadata as any)?.telegramSessions || [];
-    console.log(`Found ${telegramSessions.length} sessions in Clerk metadata`);
+    const telegramSessions = privateMetadata?.telegram_sessions || [];
+    console.log(`Found ${telegramSessions.length} sessions in Supabase`);
     
     // Find the session with the matching phone number
     const sessionIndex = telegramSessions.findIndex((s: any) => s.phone === phoneNumber);
@@ -223,18 +243,23 @@ export const deleteSessionFromClerk = async (userId: string, phoneNumber: string
     telegramSessions.splice(sessionIndex, 1);
     console.log(`Removed session for ${phoneNumber}`);
     
-    // Update the user's private metadata
-    await clerkClient.users.updateUser(userId, {
-      privateMetadata: {
-        ...privateMetadata,
-        telegramSessions
-      }
-    });
+    // Update the user's private metadata using admin client to bypass RLS
+    const { error: updateError } = await supabaseAdmin
+      .from('user_private_metadata')
+      .update({
+        telegram_sessions: telegramSessions
+      })
+      .eq('user_id', userId);
     
-    console.log(`Successfully deleted session from Clerk for ${phoneNumber}`);
+    if (updateError) {
+      console.error('Error updating user_private_metadata:', updateError);
+      return false;
+    }
+    
+    console.log(`Successfully updated user metadata after removing session`);
     return true;
   } catch (error) {
-    console.error('Error deleting Telegram session from Clerk:', error);
+    console.error('Error deleting Telegram session from Supabase:', error);
     return false;
   }
 };

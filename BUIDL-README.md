@@ -68,7 +68,7 @@ Our templates include everything a memecoin needs: Token info display, buy butto
 ## 🔗 Quick Links
 
 - [Website Generator](https://buidl.co.in)
-- [Telegram Marketing](https://buidl.co.in/telegram/dashboard)
+- [Telegram Marketing](https://buidl.co.in/telegram)
 - [Pricing Plans](https://buidl.co.in/pricing)
 - [Blog & Resources](https://buidl.co.in/blog)
 

@@ -10,7 +10,9 @@ export default function PremiumFeatureGuard({
   children,
   fallback
 }: PremiumFeatureGuardProps) {
-  const { isLoading, error, isSubscribed, subscriptionDetails } = useSubscription();
+  const { isLoading, error, subscriptionData } = useSubscription();
+  const isSubscribed = subscriptionData.isSubscribed;
+  const subscriptionDetails = subscriptionData.details;
 
   if (isLoading) {
     return (
@@ -37,7 +39,7 @@ export default function PremiumFeatureGuard({
         {subscriptionDetails ? (
           <div className="space-y-4">
             <p className="text-zinc-600">
-              Your subscription has expired on {formatDate(subscriptionDetails.expiryDate)}.
+              Your subscription has expired on {formatDate(subscriptionDetails.endDate)}.
             </p>
             <p className="text-zinc-600">
               Renew your subscription to access premium features.
