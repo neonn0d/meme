@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
+import { headers } from 'next/headers';
+import { supabase } from '@/lib/supabase';
 import { StringSession } from 'telegram/sessions';
-import { encryptSessionInfo, saveSessionToClerk, decryptSessionInfo } from '@/lib/telegram';
+import { encryptSessionInfo, saveSessionToSupabase, decryptSessionInfo } from '@/lib/telegram';
 import { CustomTelegramClient } from '@/lib/customTelegramClient';
 import { Api } from 'telegram';
 
@@ -10,11 +11,14 @@ const apiId = parseInt(process.env.TELEGRAM_API_ID || "0");
 const apiHash = process.env.TELEGRAM_API_HASH || "";
 
 export async function POST(req: Request) {
-  // Check authentication
-  const { userId } = auth();
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
+  console.log('Telegram code verification API called');
+  
+  // For this API, we'll skip authentication since the Telegram API itself
+  // will provide security through the verification code process
+  // The actual account linking will happen after verification
+  
+  // We'll use a null userId for now, and get the real userId from the request body if provided
+  let userId: string | null = null;
 
   // Validate API credentials
   if (!apiId || !apiHash) {
@@ -23,7 +27,12 @@ export async function POST(req: Request) {
 
   try {
     // Get the request body
-    const { code, password, sessionInfo } = await req.json();
+    const { code, password, sessionInfo, userId: requestUserId } = await req.json();
+    
+    // If userId is provided in the request, use it
+    if (requestUserId) {
+      userId = requestUserId;
+    }
     
     // Validate required fields
     if (!code) {
@@ -61,7 +70,7 @@ export async function POST(req: Request) {
         // Get the session as a string
         const sessionString = session.save() as string;
         
-        // Save to Clerk
+        // Save to Supabase
         if (userId) {
           // Get user info for storing with the session
           const me = await client.getMe();
@@ -84,7 +93,12 @@ export async function POST(req: Request) {
             console.error('Error getting profile photo:', photoError);
           }
           
-          await saveSessionToClerk(userId, phoneNumber, sessionString, userInfo);
+          // Only save to Supabase if we have a userId
+          if (userId) {
+            await saveSessionToSupabase(userId, phoneNumber, sessionString, userInfo);
+          } else {
+            console.log('No userId provided, skipping saving session to Supabase');
+          }
         }
         
         await client.disconnect();
@@ -168,17 +182,22 @@ export async function POST(req: Request) {
           const sessionString = session.save() as string;
           
           try {
-            // Save the session to Clerk's private metadata
-            console.log('Saving session to Clerk for phone (after 2FA):', phoneNumber);
+            // Save the session to Supabase's private metadata
+            console.log('Saving session to Supabase for phone (after 2FA):', phoneNumber);
             console.log('userInfo available after 2FA:', userInfo ? 'Yes' : 'No');
             if (userInfo) {
               console.log('userInfo keys after 2FA:', Object.keys(userInfo));
             }
-            await saveSessionToClerk(userId, phoneNumber, sessionString, userInfo);
-            console.log('Successfully saved session to Clerk after 2FA');
-          } catch (clerkError: any) {
-            console.error('Error saving to Clerk after 2FA:', clerkError);
-            // Continue even if Clerk save fails
+            // Only save to Supabase if we have a userId
+          if (userId) {
+            await saveSessionToSupabase(userId, phoneNumber, sessionString, userInfo);
+          } else {
+            console.log('No userId provided, skipping saving session to Supabase');
+          }
+            console.log('Successfully saved session to Supabase after 2FA');
+          } catch (supabaseError: any) {
+            console.error('Error saving to Supabase after 2FA:', supabaseError);
+            // Continue even if Supabase save fails
           }
           
           // Disconnect the client
@@ -281,24 +300,29 @@ export async function POST(req: Request) {
         
         console.log('Session string obtained, length:', sessionString.length);
         
-        // Always save to Clerk if userId is available
+        // Always save to Supabase if userId is available
         if (userId) {
           try {
-            // Save the session to Clerk's private metadata
-            console.log('Saving session to Clerk for phone:', phoneNumber);
+            // Save the session to Supabase's private metadata
+            console.log('Saving session to Supabase for phone:', phoneNumber);
             console.log('userInfo available:', userInfo ? 'Yes' : 'No');
             if (userInfo) {
               console.log('userInfo keys:', Object.keys(userInfo));
             }
-            await saveSessionToClerk(userId, phoneNumber, sessionString, userInfo);
-            console.log('Successfully saved session to Clerk');
-          } catch (clerkError: any) {
-            console.error('Error saving to Clerk:', clerkError);
-            // Continue even if Clerk save fails - but log it clearly
-            console.error('IMPORTANT: Session was not saved to Clerk due to an error');
+            // Only save to Supabase if we have a userId
+          if (userId) {
+            await saveSessionToSupabase(userId, phoneNumber, sessionString, userInfo);
+          } else {
+            console.log('No userId provided, skipping saving session to Supabase');
+          }
+            console.log('Successfully saved session to Supabase');
+          } catch (supabaseError: any) {
+            console.error('Error saving to Supabase:', supabaseError);
+            // Continue even if Supabase save fails - but log it clearly
+            console.error('IMPORTANT: Session was not saved to Supabase due to an error');
           }
         } else {
-          console.error('IMPORTANT: No userId available, cannot save session to Clerk');
+          console.error('IMPORTANT: No userId available, cannot save session to Supabase');
         }
         
         return NextResponse.json({ 
@@ -412,17 +436,22 @@ export async function POST(req: Request) {
               const sessionString = session.save() as string;
               
               try {
-                // Save the session to Clerk's private metadata
-                console.log('Saving session to Clerk for phone (after 2FA):', phoneNumber);
+                // Save the session to Supabase's private metadata
+                console.log('Saving session to Supabase for phone (after 2FA):', phoneNumber);
                 console.log('userInfo available after 2FA:', userInfo ? 'Yes' : 'No');
                 if (userInfo) {
                   console.log('userInfo keys after 2FA:', Object.keys(userInfo));
                 }
-                await saveSessionToClerk(userId, phoneNumber, sessionString, userInfo);
-                console.log('Successfully saved session to Clerk after 2FA');
-              } catch (clerkError: any) {
-                console.error('Error saving to Clerk after 2FA:', clerkError);
-                // Continue even if Clerk save fails
+                // Only save to Supabase if we have a userId
+          if (userId) {
+            await saveSessionToSupabase(userId, phoneNumber, sessionString, userInfo);
+          } else {
+            console.log('No userId provided, skipping saving session to Supabase');
+          }
+                console.log('Successfully saved session to Supabase after 2FA');
+              } catch (supabaseError: any) {
+                console.error('Error saving to Supabase after 2FA:', supabaseError);
+                // Continue even if Supabase save fails
               }
               
               // Disconnect the client

@@ -27,19 +27,39 @@ interface UserMetadata {
   totalGenerated?: number;
 }
 
+interface Subscription {
+  id: string;
+  user_id: string;
+  status: string;
+  plan: string;
+  current_period_start: string;
+  current_period_end: string;
+  payment_info: {
+    amount: number;
+    network: string;
+    transactionHash: string;
+  };
+}
+
 interface User {
   id: string;
   username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  imageUrl: string;
+  wallet_address: string;
   metadata?: UserMetadata;
-  lastSignInAt: string;
-  createdAt: string;
+  subscriptions?: Subscription[];
+  payments?: Payment[];
+  last_sign_in_at?: string;
+  created_at: string;
 }
 
 export default function UsersPage() {
   const [users, setUsers] = useState<User[]>([]);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    premiumUsers: 0,
+    usersWithWebsites: 0,
+    activeUsers: 0
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -59,6 +79,8 @@ export default function UsersPage() {
       }
       
       const data = await response.json();
+      console.log('API response:', data);
+      
       // Sort users: those with metadata first, then by creation date
       const sortedUsers = data.users.sort((a: User, b: User) => {
         const aHasMetadata = hasUserMetadata(a);
@@ -68,10 +90,11 @@ export default function UsersPage() {
         if (!aHasMetadata && bHasMetadata) return 1;
         
         // If both have or don't have metadata, sort by creation date (newest first)
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
       
       setUsers(sortedUsers);
+      setStats(data.stats);
       setIsAuthenticated(true);
       setError(null);
     } catch (err) {
@@ -81,13 +104,15 @@ export default function UsersPage() {
     }
   };
 
-  // Helper function to check if a user has any meaningful metadata
+  // Helper function to check if a user has any meaningful data
   const hasUserMetadata = (user: User) => {
     const websites = user.metadata?.websites;
-    const payments = user.metadata?.payments;
+    const hasPayments = user.payments && user.payments.length > 0;
+    const hasSubscriptions = user.subscriptions && user.subscriptions.length > 0;
     return !!(
       (websites && websites.length > 0) ||
-      (payments && payments.length > 0) ||
+      hasPayments ||
+      hasSubscriptions ||
       user.metadata?.totalSpent ||
       user.metadata?.totalGenerated
     );
@@ -101,6 +126,16 @@ export default function UsersPage() {
     const latestPayment = payments[0];
     const expiryDate = new Date(latestPayment.expiryDate);
     return expiryDate > new Date();
+  };
+
+  // Function to check if a user has an active subscription
+  const hasActiveSubscription = (user: User) => {
+    if (!user.subscriptions || user.subscriptions.length === 0) return false;
+    
+    return user.subscriptions.some(sub => 
+      sub.status === 'active' && 
+      new Date(sub.current_period_end) > new Date()
+    );
   };
 
   if (!isAuthenticated) {
@@ -158,11 +193,11 @@ export default function UsersPage() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold text-zinc-900">Active Users</h1>
             <div className="flex gap-2 text-sm text-zinc-500 mt-1">
-              <span>{users.filter(hasActivePremium).length} premium</span>
+              <span>{stats.premiumUsers} premium</span>
               <span>•</span>
-              <span>{users.filter(u => u.metadata?.websites?.length).length} with websites</span>
+              <span>{stats.usersWithWebsites} with websites</span>
               <span>•</span>
-              <span>{users.length} active total</span>
+              <span>{stats.activeUsers} active total</span>
             </div>
           </div>
           <button
@@ -182,11 +217,9 @@ export default function UsersPage() {
               } p-6`}
             >
               <div className="flex items-start gap-4">
-                <img
-                  src={user.imageUrl}
-                  alt={user.username || 'User'}
-                  className="w-12 h-12 rounded-full"
-                />
+                <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center">
+                  <span className="text-zinc-500 text-lg">👤</span>
+                </div>
                 <div className="flex-1">
                   <div className="flex items-center justify-between">
                     <div>
@@ -200,8 +233,8 @@ export default function UsersPage() {
                       )}
                     </div>
                     <span className="text-sm text-zinc-500">
-                      {user.createdAt ? (
-                        <>Joined {formatDistanceToNow(new Date(user.createdAt))} ago</>
+                      {user.created_at ? (
+                        <>Joined {formatDistanceToNow(new Date(user.created_at))} ago</>
                       ) : (
                         'Recently joined'
                       )}
@@ -215,17 +248,16 @@ export default function UsersPage() {
                       <h3 className="text-sm font-medium text-zinc-600 mb-1">Premium Status</h3>
                       <p className="text-zinc-900">
                         {(() => {
-                          const payments = user.metadata?.payments;
-                          if (!payments || payments.length === 0) return 'Free';
-                          
-                          const latestPayment = payments[0];
-                          const expiryDate = new Date(latestPayment.expiryDate);
-                          const now = new Date();
-                          
-                          if (expiryDate > now) {
+                          if (hasActiveSubscription(user)) {
+                            const activeSub = user.subscriptions!.find(sub => sub.status === 'active')!;
+                            const expiryDate = new Date(activeSub.current_period_end);
                             return `Premium (expires ${formatDistanceToNow(expiryDate, { addSuffix: true })})`;
                           }
-                          return 'Free (Premium expired)';
+                          
+                          // Check if user had a subscription that expired
+                          const hasExpiredSub = user.subscriptions && user.subscriptions.length > 0;
+                          
+                          return hasExpiredSub ? 'Free (Premium expired)' : 'Free';
                         })()}
                       </p>
                     </div>
@@ -247,28 +279,29 @@ export default function UsersPage() {
                     </div>
                   </div>
 
-                  {/* Payment History */}
+                  {/* Subscription History */}
                   {(() => {
-                    const payments = user.metadata?.payments;
-                    if (!payments || payments.length === 0) return null;
+                    const subscriptions = user.subscriptions;
+                    if (!subscriptions || subscriptions.length === 0) return null;
                     
                     return (
                       <div className="mt-4">
-                        <h3 className="text-sm font-medium text-zinc-600 mb-2">Premium Payments</h3>
+                        <h3 className="text-sm font-medium text-zinc-600 mb-2">Subscription History</h3>
                         <div className="bg-zinc-50 rounded-lg p-4">
                           <div className="space-y-2">
-                            {payments.map((payment, index) => {
-                              const timestamp = new Date(payment.timestamp);
-                              const expiryDate = new Date(payment.expiryDate);
-                              const isValidDate = !isNaN(timestamp.getTime());
-                              const hash = payment.transactionHash;
+                            {subscriptions.map((subscription, index) => {
+                              const startDate = new Date(subscription.current_period_start);
+                              const endDate = new Date(subscription.current_period_end);
+                              const isValidStartDate = !isNaN(startDate.getTime());
+                              const isValidEndDate = !isNaN(endDate.getTime());
+                              const hash = subscription.payment_info?.transactionHash;
                               
                               return (
                                 <div key={index} className="flex justify-between text-sm">
                                   <div className="flex flex-col">
                                     <span className="text-zinc-600">
-                                      {isValidDate 
-                                        ? timestamp.toLocaleDateString(undefined, {
+                                      {isValidStartDate 
+                                        ? startDate.toLocaleDateString(undefined, {
                                             year: 'numeric',
                                             month: 'short',
                                             day: 'numeric'
@@ -282,16 +315,25 @@ export default function UsersPage() {
                                     ) : (
                                       <span className="text-xs text-zinc-500">No transaction hash</span>
                                     )}
-                                    <span className="text-xs text-zinc-500">
-                                      Expires: {formatDistanceToNow(expiryDate, { addSuffix: true })}
-                                    </span>
+                                    {isValidEndDate ? (
+                                      <span className="text-xs text-zinc-500">
+                                        Expires: {formatDistanceToNow(endDate, { addSuffix: true })}
+                                      </span>
+                                    ) : (
+                                      <span className="text-xs text-zinc-500">
+                                        No expiration date
+                                      </span>
+                                    )}
                                   </div>
                                   <div className="text-right">
                                     <span className="font-medium text-zinc-900">
-                                      {payment.amount} SOL
+                                      {subscription.payment_info?.amount || 0} SOL
                                     </span>
                                     <span className="text-xs text-zinc-500 block">
-                                      {payment.network}
+                                      {subscription.status} ({subscription.plan})
+                                    </span>
+                                    <span className="text-xs text-zinc-500 block">
+                                      {subscription.payment_info?.network || 'unknown'}
                                     </span>
                                   </div>
                                 </div>

@@ -7,9 +7,24 @@ import { generatePepeTemplate } from "@/templates/pepe/template";
 import { generatePlayfulTemplate } from "@/templates/playful/template";
 import { generateStellarTemplate } from "@/templates/stellar/template";
 import { GenerateRequestBody, GeneratedTemplate, PreviewData } from "@/types";
+import { UserWebsiteMetadata, WebsiteGeneration } from "@/types/website-generation";
 import JSZip from 'jszip';
+import { withAuth, AuthenticatedRequest } from "@/lib/api-middleware";
+import { getSubscriptionStatus } from "@/lib/auth-utils";
+import { supabase } from "@/lib/supabase";
+import { createClient } from '@supabase/supabase-js';
+
+// Create a Supabase admin client with service role key to bypass RLS
+const supabaseAdmin = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL || '',
+  process.env.SUPABASE_SERVICE_ROLE_KEY || ''
+);
 
 export async function POST(request: NextRequest) {
+  return withAuth(request, handleGenerateRequest);
+}
+
+async function handleGenerateRequest(request: AuthenticatedRequest) {
   try {
     // Parse request body
     const body = await request.json();
@@ -36,6 +51,28 @@ export async function POST(request: NextRequest) {
                             templateId === 'playful' ? 'playful-character-v1' :
                             templateId === 'stellar' ? 'test-space-v1' :
                             templateId;
+
+    // Check subscription status
+    const userId = request.userId;
+    const { isSubscribed } = await getSubscriptionStatus(userId);
+    
+    // If not subscribed, check if they've reached the free limit
+    if (!isSubscribed) {
+      const { data: userData } = await supabaseAdmin
+        .from('user_public_metadata')
+        .select('total_generated')
+        .eq('user_id', userId)
+        .single();
+      
+      console.log('User data for free limit check:', userData);
+      
+      if (userData && userData.total_generated >= 3) {
+        return NextResponse.json(
+          { error: 'Free generation limit reached' },
+          { status: 403 }
+        );
+      }
+    }
 
     // Create preview data
     const previewData: PreviewData = {
@@ -129,6 +166,110 @@ export async function POST(request: NextRequest) {
       const filename = body.coinName ? `${body.coinName.toLowerCase()}-website.zip` : 'memecoin-website.zip';
       console.log('Generated filename:', filename); // Debug log
       
+      // Get current user metadata
+      console.log('Getting current user metadata for:', userId);
+      const { data: userData, error: fetchError } = await supabaseAdmin
+        .from('user_public_metadata')
+        .select('total_generated, websites, total_spent, payments')
+        .eq('user_id', userId)
+        .single();
+        
+      if (fetchError) {
+        console.error('Error fetching user metadata:', fetchError);
+        
+        // Check if this is a "no rows returned" error, which means we need to create the metadata
+        if (fetchError.code === 'PGRST116') {
+          console.log('No user metadata found, creating new record for user:', userId);
+          
+          // Create new user metadata record with website details
+          const websiteDetails = {
+            coinName: body.coinName,
+            tokenSymbol: body.tokenSymbol,
+            contractAddress: body.contractAddress || '0xD0ntL34v3Th1sPl4c3h0ld3rHere',
+            timestamp: new Date().toISOString()
+          };
+          
+          // Check if payment information is available
+          const paymentAmount = body.paymentAmount || 0;
+          const paymentTx = body.paymentTx || null;
+          
+          // Create payment record if payment was made
+          const paymentRecord = paymentTx ? {
+            amount: paymentAmount,
+            tx_hash: paymentTx,
+            explorer_url: body.explorerUrl || null,
+            timestamp: new Date().toISOString()
+          } : null;
+          
+          const { data: newMetadata, error: createError } = await supabaseAdmin
+            .from('user_public_metadata')
+            .insert({
+              user_id: userId,
+              total_generated: 1,
+              total_spent: paymentAmount,
+              websites: [websiteDetails],
+              payments: paymentRecord ? [paymentRecord] : []
+            })
+            .select()
+            .single();
+            
+          if (createError) {
+            console.error('Error creating user metadata:', createError);
+          } else {
+            console.log('User metadata created successfully:', newMetadata);
+          }
+        }
+      } else {
+        // Update total generated count and add website details
+        const currentCount = userData?.total_generated || 0;
+        const newCount = currentCount + 1;
+        
+        // Get existing websites array
+        const existingWebsites = userData?.websites || [];
+        
+        // Create new website details
+        const websiteDetails = {
+          coinName: body.coinName,
+          tokenSymbol: body.tokenSymbol,
+          contractAddress: body.contractAddress || '0xD0ntL34v3Th1sPl4c3h0ld3rHere',
+          timestamp: new Date().toISOString()
+        };
+        
+        // Check if payment information is available
+        const paymentAmount = body.paymentAmount || 0;
+        const paymentTx = body.paymentTx || null;
+        const currentTotalSpent = userData?.total_spent || 0;
+        const newTotalSpent = currentTotalSpent + paymentAmount;
+        
+        // Create payment record if payment was made
+        const paymentRecord = paymentTx ? {
+          amount: paymentAmount,
+          tx_hash: paymentTx,
+          explorer_url: body.explorerUrl || null,
+          timestamp: new Date().toISOString()
+        } : null;
+        
+        // Get existing payments array
+        const existingPayments = userData?.payments || [];
+        const updatedPayments = paymentRecord ? [...existingPayments, paymentRecord] : existingPayments;
+        
+        const { error: updateError } = await supabaseAdmin
+          .from('user_public_metadata')
+          .update({ 
+            total_generated: newCount,
+            total_spent: newTotalSpent,
+            websites: [...existingWebsites, websiteDetails],
+            payments: updatedPayments
+          })
+          .eq('user_id', userId);
+          
+        if (updateError) {
+          console.error('Error updating user metadata:', updateError);
+        } else {
+          console.log('User metadata updated successfully');
+        }
+      }
+
       return new NextResponse(buffer, {
         headers: {
           'Content-Type': 'application/zip',

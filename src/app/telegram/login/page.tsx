@@ -1,6 +1,6 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useAuth } from '@/contexts/AuthContext';
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 
@@ -11,22 +11,12 @@ const TelegramLoginContainer = dynamic(
 );
 
 export default function TelegramLoginPage() {
-  const { isLoaded, isSignedIn, user } = useUser();
+  const { isLoading, isSignedIn, userProfile } = useAuth();
 
-  if (!isLoaded) {
-    return null;
-  }
-
-  if (!isSignedIn) {
+  if (isLoading) {
     return (
-      <div className="min-h-full bg-white pt-20">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-8 py-12 text-center">
-          <h1 className="text-3xl font-bold text-zinc-900 mb-4">Sign In Required</h1>
-          <p className="mb-4">You need to be signed in to access this page.</p>
-          <a href="/sign-in" className="bg-zinc-900 text-white px-4 py-2 rounded hover:bg-zinc-800">
-            Sign In
-          </a>
-        </div>
+      <div className="min-h-full bg-white pt-20 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-zinc-900"></div>
       </div>
     );
   }

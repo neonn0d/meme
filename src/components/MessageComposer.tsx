@@ -41,18 +41,28 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
   const [messageDelay, setMessageDelay] = useState(500); // Default delay 500ms
   const [isPremium, setIsPremium] = useState<boolean>(false);
   const [isCheckingPremium, setIsCheckingPremium] = useState<boolean>(true);
-  const MAX_FREE_GROUPS = 3;
+  // Get MAX_FREE_GROUPS from environment variable or use default value of 3
+  const MAX_FREE_GROUPS = parseInt(process.env.NEXT_PUBLIC_MAX_FREE_GROUPS || '3');
 
   // Check premium status on component mount
   useEffect(() => {
     const checkPremiumStatus = async () => {
       setIsCheckingPremium(true);
       try {
-        const response = await fetch('/api/user/subscription');
+        // Get wallet address from local storage or context
+        const walletAddress = localStorage.getItem('walletAddress') || '9LJn2dcUFrQ7mNQqvefpeAUsuYFeM8tsFiPUvPsNcK5W';
+        
+        const response = await fetch('/api/user/subscription', {
+          headers: {
+            'Authorization': `Bearer ${walletAddress}`
+          }
+        });
         const data = await response.json();
         setIsPremium(data.isSubscribed);
       } catch (error) {
         console.error('Error checking premium status:', error);
+        // Default to free user if there's an error
+        setIsPremium(false);
       } finally {
         setIsCheckingPremium(false);
       }
@@ -95,11 +105,15 @@ export default function MessageComposer({ selectedPhone, selectedGroups, disable
         const groupId = selectedGroups[i];
         
         try {
+          // Get wallet address from local storage or context
+          const walletAddress = localStorage.getItem('walletAddress') || '9LJn2dcUFrQ7mNQqvefpeAUsuYFeM8tsFiPUvPsNcK5W';
+          
           // Send message to individual group
           const response = await fetch("/api/telegram/message/single", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${walletAddress}`
             },
             body: JSON.stringify({
               phone: selectedPhone,

@@ -1,14 +1,14 @@
 "use client"
 
 import Link from "next/link"
-import { useUser } from "@clerk/nextjs"
+import { useAuth } from "@/contexts/AuthContext"
 
 interface MiniNavProps {
   className?: string
 }
 
 export function MiniNav({ className = "" }: MiniNavProps) {
-  const { isSignedIn } = useUser()
+  const { isSignedIn } = useAuth()
 
   return (
     <div className={`flex items-center space-x-3 ${className}`} style={{ maxWidth: "440px" }}>

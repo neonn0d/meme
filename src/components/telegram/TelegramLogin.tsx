@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 
 // Define TypeScript interface for user info
 interface TelegramUserInfo {
@@ -42,6 +43,7 @@ const decodeBase64 = (value: string): string => {
 };
 
 export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
+  const { userProfile, isSignedIn } = useAuth();
   const [phoneNumber, setPhoneNumber] = useState('');
   const [code, setCode] = useState('');
   const [password, setPassword] = useState('');
@@ -51,6 +53,7 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<TelegramUserInfo | null>(null);
+  const [walletAddress, setWalletAddress] = useState<string>('');
 
   // Update the parent component when step changes
   const updateStep = (newStep: 'phone' | 'code' | 'password' | 'success') => {
@@ -60,18 +63,38 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
     }
   };
 
+  // Get wallet address from user profile when component mounts
+  useEffect(() => {
+    if (userProfile && userProfile.wallet_address) {
+      console.log('Found wallet address:', userProfile.wallet_address);
+      setWalletAddress(userProfile.wallet_address);
+    } else {
+      console.log('No wallet address found in user profile:', userProfile);
+    }
+  }, [userProfile]);
+
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     
     try {
+      // Check if user is signed in with wallet
+      if (!isSignedIn) {
+        throw new Error('Please connect your Solana wallet to continue.');
+      }
+      
+      console.log('User is signed in, profile:', userProfile);
+
       const response = await fetch('/api/telegram/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ phoneNumber }),
+        body: JSON.stringify({ 
+          phoneNumber,
+          userId: userProfile?.id // Pass the user ID if available
+        }),
       });
       
       const data = await response.json();
@@ -100,9 +123,14 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
       const response = await fetch('/api/telegram/code', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code, password, sessionInfo }),
+        body: JSON.stringify({ 
+          code, 
+          sessionInfo, 
+          password,
+          userId: userProfile?.id // Pass the user ID from the profile
+        }),
       });
       
       const data = await response.json();
@@ -134,7 +162,7 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
         
         // Redirect to dashboard after a short delay
         setTimeout(() => {
-          window.location.href = '/telegram/dashboard';
+          window.location.href = '/telegram';
         }, 3000);
       }
     } catch (error: any) {
@@ -150,12 +178,21 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
     setError(null);
     
     try {
-      const response = await fetch('/api/telegram/code', {
+      // Check if user is signed in with wallet
+      if (!isSignedIn || !userProfile?.id) {
+        throw new Error('Please connect your Solana wallet to continue.');
+      }
+
+      const response = await fetch('/api/telegram/password', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ code: '', password, sessionInfo }),
+        body: JSON.stringify({ 
+          password, 
+          sessionInfo,
+          userId: userProfile.id
+        }),
       });
       
       const data = await response.json();
@@ -181,7 +218,7 @@ export default function TelegramLogin({ onStepChange }: TelegramLoginProps) {
       
       // Redirect to dashboard after a short delay
       setTimeout(() => {
-        window.location.href = '/telegram/dashboard';
+        window.location.href = '/telegram';
       }, 3000);
     } catch (error: any) {
       setError(error.message || 'Something went wrong');

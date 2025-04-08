@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { MessageSquare, Zap, Users, Clock } from 'lucide-react';
-import { useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 
 const features = [
   {
@@ -44,7 +44,7 @@ const item = {
 };
 
 export default function TelegramMarketing() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useAuth();
 
   return (
     <div className="bg-white">
