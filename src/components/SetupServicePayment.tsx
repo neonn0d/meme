@@ -44,17 +44,12 @@ export function SetupServicePayment({ onSuccess, onClose }: SetupServicePaymentP
         lamports: LAMPORTS_PER_SOL * SETUP_SERVICE_PRICE
       });
 
-      // Create a new transaction (unsigned)
-      const transaction = new Transaction();
-      transaction.add(instruction);
-      
+      const transaction = new Transaction().add(instruction);
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      // Use the method that Phantom recommends to avoid security warnings
-      // Send the transaction unsigned and let Phantom handle signing
-      const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
+      const signature = await sendTransaction(transaction, connection);
       const confirmation = await connection.confirmTransaction(signature);
       
       if (confirmation.value.err) {

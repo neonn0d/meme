@@ -105,25 +105,34 @@ export function SolanaPayment({ onSuccess, onClose, websiteDetails }: SolanaPaym
     
     try {
       console.log('Creating transaction...');
-      const instruction = SystemProgram.transfer({
-        fromPubkey: publicKey,
-        toPubkey: MERCHANT_WALLET,
-        lamports: LAMPORTS_PER_SOL * SOLANA_PRICE
-      });
-
-      // Create a new transaction (unsigned)
+      // Create an unsigned transaction
       const transaction = new Transaction();
-      transaction.add(instruction);
+      
+      // Add the transfer instruction
+      transaction.add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: MERCHANT_WALLET,
+          lamports: LAMPORTS_PER_SOL * SOLANA_PRICE
+        })
+      );
       
       console.log('Getting latest blockhash...');
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
 
-      console.log('Sending transaction using Phantom-recommended method...');
-      // Use the method that Phantom recommends to avoid security warnings
-      // Send the transaction unsigned and let Phantom handle signing
-      const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
+      console.log('Sending transaction using Phantom\'s signAndSendTransaction...');
+      // Use the recommended signAndSendTransaction method from Phantom
+      // This avoids the "malicious dApp" warning
+      // @ts-ignore - Phantom types are not included in the default TypeScript definitions
+      const provider = window.phantom?.solana;
+      
+      if (!provider) {
+        throw new Error("Phantom wallet not found");
+      }
+      
+      const { signature } = await provider.signAndSendTransaction(transaction);
       const explorerUrl = getExplorerUrl(signature);
       setTransactionHash(signature);
       console.log('Transaction sent, signature:', signature);

@@ -70,8 +70,7 @@ export default function SolanaPaymentModal({
       const amount = getPaymentAmount();
       console.log('Making payment of', amount, 'SOL');
       
-      // Create transaction (unsigned)
-      const { blockhash } = await connection.getLatestBlockhash();
+      // Create an unsigned transaction
       const transaction = new Transaction();
       
       // Add the transfer instruction
@@ -83,14 +82,21 @@ export default function SolanaPaymentModal({
         })
       );
       
-      // Set recent blockhash and fee payer
+      // Get the latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
       
-      // Use the method that Phantom recommends to avoid security warnings
-      // The transaction is sent unsigned, and Phantom will handle signing it
-      // This avoids the "This dApp could be malicious" warning
-      const signature = await wallet.sendTransaction(transaction, connection, { skipPreflight: false });
+      // Use the recommended signAndSendTransaction method from Phantom
+      // This avoids the "malicious dApp" warning
+      // @ts-ignore - Phantom types are not included in the default TypeScript definitions
+      const provider = window.phantom?.solana;
+      
+      if (!provider) {
+        throw new Error("Phantom wallet not found");
+      }
+      
+      const { signature } = await provider.signAndSendTransaction(transaction);
       console.log('Transaction sent with signature:', signature);
       setTransactionSignature(signature);
       

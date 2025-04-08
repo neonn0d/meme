@@ -124,8 +124,8 @@ export default function PremiumSubscription({
 
       const connection = new Connection(RPC_ENDPOINT, "confirmed");
       const merchantWallet = new PublicKey(MERCHANT_WALLET);
-
-      // Create a new transaction (unsigned)
+      
+      // Create an unsigned transaction
       const transaction = new Transaction();
       
       // Add the transfer instruction
@@ -136,28 +136,25 @@ export default function PremiumSubscription({
           lamports: PREMIUM_AMOUNT * LAMPORTS_PER_SOL,
         })
       );
-
-      const {
-        context: { slot: minContextSlot },
-        value: { blockhash, lastValidBlockHeight },
-      } = await connection.getLatestBlockhashAndContext();
       
-      // Set recent blockhash and fee payer
+      // Get the latest blockhash
+      const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
       transaction.feePayer = publicKey;
-
-      // Use the method that Phantom recommends to avoid security warnings
-      // Send the transaction unsigned and let Phantom handle signing
-      const signature = await sendTransaction(transaction, connection, {
-        minContextSlot,
-        skipPreflight: false
-      });
-
-      const confirmation = await connection.confirmTransaction({
-        blockhash,
-        lastValidBlockHeight,
-        signature,
-      });
+      
+      // Use the recommended signAndSendTransaction method from Phantom
+      // This avoids the "malicious dApp" warning
+      // @ts-ignore - Phantom types are not included in the default TypeScript definitions
+      const provider = window.phantom?.solana;
+      
+      if (!provider) {
+        throw new Error("Phantom wallet not found");
+      }
+      
+      const { signature } = await provider.signAndSendTransaction(transaction);
+      
+      // Wait for confirmation
+      const confirmation = await connection.confirmTransaction(signature, "confirmed");
 
       if (confirmation.value.err) {
         throw new Error("Transaction failed");
