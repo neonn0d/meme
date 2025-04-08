@@ -1,30 +1,24 @@
-import { Shield, Wallet, Code, MessageCircle, Crown } from "lucide-react";
+
 
 export default function Terms() {
   return (
-    <div className="relative">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8 py-12 sm:py-16">
-        <div className="mx-auto max-w-2xl lg:max-w-4xl space-y-12 sm:space-y-16">
-          <div className="space-y-6 text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-zinc-900 sm:text-5xl">
+    <div className="min-h-screen bg-white pt-16">
+      <div className="max-w-3xl mx-auto px-4 py-12">
+        <div className="mx-auto space-y-8">
+          <div className="mb-12 text-center">
+            <h1 className="text-3xl font-semibold text-gray-900">
               Terms of Service
             </h1>
-            <p className="text-base text-zinc-600">
+            <p className="mt-3 text-base text-gray-600">
               Please read these terms carefully before using our service.
             </p>
           </div>
 
           {/* Website Generation & Ownership */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-2 bg-zinc-100 rounded-xl">
-                  <Code className="w-6 h-6 text-zinc-700" />
-                </div>
-                <h2 className="text-2xl font-semibold text-zinc-900">Website Generation & Ownership</h2>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
+          <section>
+            <div>
+              <h2 className="text-xl font-medium text-gray-900 mb-3">Website Generation & Ownership</h2>
+              <div className="bg-white p-4 border-b border-gray-200">
                 <div className="space-y-4">
                   <p className="text-base text-zinc-600">
                     When you generate a website using our service:
@@ -48,16 +42,10 @@ export default function Terms() {
           </section>
 
           {/* Payments & Refunds */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-2 bg-zinc-100 rounded-xl">
-                  <Wallet className="w-6 h-6 text-zinc-700" />
-                </div>
-                <h2 className="text-2xl font-semibold text-zinc-900">Payments & Transactions</h2>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
+          <section>
+            <div>
+              <h2 className="text-xl font-medium text-gray-900 mb-3">Payments & Transactions</h2>
+              <div className="bg-white p-4 border-b border-gray-200">
                 <div className="space-y-4">
                   <p className="text-base text-zinc-600">
                     All transactions are processed through the Solana blockchain:
@@ -81,16 +69,10 @@ export default function Terms() {
           </section>
 
           {/* Acceptable Use */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-2 bg-zinc-100 rounded-xl">
-                  <Shield className="w-6 h-6 text-zinc-700" />
-                </div>
-                <h2 className="text-2xl font-semibold text-zinc-900">Acceptable Use</h2>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
+          <section>
+            <div>
+              <h2 className="text-xl font-medium text-gray-900 mb-3">Acceptable Use</h2>
+              <div className="bg-white p-4 border-b border-gray-200">
                 <div className="space-y-4">
                   <p className="text-base text-zinc-600">
                     To maintain a safe environment for all users:
@@ -114,16 +96,10 @@ export default function Terms() {
           </section>
 
           {/* Subscription Terms */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-2 bg-zinc-100 rounded-xl">
-                  <Crown className="w-6 h-6 text-zinc-700" />
-                </div>
-                <h2 className="text-2xl font-semibold text-zinc-900">Premium Subscription</h2>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
+          <section>
+            <div>
+              <h2 className="text-xl font-medium text-gray-900 mb-3">Premium Subscription</h2>
+              <div className="bg-white p-4 border-b border-gray-200">
                 <div className="space-y-4">
                   <p className="text-base text-zinc-600">
                     Current premium subscription terms:
@@ -147,12 +123,11 @@ export default function Terms() {
           </section>
           
           {/* Final Note */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
-                <div className="max-w-2xl mx-auto space-y-4 text-center">
-                  <h3 className="text-lg font-semibold bg-clip-text text-transparent bg-gradient-to-r from-zinc-900 via-zinc-600 to-zinc-900">
+          <section>
+            <div>
+              <div className="bg-white p-4 border-t border-b border-gray-200">
+                <div className="max-w-2xl mx-auto space-y-3 text-center">
+                  <h3 className="text-lg font-medium text-gray-900">
                     Built for the community
                   </h3>
                   <p className="text-sm text-zinc-600">
@@ -171,25 +146,19 @@ export default function Terms() {
           </section>
 
           {/* Contact Section */}
-          <section className="relative">
-            <div className="absolute -inset-x-4 -inset-y-6 z-0 bg-zinc-50 border border-zinc-200 rounded-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center gap-4 mb-6">
-                <div className="p-2 bg-zinc-100 rounded-xl">
-                  <MessageCircle className="w-6 h-6 text-zinc-700" />
-                </div>
-                <h2 className="text-2xl font-semibold text-zinc-900">Get in Touch</h2>
-              </div>
-              <div className="bg-white p-6 rounded-xl shadow-sm ring-1 ring-zinc-900/5 border border-zinc-200">
+          <section>
+            <div>
+              <h2 className="text-xl font-medium text-gray-900 mb-3">Get in Touch</h2>
+              <div className="bg-white p-4 border-b border-gray-200">
                 <p className="text-base text-zinc-600">
                   Have questions about our terms? Join our{" "}
                   <a 
-                    href="https://discord.gg/UHDdNH574Y" 
-                    className="font-medium text-zinc-900 hover:text-zinc-700 transition-colors"
-                    target="_blank"
+                    href="https://t.me/buidl_community" 
+                    target="_blank" 
                     rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 underline"
                   >
-                    Discord community
+                    Telegram community
                   </a>
                   {" "}and we'll be happy to help.
                 </p>

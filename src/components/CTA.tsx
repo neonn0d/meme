@@ -3,10 +3,10 @@
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { SignUpButton, useUser } from "@clerk/nextjs";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function CTA() {
-  const { isSignedIn } = useUser();
+  const { isSignedIn } = useAuth();
 
   return (
     <div className="relative overflow-hidden bg-black">      
@@ -43,10 +43,10 @@ export default function CTA() {
                 </button>
               </Link>
             ) : (
-              <SignUpButton mode="modal">
+              <Link href="/sign-in">
                 <button className="group relative inline-flex items-center justify-center px-8 py-3 text-lg font-bold overflow-hidden rounded-full bg-white text-black transition-all duration-300 hover:bg-black hover:text-white border-2 border-white">
                   <span className="relative flex items-center gap-2">
-                    Get Started
+                    Connect Wallet
                     <motion.span
                       animate={{ x: [0, 4, 0] }}
                       transition={{ duration: 1.5, repeat: Infinity }}
@@ -55,7 +55,7 @@ export default function CTA() {
                     </motion.span>
                   </span>
                 </button>
-              </SignUpButton>
+              </Link>
             )}
           </motion.div>
         </div>
