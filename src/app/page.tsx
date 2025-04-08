@@ -11,7 +11,7 @@ import TelegramMarketing from "@/components/TelegramMarketing"
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white md:pt-20">
+    <div className="min-h-screen bg-white md:pt-20 pt-10">
       <main>
         <Hero />
         <Features />
