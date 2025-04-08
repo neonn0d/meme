@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useSearchParams } from "next/navigation";
@@ -89,7 +89,17 @@ const tabs = [
 
 type TabId = (typeof tabs)[number]["id"];
 
+// Main component with suspense boundary
 export default function CustomizePage() {
+  return (
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
+      <CustomizePageContent />
+    </Suspense>
+  );
+}
+
+// Wrapper component that uses searchParams
+function CustomizePageContent() {
   const { userId } = useAuth();
   const { publicKey } = useWallet();
   const { subscriptionData } = useSubscription();

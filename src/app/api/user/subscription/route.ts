@@ -12,6 +12,12 @@ export async function GET(req: NextRequest) {
   const userId = authResult.userId;
 
   try {
+    // Check if supabase client is available
+    if (!supabase) {
+      console.error('Database connection not available');
+      return errorResponse('Database connection not available', 500);
+    }
+    
     // Get user's public metadata from Supabase
     const { data: userData, error } = await supabase
       .from('user_public_metadata')

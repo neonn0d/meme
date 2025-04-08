@@ -1,21 +1,41 @@
 import { NextResponse } from 'next/server';
-import { auth } from '@clerk/nextjs';
 import { StringSession } from 'telegram/sessions';
-import { getSessionFromClerk } from '@/lib/telegram';
+import { getSessionFromSupabase } from '@/lib/telegram';
 import { CustomTelegramClient } from '@/lib/customTelegramClient';
+import { supabase } from '@/lib/supabase';
 
 // Load environment variables
 const apiId = parseInt(process.env.TELEGRAM_API_ID || "0");
 const apiHash = process.env.TELEGRAM_API_HASH || "";
 
 export async function POST(req: Request) {
-  // Check authentication
-  const { userId } = auth();
-  if (!userId) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
   try {
+    // Get the wallet address from the Authorization header
+    const authHeader = req.headers.get('Authorization');
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      return NextResponse.json({ error: 'Unauthorized - No valid authorization header' }, { status: 401 });
+    }
+    
+    const walletAddress = authHeader.substring(7); // Remove 'Bearer ' prefix
+    
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json({ error: 'Database connection not available' }, { status: 500 });
+    }
+    
+    // Get user ID from wallet address
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('wallet_address', walletAddress)
+      .single();
+      
+    if (userError || !userData) {
+      return NextResponse.json({ error: 'Unauthorized - User not found' }, { status: 401 });
+    }
+    
+    const userId = userData.id;
+
     const { phone, groupIds, message } = await req.json();
     
     if (!phone) {
@@ -30,8 +50,8 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Message is required and must be a string' }, { status: 400 });
     }
     
-    // Get session from Clerk
-    const session = await getSessionFromClerk(userId, phone);
+    // Get session from Supabase
+    const session = await getSessionFromSupabase(userId, phone);
     
     // If session not found, return error
     if (!session) {

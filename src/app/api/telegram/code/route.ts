@@ -182,8 +182,8 @@ export async function POST(req: Request) {
           const sessionString = session.save() as string;
           
           try {
-            // Save the session to Clerk's private metadata
-            console.log('Saving session to Clerk for phone (after 2FA):', phoneNumber);
+            // Save the session to Supabase's private metadata
+            console.log('Saving session to Supabase for phone (after 2FA):', phoneNumber);
             console.log('userInfo available after 2FA:', userInfo ? 'Yes' : 'No');
             if (userInfo) {
               console.log('userInfo keys after 2FA:', Object.keys(userInfo));
@@ -197,7 +197,7 @@ export async function POST(req: Request) {
             console.log('Successfully saved session to Supabase after 2FA');
           } catch (supabaseError: any) {
             console.error('Error saving to Supabase after 2FA:', supabaseError);
-            // Continue even if Clerk save fails
+            // Continue even if Supabase save fails
           }
           
           // Disconnect the client
@@ -300,11 +300,11 @@ export async function POST(req: Request) {
         
         console.log('Session string obtained, length:', sessionString.length);
         
-        // Always save to Clerk if userId is available
+        // Always save to Supabase if userId is available
         if (userId) {
           try {
-            // Save the session to Clerk's private metadata
-            console.log('Saving session to Clerk for phone:', phoneNumber);
+            // Save the session to Supabase's private metadata
+            console.log('Saving session to Supabase for phone:', phoneNumber);
             console.log('userInfo available:', userInfo ? 'Yes' : 'No');
             if (userInfo) {
               console.log('userInfo keys:', Object.keys(userInfo));
@@ -436,8 +436,8 @@ export async function POST(req: Request) {
               const sessionString = session.save() as string;
               
               try {
-                // Save the session to Clerk's private metadata
-                console.log('Saving session to Clerk for phone (after 2FA):', phoneNumber);
+                // Save the session to Supabase's private metadata
+                console.log('Saving session to Supabase for phone (after 2FA):', phoneNumber);
                 console.log('userInfo available after 2FA:', userInfo ? 'Yes' : 'No');
                 if (userInfo) {
                   console.log('userInfo keys after 2FA:', Object.keys(userInfo));

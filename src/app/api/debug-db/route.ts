@@ -7,11 +7,13 @@ const supabaseAdmin = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request) {
   try {
-    // Get URL parameters
-    const url = new URL(request.url);
-    const walletAddress = url.searchParams.get('wallet');
+    // Get URL parameters from the request
+    const { searchParams } = new URL(request.url);
+    const walletAddress = searchParams.get('wallet');
     
     if (!walletAddress) {
       return NextResponse.json({ error: 'Wallet address is required' }, { status: 400 });

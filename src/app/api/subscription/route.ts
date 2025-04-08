@@ -11,6 +11,15 @@ async function handleGetSubscription(req: AuthenticatedRequest) {
   try {
     const userId = req.userId;
     
+    // Check if supabase client is available
+    if (!supabase) {
+      console.error('Database connection not available');
+      return NextResponse.json({
+        status: 'error',
+        message: 'Database connection not available'
+      }, { status: 500 });
+    }
+    
     // Get subscription from Supabase
     const { isSubscribed, subscription } = await getSubscriptionStatus(userId);
     

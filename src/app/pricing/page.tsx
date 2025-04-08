@@ -36,7 +36,7 @@ const features = [
 
 export default function PricingPage() {
   const { isSignedIn } = useAuth();
-  const { isSubscribed } = useSubscription();
+  const { subscriptionData } = useSubscription();
   const router = useRouter();
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const premiumPrice = process.env.NEXT_PUBLIC_PREMIUM_AMOUNT || "2.5";
@@ -49,6 +49,8 @@ export default function PricingPage() {
     }
     setShowPaymentModal(true);
   };
+  
+  const isSubscribed = subscriptionData?.isSubscribed || false;
 
   const handlePaymentSuccess = () => {
     setShowPaymentModal(false);

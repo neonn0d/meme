@@ -99,6 +99,12 @@ export default function SolanaPaymentModal({
         const endDate = new Date();
         endDate.setDate(now.getDate() + periodDays);
         
+        // Check if supabase client is available
+        if (!supabase) {
+          console.error('Database connection not available');
+          throw new Error('Database connection not available');
+        }
+        
         // Create or update subscription record
         const { error: subError } = await supabase
           .from('subscriptions')
@@ -121,6 +127,12 @@ export default function SolanaPaymentModal({
         // Handle website payment - increment website count
         console.log('Updating website count');
         
+        // Check if supabase client is available
+        if (!supabase) {
+          console.error('Database connection not available');
+          throw new Error('Database connection not available');
+        }
+        
         // Get current count
         const { data: metadata, error: fetchError } = await supabase
           .from('user_public_metadata')
@@ -134,6 +146,12 @@ export default function SolanaPaymentModal({
         }
         
         const currentCount = metadata?.total_generated || 0;
+        
+        // Check if supabase client is available
+        if (!supabase) {
+          console.error('Database connection not available');
+          throw new Error('Database connection not available');
+        }
         
         // Update count
         const { error: countError } = await supabase
@@ -153,6 +171,12 @@ export default function SolanaPaymentModal({
       
       // Update payment history
       console.log('Updating payment history');
+      
+      // Check if supabase client is available
+      if (!supabase) {
+        console.error('Database connection not available');
+        throw new Error('Database connection not available');
+      }
       
       // Get current payments array and total_spent
       const { data: userData, error: userError } = await supabase
@@ -180,6 +204,12 @@ export default function SolanaPaymentModal({
       // Append to existing payments or create new array
       const currentPayments = userData?.payments || [];
       const updatedPayments = [...currentPayments, paymentData];
+      
+      // Check if supabase client is available
+      if (!supabase) {
+        console.error('Database connection not available');
+        throw new Error('Database connection not available');
+      }
       
       // Update payments array
       const { error: paymentError } = await supabase

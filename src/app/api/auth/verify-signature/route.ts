@@ -37,6 +37,14 @@ export async function POST(req: NextRequest) {
       );
     }
     
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json(
+        { error: 'Database connection not available' },
+        { status: 500 }
+      );
+    }
+    
     // Get user from database
     const { data: user, error: userError } = await supabase
       .from('users')

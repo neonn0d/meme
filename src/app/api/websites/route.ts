@@ -18,8 +18,17 @@ async function handleGetWebsites(req: AuthenticatedRequest) {
   const userId = req.userId;
 
   try {
+    // Check if supabase client is available
+    if (!supabase) {
+      console.error('Database connection not available');
+      return NextResponse.json({
+        success: false,
+        error: 'Database connection not available'
+      }, { status: 500 });
+    }
+    
     // Get websites data from user_public_metadata table
-    const { data, error } = await supabase
+    const { data, error } = await supabase!
       .from('user_public_metadata')
       .select('websites, total_generated, total_spent, payments')
       .eq('user_id', userId)

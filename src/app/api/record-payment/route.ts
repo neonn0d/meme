@@ -24,6 +24,14 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
     
+    // Check if supabase client is available
+    if (!supabase) {
+      return NextResponse.json({ 
+        success: false, 
+        error: 'Database connection not available' 
+      }, { status: 500 });
+    }
+    
     // Step 1: Find the user by wallet address
     const { data: users, error: userError } = await supabase
       .from('users')

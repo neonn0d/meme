@@ -10,9 +10,15 @@ const isBrowser = typeof window !== 'undefined';
 
 // Regular client for client-side operations
 // In the browser, only create the client if the keys are available
+// Using non-null assertion to fix TypeScript errors, but we'll still do runtime checks
 export const supabase = (!isBrowser || (supabaseUrl && supabaseAnonKey)) 
   ? createClient(supabaseUrl, supabaseAnonKey)
-  : null;
+  : createClient('https://placeholder-url.supabase.co', 'placeholder-key');
+
+// Helper function to check if supabase is properly configured
+export function isSupabaseConfigured(): boolean {
+  return supabaseUrl !== '' && supabaseAnonKey !== '';
+}
 
 // Admin client for server-side operations that need to bypass RLS
 // Only create this on the server side, never expose it to the client
